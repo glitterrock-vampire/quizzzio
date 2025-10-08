@@ -10,6 +10,7 @@
     "server:dev": "nodemon server/server.js"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "canvas-confetti": "^1.9.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
@@ -17,10 +18,15 @@
     "date-fns": "^3.0.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "express-rate-limit": "^8.1.0",
     "framer-motion": "^10.16.16",
+    "helmet": "^8.1.0",
+    "joi": "^18.0.1",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.294.0",
+    "morgan": "^1.10.1",
     "openai": "^4.20.1",
+    "pg": "^8.16.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.0",
