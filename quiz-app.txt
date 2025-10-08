@@ -1,0 +1,2744 @@
+Complete Code for Local Recreation
+Project Structure
+quiz-app/
+├── entities/
+│   ├── QuizQuestion.json
+│   ├── QuizSession.json
+│   └── User.json
+├── pages/
+│   ├── Home.js
+│   ├── Quiz.js
+│   ├── Upload.js
+│   └── Leaderboard.js
+├── components/
+│   └── quiz/
+│       ├── QuizSetup.js
+│       ├── QuestionCard.js
+│       └── QuizResults.js
+└── Layout.js
+📁 entities/QuizQuestion.json
+{
+  "name": "QuizQuestion",
+  "type": "object",
+  "properties": {
+    "subject": {
+      "type": "string",
+      "enum": ["math", "science", "history", "geography", "literature", "general_knowledge"],
+      "description": "Quiz question subject category"
+    },
+    "question": {
+      "type": "string",
+      "description": "The quiz question text"
+    },
+    "options": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 2,
+      "maxItems": 6,
+      "description": "Array of answer options"
+    },
+    "correct_answer": {
+      "type": "string",
+      "description": "The correct answer (must match one of the options)"
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": ["easy", "medium", "hard"],
+      "default": "medium",
+      "description": "Question difficulty level"
+    },
+    "explanation": {
+      "type": "string",
+      "description": "Explanation for the correct answer"
+    },
+    "points": {
+      "type": "number",
+      "default": 10,
+      "description": "Points awarded for correct answer"
+    }
+  },
+  "required": ["subject", "question", "options", "correct_answer"]
+}
+📁 entities/QuizSession.json
+{
+  "name": "QuizSession",
+  "type": "object",
+  "properties": {
+    "subject": {
+      "type": "string",
+      "description": "Quiz subject"
+    },
+    "score": {
+      "type": "number",
+      "description": "Final score"
+    },
+    "correct_answers": {
+      "type": "number",
+      "description": "Number of correct answers"
+    },
+    "total_questions": {
+      "type": "number",
+      "description": "Total questions in quiz"
+    },
+    "time_taken": {
+      "type": "number",
+      "description": "Time taken in seconds"
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": ["easy", "medium", "hard", "mixed"]
+    }
+  },
+  "required": ["subject", "score", "correct_answers", "total_questions"]
+}
+📁 entities/User.json
+{
+  "type": "object",
+  "properties": {
+    "total_points": {
+      "type": "number",
+      "default": 0,
+      "description": "Total points earned"
+    },
+    "current_streak": {
+      "type": "number",
+      "default": 0,
+      "description": "Current correct answer streak"
+    },
+    "best_streak": {
+      "type": "number",
+      "default": 0,
+      "description": "Best streak achieved"
+    },
+    "quizzes_completed": {
+      "type": "number",
+      "default": 0,
+      "description": "Total quizzes completed"
+    },
+    "correct_answers": {
+      "type": "number",
+      "default": 0,
+      "description": "Total correct answers"
+    },
+    "total_answers": {
+      "type": "number",
+      "default": 0,
+      "description": "Total questions answered"
+    },
+    "achievements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Unlocked achievements"
+    },
+    "favorite_subject": {
+      "type": "string",
+      "description": "User's favorite quiz subject"
+    }
+  }
+}
+📁 Layout.js
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import { Home, Play, Upload, Trophy, Zap } from "lucide-react";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarHeader,
+  SidebarFooter,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+import { User } from "@/entities/User";
+
+const navigationItems = [
+  { title: "Home", url: createPageUrl("Home"), icon: Home },
+  { title: "Play Quiz", url: createPageUrl("Quiz"), icon: Play },
+  { title: "Upload Questions", url: createPageUrl("Upload"), icon: Upload },
+  { title: "Leaderboard", url: createPageUrl("Leaderboard"), icon: Trophy },
+];
+
+export default function Layout({ children, currentPageName }) {
+  const location = useLocation();
+  const [userData, setUserData] = React.useState(null);
+
+  React.useEffect(() => {
+    loadUserData();
+  }, []);
+
+  const loadUserData = async () => {
+    try {
+      const user = await User.me();
+      setUserData(user);
+    } catch (error) {
+      console.error("Error loading user data:", error);
+    }
+  };
+
+  return (
+    <SidebarProvider>
+      <style>{`
+        :root {
+          --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          --success-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+          --warning-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+      `}</style>
+      
+      <div className="min-h-screen flex w-full bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+        <Sidebar className="border-r border-purple-100 bg-white/80 backdrop-blur-sm">
+          <SidebarHeader className="border-b border-purple-100 p-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
+                <Zap className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h2 className="font-bold text-xl bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  QuizMaster
+                </h2>
+                <p className="text-xs text-gray-500">Challenge Yourself!</p>
+              </div>
+            </div>
+          </SidebarHeader>
+          
+          <SidebarContent className="p-3">
+            <SidebarGroup>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {navigationItems.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton 
+                        asChild 
+                        className={`hover:bg-purple-50 hover:text-purple-700 transition-all duration-200 rounded-xl mb-1 ${
+                          location.pathname === item.url 
+                            ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:text-white' 
+                            : ''
+                        }`}
+                      >
+                        <Link to={item.url} className="flex items-center gap-3 px-4 py-3">
+                          <item.icon className="w-5 h-5" />
+                          <span className="font-medium">{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+
+            {userData && (
+              <SidebarGroup className="mt-4">
+                <div className="px-4 py-3 bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl">
+                  <h3 className="text-xs font-semibold text-purple-900 uppercase tracking-wider mb-3">
+                    Your Stats
+                  </h3>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-purple-700">Points</span>
+                      <span className="font-bold text-purple-900">{userData.total_points || 0}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-purple-700">Best Streak</span>
+                      <span className="font-bold text-purple-900">🔥 {userData.best_streak || 0}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-purple-700">Accuracy</span>
+                      <span className="font-bold text-purple-900">
+                        {userData.total_answers > 0 
+                          ? Math.round((userData.correct_answers / userData.total_answers) * 100)
+                          : 0}%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </SidebarGroup>
+            )}
+          </SidebarContent>
+
+          <SidebarFooter className="border-t border-purple-100 p-4">
+            {userData && (
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">
+                    {userData.full_name?.[0]?.toUpperCase() || 'U'}
+                  </span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-gray-900 text-sm truncate">
+                    {userData.full_name || 'User'}
+                  </p>
+                  <p className="text-xs text-gray-500 truncate">
+                    Level {Math.floor((userData.total_points || 0) / 100) + 1}
+                  </p>
+                </div>
+              </div>
+            )}
+          </SidebarFooter>
+        </Sidebar>
+
+        <main className="flex-1 flex flex-col">
+          <header className="bg-white/80 backdrop-blur-sm border-b border-purple-100 px-6 py-4 md:hidden">
+            <div className="flex items-center gap-4">
+              <SidebarTrigger className="hover:bg-purple-100 p-2 rounded-lg transition-colors duration-200" />
+              <h1 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                QuizMaster
+              </h1>
+            </div>
+          </header>
+
+          <div className="flex-1 overflow-auto">
+            {children}
+          </div>
+        </main>
+      </div>
+    </SidebarProvider>
+  );
+}
+📁 pages/Home.js
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import { User } from "@/entities/User";
+import { QuizSession } from "@/entities/QuizSession";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Play, Trophy, Target, Zap, TrendingUp, Award, Book, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
+
+const subjectIcons = {
+  math: "🔢",
+  science: "🔬",
+  history: "📜",
+  geography: "🌍",
+  literature: "📚",
+  general_knowledge: "🧠"
+};
+
+const subjects = [
+  { id: "math", name: "Mathematics", color: "from-blue-500 to-cyan-500", icon: "🔢" },
+  { id: "science", name: "Science", color: "from-green-500 to-emerald-500", icon: "🔬" },
+  { id: "history", name: "History", color: "from-amber-500 to-orange-500", icon: "📜" },
+  { id: "geography", name: "Geography", color: "from-teal-500 to-cyan-500", icon: "🌍" },
+  { id: "literature", name: "Literature", color: "from-purple-500 to-pink-500", icon: "📚" },
+  { id: "general_knowledge", name: "General Knowledge", color: "from-indigo-500 to-purple-500", icon: "🧠" }
+];
+
+const achievements = [
+  { id: "first_quiz", name: "Getting Started", icon: "🎯", description: "Complete your first quiz" },
+  { id: "streak_5", name: "On Fire", icon: "🔥", description: "Get 5 correct answers in a row" },
+  { id: "100_points", name: "Century", icon: "💯", description: "Earn 100 points" },
+  { id: "perfect_quiz", name: "Perfectionist", icon: "⭐", description: "Complete a quiz with 100% accuracy" },
+  { id: "speedster", name: "Speedster", icon: "⚡", description: "Complete a quiz in under 2 minutes" },
+  { id: "scholar", name: "Scholar", icon: "🎓", description: "Complete 10 quizzes" }
+];
+
+export default function HomePage() {
+  const [userData, setUserData] = useState(null);
+  const [recentSessions, setRecentSessions] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      const user = await User.me();
+      setUserData(user);
+      const sessions = await QuizSession.filter({ created_by: user.email }, "-created_date", 5);
+      setRecentSessions(sessions);
+    } catch (error) {
+      console.error("Error loading data:", error);
+    }
+    setLoading(false);
+  };
+
+  const unlockedAchievements = userData?.achievements || [];
+
+  return (
+    <div className="min-h-screen p-4 md:p-8">
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Hero Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-600 via-pink-600 to-blue-600 p-8 md:p-12 text-white"
+        >
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
+          
+          <div className="relative z-10">
+            <div className="flex items-center gap-2 mb-4">
+              <Sparkles className="w-6 h-6" />
+              <span className="text-sm font-semibold uppercase tracking-wider">Welcome Back!</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              Ready to Challenge<br />Your Knowledge?
+            </h1>
+            <p className="text-lg text-white/90 mb-8 max-w-2xl">
+              Test yourself across multiple subjects, earn points, unlock achievements, and climb the leaderboard!
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Link to={createPageUrl("Quiz")}>
+                <Button size="lg" className="bg-white text-purple-600 hover:bg-white/90 font-semibold">
+                  <Play className="w-5 h-5 mr-2" />
+                  Start Quiz
+                </Button>
+              </Link>
+              <Link to={createPageUrl("Leaderboard")}>
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+                  <Trophy className="w-5 h-5 mr-2" />
+                  Leaderboard
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Stats Cards */}
+        {userData && (
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+              <Card className="border-none shadow-lg bg-gradient-to-br from-blue-50 to-cyan-50">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600 font-medium">Total Points</p>
+                      <p className="text-3xl font-bold text-blue-600 mt-1">{userData.total_points || 0}</p>
+                    </div>
+                    <div className="w-14 h-14 bg-blue-500 rounded-2xl flex items-center justify-center">
+                      <Zap className="w-7 h-7 text-white" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+              <Card className="border-none shadow-lg bg-gradient-to-br from-orange-50 to-amber-50">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600 font-medium">Best Streak</p>
+                      <p className="text-3xl font-bold text-orange-600 mt-1">🔥 {userData.best_streak || 0}</p>
+                    </div>
+                    <div className="w-14 h-14 bg-orange-500 rounded-2xl flex items-center justify-center">
+                      <Target className="w-7 h-7 text-white" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+              <Card className="border-none shadow-lg bg-gradient-to-br from-green-50 to-emerald-50">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600 font-medium">Accuracy</p>
+                      <p className="text-3xl font-bold text-green-600 mt-1">
+                        {userData.total_answers > 0 
+                          ? Math.round((userData.correct_answers / userData.total_answers) * 100)
+                          : 0}%
+                      </p>
+                    </div>
+                    <div className="w-14 h-14 bg-green-500 rounded-2xl flex items-center justify-center">
+                      <TrendingUp className="w-7 h-7 text-white" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+              <Card className="border-none shadow-lg bg-gradient-to-br from-purple-50 to-pink-50">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600 font-medium">Quizzes Done</p>
+                      <p className="text-3xl font-bold text-purple-600 mt-1">{userData.quizzes_completed || 0}</p>
+                    </div>
+                    <div className="w-14 h-14 bg-purple-500 rounded-2xl flex items-center justify-center">
+                      <Book className="w-7 h-7 text-white" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
+        )}
+
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Subjects */}
+          <div className="lg:col-span-2 space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold mb-4">Choose Your Subject</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {subjects.map((subject, index) => (
+                  <motion.div
+                    key={subject.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 * index }}
+                  >
+                    <Link to={`${createPageUrl("Quiz")}?subject=${subject.id}`}>
+                      <Card className="border-none shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer bg-white overflow-hidden">
+                        <div className={`h-2 bg-gradient-to-r ${subject.color}`} />
+                        <CardContent className="p-6">
+                          <div className="flex items-center gap-4">
+                            <div className="text-4xl">{subject.icon}</div>
+                            <div>
+                              <h3 className="font-bold text-lg">{subject.name}</h3>
+                              <p className="text-sm text-gray-500">Start learning</p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* Recent Activity */}
+            {recentSessions.length > 0 && (
+              <Card className="border-none shadow-lg">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5" />
+                    Recent Activity
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {recentSessions.map((session) => (
+                      <div key={session.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                        <div className="flex items-center gap-3">
+                          <div className="text-2xl">{subjectIcons[session.subject]}</div>
+                          <div>
+                            <p className="font-medium capitalize">{session.subject.replace(/_/g, ' ')}</p>
+                            <p className="text-sm text-gray-500">
+                              {session.correct_answers}/{session.total_questions} correct
+                            </p>
+                          </div>
+                        </div>
+                        <Badge variant="secondary" className="font-semibold">
+                          {session.score} pts
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+
+          {/* Achievements */}
+          <div>
+            <Card className="border-none shadow-lg">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Award className="w-5 h-5" />
+                  Achievements
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {achievements.map((achievement) => {
+                    const isUnlocked = unlockedAchievements.includes(achievement.id);
+                    return (
+                      <div
+                        key={achievement.id}
+                        className={`p-4 rounded-xl border-2 transition-all ${
+                          isUnlocked
+                            ? 'bg-gradient-to-br from-yellow-50 to-amber-50 border-yellow-300'
+                            : 'bg-gray-50 border-gray-200 opacity-50'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="text-3xl">{achievement.icon}</div>
+                          <div>
+                            <p className="font-semibold text-sm">{achievement.name}</p>
+                            <p className="text-xs text-gray-600">{achievement.description}</p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+📁 pages/Quiz.js
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import { QuizQuestion } from "@/entities/QuizQuestion";
+import { QuizSession } from "@/entities/QuizSession";
+import { User } from "@/entities/User";
+import { InvokeLLM } from "@/integrations/Core";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { ArrowLeft, Loader2, Sparkles } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+
+import QuizSetup from "../components/quiz/QuizSetup";
+import QuestionCard from "../components/quiz/QuestionCard";
+import QuizResults from "../components/quiz/QuizResults";
+
+export default function QuizPage() {
+  const navigate = useNavigate();
+  const [stage, setStage] = useState("setup"); // setup, playing, results
+  const [quizConfig, setQuizConfig] = useState(null);
+  const [questions, setQuestions] = useState([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [answers, setAnswers] = useState([]);
+  const [score, setScore] = useState(0);
+  const [streak, setStreak] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [startTime, setStartTime] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(30);
+  const [showExplanation, setShowExplanation] = useState(false);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const subject = urlParams.get("subject");
+    if (subject) {
+      setQuizConfig({ subject, questionCount: 10, difficulty: "mixed", mode: "existing" });
+      handleStartQuiz({ subject, questionCount: 10, difficulty: "mixed", mode: "existing" });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (stage === "playing" && !showExplanation) {
+      const timer = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            handleAnswer(null);
+            return 30;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [stage, currentQuestionIndex, showExplanation]);
+
+  const handleStartQuiz = async (config) => {
+    setLoading(true);
+    setQuizConfig(config);
+
+    try {
+      let quizQuestions = [];
+
+      if (config.mode === "ai") {
+        quizQuestions = await generateAIQuestions(config);
+      } else {
+        const filters = { subject: config.subject };
+        if (config.difficulty !== "mixed") {
+          filters.difficulty = config.difficulty;
+        }
+        const allQuestions = await QuizQuestion.filter(filters);
+        quizQuestions = allQuestions
+          .sort(() => Math.random() - 0.5)
+          .slice(0, config.questionCount);
+      }
+
+      if (quizQuestions.length === 0) {
+        alert("No questions available. Try generating AI questions or uploading some!");
+        setLoading(false);
+        return;
+      }
+
+      setQuestions(quizQuestions);
+      setStage("playing");
+      setStartTime(Date.now());
+      setTimeLeft(30);
+    } catch (error) {
+      console.error("Error starting quiz:", error);
+      alert("Error loading questions. Please try again.");
+    }
+    setLoading(false);
+  };
+
+  const generateAIQuestions = async (config) => {
+    const prompt = `Generate ${config.questionCount} multiple choice quiz questions about ${config.subject.replace(/_/g, ' ')}.
+    Difficulty level: ${config.difficulty === "mixed" ? "mix of easy, medium, and hard" : config.difficulty}.
+    
+    Make the questions interesting, educational, and varied.
+    Each question should have 4 options.
+    Include a brief explanation for each correct answer.`;
+
+    const result = await InvokeLLM({
+      prompt,
+      response_json_schema: {
+        type: "object",
+        properties: {
+          questions: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                question: { type: "string" },
+                options: { type: "array", items: { type: "string" } },
+                correct_answer: { type: "string" },
+                explanation: { type: "string" },
+                difficulty: { type: "string", enum: ["easy", "medium", "hard"] }
+              }
+            }
+          }
+        }
+      }
+    });
+
+    return result.questions.map(q => ({
+      ...q,
+      subject: config.subject,
+      points: q.difficulty === "easy" ? 10 : q.difficulty === "medium" ? 15 : 20
+    }));
+  };
+
+  const handleAnswer = (selectedAnswer) => {
+    if (showExplanation) return;
+
+    const currentQuestion = questions[currentQuestionIndex];
+    const isCorrect = selectedAnswer === currentQuestion.correct_answer;
+    
+    const newAnswers = [...answers, {
+      question: currentQuestion.question,
+      selectedAnswer,
+      correctAnswer: currentQuestion.correct_answer,
+      isCorrect,
+      points: isCorrect ? currentQuestion.points : 0
+    }];
+    setAnswers(newAnswers);
+
+    if (isCorrect) {
+      setScore(score + currentQuestion.points);
+      setStreak(streak + 1);
+    } else {
+      setStreak(0);
+    }
+
+    setShowExplanation(true);
+    
+    setTimeout(() => {
+      setShowExplanation(false);
+      if (currentQuestionIndex < questions.length - 1) {
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+        setTimeLeft(30);
+      } else {
+        finishQuiz(newAnswers);
+      }
+    }, 3000);
+  };
+
+  const finishQuiz = async (finalAnswers) => {
+    const timeTaken = Math.floor((Date.now() - startTime) / 1000);
+    const correctCount = finalAnswers.filter(a => a.isCorrect).length;
+    const finalScore = finalAnswers.reduce((sum, a) => sum + a.points, 0);
+
+    try {
+      const user = await User.me();
+      
+      await QuizSession.create({
+        subject: quizConfig.subject,
+        score: finalScore,
+        correct_answers: correctCount,
+        total_questions: questions.length,
+        time_taken: timeTaken,
+        difficulty: quizConfig.difficulty
+      });
+
+      const newTotalPoints = (user.total_points || 0) + finalScore;
+      const newCorrectAnswers = (user.correct_answers || 0) + correctCount;
+      const newTotalAnswers = (user.total_answers || 0) + questions.length;
+      const newQuizzesCompleted = (user.quizzes_completed || 0) + 1;
+      const newBestStreak = Math.max(user.best_streak || 0, streak);
+
+      const newAchievements = [...(user.achievements || [])];
+      if (newQuizzesCompleted === 1 && !newAchievements.includes("first_quiz")) {
+        newAchievements.push("first_quiz");
+      }
+      if (newBestStreak >= 5 && !newAchievements.includes("streak_5")) {
+        newAchievements.push("streak_5");
+      }
+      if (newTotalPoints >= 100 && !newAchievements.includes("100_points")) {
+        newAchievements.push("100_points");
+      }
+      if (correctCount === questions.length && !newAchievements.includes("perfect_quiz")) {
+        newAchievements.push("perfect_quiz");
+      }
+      if (timeTaken < 120 && !newAchievements.includes("speedster")) {
+        newAchievements.push("speedster");
+      }
+      if (newQuizzesCompleted >= 10 && !newAchievements.includes("scholar")) {
+        newAchievements.push("scholar");
+      }
+
+      await User.updateMyUserData({
+        total_points: newTotalPoints,
+        correct_answers: newCorrectAnswers,
+        total_answers: newTotalAnswers,
+        quizzes_completed: newQuizzesCompleted,
+        best_streak: newBestStreak,
+        achievements: newAchievements
+      });
+    } catch (error) {
+      console.error("Error saving quiz results:", error);
+    }
+
+    setStage("results");
+  };
+
+  const resetQuiz = () => {
+    setStage("setup");
+    setQuizConfig(null);
+    setQuestions([]);
+    setCurrentQuestionIndex(0);
+    setAnswers([]);
+    setScore(0);
+    setStreak(0);
+    setTimeLeft(30);
+    setShowExplanation(false);
+  };
+
+  if (stage === "setup") {
+    return (
+      <div className="min-h-screen p-4 md:p-8">
+        <div className="max-w-4xl mx-auto">
+          <Button
+            variant="ghost"
+            onClick={() => navigate(createPageUrl("Home"))}
+            className="mb-6"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Home
+          </Button>
+          <QuizSetup onStart={handleStartQuiz} loading={loading} />
+        </div>
+      </div>
+    );
+  }
+
+  if (stage === "results") {
+    return (
+      <QuizResults
+        answers={answers}
+        score={score}
+        questions={questions}
+        onPlayAgain={resetQuiz}
+        onBackHome={() => navigate(createPageUrl("Home"))}
+      />
+    );
+  }
+
+  const currentQuestion = questions[currentQuestionIndex];
+  const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+
+  return (
+    <div className="min-h-screen p-4 md:p-8">
+      <div className="max-w-4xl mx-auto">
+        <div className="mb-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" size="icon" onClick={resetQuiz}>
+                <ArrowLeft className="w-4 h-4" />
+              </Button>
+              <div>
+                <p className="text-sm text-gray-500">
+                  Question {currentQuestionIndex + 1} of {questions.length}
+                </p>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="font-bold text-lg">Score: {score}</span>
+                  {streak > 0 && (
+                    <span className="text-orange-600 font-semibold">🔥 {streak}</span>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className={`text-3xl font-bold ${timeLeft <= 10 ? 'text-red-500 animate-pulse' : 'text-gray-700'}`}>
+              {timeLeft}s
+            </div>
+          </div>
+          <Progress value={progress} className="h-2" />
+        </div>
+
+        <AnimatePresence mode="wait">
+          {loading ? (
+            <Card className="p-12 flex items-center justify-center">
+              <Loader2 className="w-8 h-8 animate-spin text-purple-600" />
+            </Card>
+          ) : (
+            <QuestionCard
+              key={currentQuestionIndex}
+              question={currentQuestion}
+              onAnswer={handleAnswer}
+              showExplanation={showExplanation}
+              selectedAnswer={answers[currentQuestionIndex]?.selectedAnswer}
+            />
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
+📁 pages/Upload.js
+import React, { useState } from "react";
+import { QuizQuestion } from "@/entities/QuizQuestion";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Upload, FileJson, FileSpreadsheet, CheckCircle2, AlertCircle, ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import { motion } from "framer-motion";
+
+export default function UploadPage() {
+  const navigate = useNavigate();
+  const [jsonInput, setJsonInput] = useState("");
+  const [csvInput, setCsvInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(null);
+  const [error, setError] = useState(null);
+
+  const handleJsonUpload = async () => {
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const questions = JSON.parse(jsonInput);
+      
+      if (!Array.isArray(questions)) {
+        throw new Error("JSON must be an array of questions");
+      }
+
+      await QuizQuestion.bulkCreate(questions);
+      setSuccess(`Successfully uploaded ${questions.length} questions!`);
+      setJsonInput("");
+    } catch (err) {
+      setError(err.message || "Error uploading questions");
+    }
+    setLoading(false);
+  };
+
+  const handleCsvUpload = async () => {
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const lines = csvInput.trim().split('\n');
+      const headers = lines[0].split(',').map(h => h.trim());
+      
+      const questions = lines.slice(1).map(line => {
+        const values = line.split(',').map(v => v.trim());
+        const question = {};
+        
+        headers.forEach((header, index) => {
+          if (header === 'options') {
+            question[header] = values[index].split('|').map(o => o.trim());
+          } else {
+            question[header] = values[index];
+          }
+        });
+        
+        return question;
+      });
+
+      await QuizQuestion.bulkCreate(questions);
+      setSuccess(`Successfully uploaded ${questions.length} questions!`);
+      setCsvInput("");
+    } catch (err) {
+      setError(err.message || "Error uploading questions");
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div className="min-h-screen p-4 md:p-8">
+      <div className="max-w-5xl mx-auto">
+        <Button
+          variant="ghost"
+          onClick={() => navigate(createPageUrl("Home"))}
+          className="mb-6"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Home
+        </Button>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <h1 className="text-3xl font-bold mb-2">Upload Questions</h1>
+          <p className="text-gray-600">
+            Add your own quiz questions via JSON or CSV format
+          </p>
+        </motion.div>
+
+        {success && (
+          <Alert className="mb-6 border-green-200 bg-green-50">
+            <CheckCircle2 className="h-4 w-4 text-green-600" />
+            <AlertDescription className="text-green-800">{success}</AlertDescription>
+          </Alert>
+        )}
+
+        {error && (
+          <Alert variant="destructive" className="mb-6">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
+        <div className="grid md:grid-cols-2 gap-6">
+          {/* JSON Upload */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <Card className="border-none shadow-lg h-full">
+              <CardHeader className="bg-gradient-to-r from-blue-50 to-cyan-50">
+                <CardTitle className="flex items-center gap-2">
+                  <FileJson className="w-5 h-5 text-blue-600" />
+                  JSON Format
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6 space-y-4">
+                <div className="bg-gray-50 p-4 rounded-lg text-sm font-mono overflow-x-auto">
+                  <pre className="text-xs">{`[
+  {
+    "subject": "math",
+    "question": "What is 2+2?",
+    "options": ["3", "4", "5", "6"],
+    "correct_answer": "4",
+    "difficulty": "easy",
+    "explanation": "Basic addition"
+  }
+]`}</pre>
+                </div>
+                <Textarea
+                  placeholder="Paste your JSON here..."
+                  value={jsonInput}
+                  onChange={(e) => setJsonInput(e.target.value)}
+                  className="min-h-[200px] font-mono text-sm"
+                />
+                <Button
+                  onClick={handleJsonUpload}
+                  disabled={!jsonInput || loading}
+                  className="w-full bg-blue-600 hover:bg-blue-700"
+                >
+                  <Upload className="w-4 h-4 mr-2" />
+                  Upload JSON
+                </Button>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* CSV Upload */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Card className="border-none shadow-lg h-full">
+              <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50">
+                <CardTitle className="flex items-center gap-2">
+                  <FileSpreadsheet className="w-5 h-5 text-green-600" />
+                  CSV Format
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6 space-y-4">
+                <div className="bg-gray-50 p-4 rounded-lg text-sm font-mono overflow-x-auto">
+                  <pre className="text-xs">{`subject,question,options,correct_answer,difficulty
+math,What is 2+2?,3|4|5|6,4,easy
+science,What is H2O?,Air|Water|Fire,Water,easy`}</pre>
+                </div>
+                <Textarea
+                  placeholder="Paste your CSV here..."
+                  value={csvInput}
+                  onChange={(e) => setCsvInput(e.target.value)}
+                  className="min-h-[200px] font-mono text-sm"
+                />
+                <div className="text-xs text-gray-500">
+                  Note: Separate multiple options with | character
+                </div>
+                <Button
+                  onClick={handleCsvUpload}
+                  disabled={!csvInput || loading}
+                  className="w-full bg-green-600 hover:bg-green-700"
+                >
+                  <Upload className="w-4 h-4 mr-2" />
+                  Upload CSV
+                </Button>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+
+        <Card className="mt-6 border-none shadow-lg">
+          <CardHeader>
+            <CardTitle>Field Specifications</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <h3 className="font-semibold mb-3">Required Fields</h3>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-600">•</span>
+                    <div>
+                      <strong>subject:</strong> math, science, history, geography, literature, general_knowledge
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-600">•</span>
+                    <div>
+                      <strong>question:</strong> The question text
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-600">•</span>
+                    <div>
+                      <strong>options:</strong> Array of answer choices
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-600">•</span>
+                    <div>
+                      <strong>correct_answer:</strong> Must match one of the options
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="font-semibold mb-3">Optional Fields</h3>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-600">•</span>
+                    <div>
+                      <strong>difficulty:</strong> easy, medium, or hard (default: medium)
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-600">•</span>
+                    <div>
+                      <strong>explanation:</strong> Explanation for the correct answer
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-600">•</span>
+                    <div>
+                      <strong>points:</strong> Points awarded (default: 10)
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
+📁 pages/Leaderboard.js
+import React, { useState, useEffect } from "react";
+import { User } from "@/entities/User";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Trophy, Medal, Award, TrendingUp, Target, Zap, ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import { motion } from "framer-motion";
+
+export default function LeaderboardPage() {
+  const navigate = useNavigate();
+  const [users, setUsers] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadLeaderboard();
+  }, []);
+
+  const loadLeaderboard = async () => {
+    try {
+      const me = await User.me();
+      setCurrentUser(me);
+      
+      const allUsers = await User.list();
+      const sortedUsers = allUsers
+        .filter(u => u.total_points > 0)
+        .sort((a, b) => (b.total_points || 0) - (a.total_points || 0));
+      
+      setUsers(sortedUsers);
+    } catch (error) {
+      console.error("Error loading leaderboard:", error);
+    }
+    setLoading(false);
+  };
+
+  const getRankIcon = (index) => {
+    if (index === 0) return <Trophy className="w-6 h-6 text-yellow-500" />;
+    if (index === 1) return <Medal className="w-6 h-6 text-gray-400" />;
+    if (index === 2) return <Medal className="w-6 h-6 text-amber-600" />;
+    return <Award className="w-5 h-5 text-gray-400" />;
+  };
+
+  const getRankColor = (index) => {
+    if (index === 0) return "from-yellow-500 to-amber-500";
+    if (index === 1) return "from-gray-400 to-gray-500";
+    if (index === 2) return "from-amber-600 to-amber-700";
+    return "from-purple-500 to-pink-500";
+  };
+
+  const currentUserRank = users.findIndex(u => u.email === currentUser?.email) + 1;
+
+  return (
+    <div className="min-h-screen p-4 md:p-8">
+      <div className="max-w-5xl mx-auto">
+        <Button
+          variant="ghost"
+          onClick={() => navigate(createPageUrl("Home"))}
+          className="mb-6"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Home
+        </Button>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <h1 className="text-3xl font-bold mb-2">Leaderboard</h1>
+          <p className="text-gray-600">
+            See how you rank against other players
+          </p>
+        </motion.div>
+
+        {currentUser && currentUserRank > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <Card className="mb-6 border-none shadow-lg bg-gradient-to-br from-purple-600 via-pink-600 to-blue-600 text-white">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-white/80 mb-1">Your Rank</p>
+                    <div className="flex items-center gap-3">
+                      <span className="text-4xl font-bold">#{currentUserRank}</span>
+                      <div>
+                        <p className="font-semibold">{currentUser.full_name}</p>
+                        <p className="text-sm text-white/80">{currentUser.total_points} points</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="text-center bg-white/20 backdrop-blur rounded-xl p-3">
+                      <Target className="w-5 h-5 mx-auto mb-1" />
+                      <p className="text-2xl font-bold">
+                        {currentUser.total_answers > 0 
+                          ? Math.round((currentUser.correct_answers / currentUser.total_answers) * 100)
+                          : 0}%
+                      </p>
+                      <p className="text-xs text-white/80">Accuracy</p>
+                    </div>
+                    <div className="text-center bg-white/20 backdrop-blur rounded-xl p-3">
+                      <Zap className="w-5 h-5 mx-auto mb-1" />
+                      <p className="text-2xl font-bold">{currentUser.best_streak || 0}</p>
+                      <p className="text-xs text-white/80">Best Streak</p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+
+        <Card className="border-none shadow-lg">
+          <CardHeader className="border-b bg-gradient-to-r from-purple-50 to-pink-50">
+            <CardTitle className="flex items-center gap-2">
+              <Trophy className="w-5 h-5 text-purple-600" />
+              Top Players
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            {loading ? (
+              <div className="p-12 text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto" />
+              </div>
+            ) : users.length === 0 ? (
+              <div className="p-12 text-center text-gray-500">
+                <Trophy className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                <p>No players on the leaderboard yet.</p>
+                <p className="text-sm">Be the first to play and earn points!</p>
+              </div>
+            ) : (
+              <div className="divide-y divide-gray-100">
+                {users.map((user, index) => (
+                  <motion.div
+                    key={user.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className={`p-6 hover:bg-gray-50 transition-colors ${
+                      user.email === currentUser?.email ? 'bg-purple-50' : ''
+                    }`}
+                  >
+                    <div className="flex items-center gap-6">
+                      <div className="relative">
+                        <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${getRankColor(index)} flex items-center justify-center text-white font-bold text-lg`}>
+                          {index + 1}
+                        </div>
+                        {index < 3 && (
+                          <div className="absolute -top-1 -right-1">
+                            {getRankIcon(index)}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="font-semibold text-lg">{user.full_name || 'Anonymous'}</p>
+                          {user.email === currentUser?.email && (
+                            <Badge variant="secondary">You</Badge>
+                          )}
+                        </div>
+                        <div className="flex flex-wrap gap-4 text-sm text-gray-600">
+                          <span className="flex items-center gap-1">
+                            <TrendingUp className="w-4 h-4" />
+                            {user.quizzes_completed || 0} quizzes
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Target className="w-4 h-4" />
+                            {user.total_answers > 0 
+                              ? Math.round((user.correct_answers / user.total_answers) * 100)
+                              : 0}% accuracy
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Zap className="w-4 h-4" />
+                            {user.best_streak || 0} best streak
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="text-right">
+                        <p className="text-2xl font-bold text-purple-600">
+                          {user.total_points || 0}
+                        </p>
+                        <p className="text-sm text-gray-500">points</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
+📁 components/quiz/QuizSetup.js
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Play, Sparkles, Database, Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
+
+const subjects = [
+  { id: "math", name: "Mathematics", icon: "🔢" },
+  { id: "science", name: "Science", icon: "🔬" },
+  { id: "history", name: "History", icon: "📜" },
+  { id: "geography", name: "Geography", icon: "🌍" },
+  { id: "literature", name: "Literature", icon: "📚" },
+  { id: "general_knowledge", name: "General Knowledge", icon: "🧠" }
+];
+
+export default function QuizSetup({ onStart, loading }) {
+  const [config, setConfig] = useState({
+    subject: "math",
+    difficulty: "mixed",
+    questionCount: 10,
+    mode: "ai"
+  });
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+    >
+      <Card className="border-none shadow-2xl bg-white">
+        <CardHeader className="border-b bg-gradient-to-r from-purple-50 to-pink-50">
+          <CardTitle className="text-2xl">Setup Your Quiz</CardTitle>
+        </CardHeader>
+        <CardContent className="p-8 space-y-8">
+          {/* Subject Selection */}
+          <div>
+            <Label className="text-base font-semibold mb-4 block">Choose Subject</Label>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {subjects.map((subject) => (
+                <button
+                  key={subject.id}
+                  onClick={() => setConfig({ ...config, subject: subject.id })}
+                  className={`p-4 rounded-xl border-2 transition-all ${
+                    config.subject === subject.id
+                      ? 'border-purple-500 bg-purple-50 shadow-lg'
+                      : 'border-gray-200 hover:border-purple-300 hover:bg-gray-50'
+                  }`}
+                >
+                  <div className="text-3xl mb-2">{subject.icon}</div>
+                  <p className="font-medium text-sm">{subject.name}</p>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Difficulty */}
+          <div>
+            <Label className="text-base font-semibold mb-4 block">Difficulty Level</Label>
+            <RadioGroup
+              value={config.difficulty}
+              onValueChange={(value) => setConfig({ ...config, difficulty: value })}
+              className="space-y-3"
+            >
+              <div className="flex items-center space-x-3 p-4 rounded-xl border-2 border-gray-200 hover:border-purple-300 transition-all">
+                <RadioGroupItem value="easy" id="easy" />
+                <Label htmlFor="easy" className="flex-1 cursor-pointer">
+                  <span className="font-semibold">Easy</span>
+                  <p className="text-sm text-gray-500">Perfect for beginners</p>
+                </Label>
+              </div>
+              <div className="flex items-center space-x-3 p-4 rounded-xl border-2 border-gray-200 hover:border-purple-300 transition-all">
+                <RadioGroupItem value="medium" id="medium" />
+                <Label htmlFor="medium" className="flex-1 cursor-pointer">
+                  <span className="font-semibold">Medium</span>
+                  <p className="text-sm text-gray-500">Good challenge for most</p>
+                </Label>
+              </div>
+              <div className="flex items-center space-x-3 p-4 rounded-xl border-2 border-gray-200 hover:border-purple-300 transition-all">
+                <RadioGroupItem value="hard" id="hard" />
+                <Label htmlFor="hard" className="flex-1 cursor-pointer">
+                  <span className="font-semibold">Hard</span>
+                  <p className="text-sm text-gray-500">For the experts</p>
+                </Label>
+              </div>
+              <div className="flex items-center space-x-3 p-4 rounded-xl border-2 border-gray-200 hover:border-purple-300 transition-all">
+                <RadioGroupItem value="mixed" id="mixed" />
+                <Label htmlFor="mixed" className="flex-1 cursor-pointer">
+                  <span className="font-semibold">Mixed</span>
+                  <p className="text-sm text-gray-500">All difficulty levels</p>
+                </Label>
+              </div>
+            </RadioGroup>
+          </div>
+
+          {/* Number of Questions */}
+          <div>
+            <Label htmlFor="count" className="text-base font-semibold mb-4 block">
+              Number of Questions
+            </Label>
+            <Select
+              value={config.questionCount.toString()}
+              onValueChange={(value) => setConfig({ ...config, questionCount: parseInt(value) })}
+            >
+              <SelectTrigger id="count" className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="5">5 Questions (Quick)</SelectItem>
+                <SelectItem value="10">10 Questions (Standard)</SelectItem>
+                <SelectItem value="15">15 Questions (Extended)</SelectItem>
+                <SelectItem value="20">20 Questions (Marathon)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Question Source */}
+          <div>
+            <Label className="text-base font-semibold mb-4 block">Question Source</Label>
+            <RadioGroup
+              value={config.mode}
+              onValueChange={(value) => setConfig({ ...config, mode: value })}
+              className="space-y-3"
+            >
+              <div className="flex items-center space-x-3 p-4 rounded-xl border-2 border-gray-200 hover:border-purple-300 transition-all">
+                <RadioGroupItem value="ai" id="ai" />
+                <Label htmlFor="ai" className="flex-1 cursor-pointer">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-purple-600" />
+                    <span className="font-semibold">AI Generated</span>
+                  </div>
+                  <p className="text-sm text-gray-500">Fresh questions created by AI</p>
+                </Label>
+              </div>
+              <div className="flex items-center space-x-3 p-4 rounded-xl border-2 border-gray-200 hover:border-purple-300 transition-all">
+                <RadioGroupItem value="existing" id="existing" />
+                <Label htmlFor="existing" className="flex-1 cursor-pointer">
+                  <div className="flex items-center gap-2">
+                    <Database className="w-4 h-4 text-blue-600" />
+                    <span className="font-semibold">Existing Database</span>
+                  </div>
+                  <p className="text-sm text-gray-500">Use uploaded questions</p>
+                </Label>
+              </div>
+            </RadioGroup>
+          </div>
+
+          <Button
+            onClick={() => onStart(config)}
+            disabled={loading}
+            size="lg"
+            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-lg font-semibold"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                Loading Questions...
+              </>
+            ) : (
+              <>
+                <Play className="w-5 h-5 mr-2" />
+                Start Quiz
+              </>
+            )}
+          </Button>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+}
+📁 components/quiz/QuestionCard.js
+import React from "react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { CheckCircle2, XCircle, Lightbulb } from "lucide-react";
+import { motion } from "framer-motion";
+
+export default function QuestionCard({ question, onAnswer, showExplanation, selectedAnswer }) {
+  const isCorrect = selectedAnswer === question.correct_answer;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.3 }}
+    >
+      <Card className="border-none shadow-2xl bg-white overflow-hidden">
+        <div className="h-2 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500" />
+        
+        <CardHeader className="p-8 bg-gradient-to-br from-purple-50 to-pink-50">
+          <div className="flex items-start justify-between gap-4 mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 leading-tight">
+              {question.question}
+            </h2>
+            <Badge variant="secondary" className="capitalize shrink-0">
+              {question.difficulty || 'medium'}
+            </Badge>
+          </div>
+        </CardHeader>
+
+        <CardContent className="p-8 space-y-4">
+          {question.options.map((option, index) => {
+            const isSelected = selectedAnswer === option;
+            const isCorrectAnswer = option === question.correct_answer;
+            
+            let buttonClasses = "w-full p-6 rounded-xl border-2 text-left transition-all duration-300 font-medium ";
+            
+            if (showExplanation) {
+              if (isCorrectAnswer) {
+                buttonClasses += "border-green-500 bg-green-50 text-green-900";
+              } else if (isSelected && !isCorrect) {
+                buttonClasses += "border-red-500 bg-red-50 text-red-900";
+              } else {
+                buttonClasses += "border-gray-200 bg-gray-50 text-gray-400";
+              }
+            } else {
+              buttonClasses += "border-gray-200 hover:border-purple-400 hover:bg-purple-50 hover:shadow-lg active:scale-95";
+            }
+
+            return (
+              <motion.button
+                key={index}
+                onClick={() => !showExplanation && onAnswer(option)}
+                disabled={showExplanation}
+                className={buttonClasses}
+                whileHover={!showExplanation ? { scale: 1.02 } : {}}
+                whileTap={!showExplanation ? { scale: 0.98 } : {}}
+              >
+                <div className="flex items-center justify-between gap-4">
+                  <span className="text-lg">{option}</span>
+                  {showExplanation && isCorrectAnswer && (
+                    <CheckCircle2 className="w-6 h-6 text-green-600 shrink-0" />
+                  )}
+                  {showExplanation && isSelected && !isCorrect && (
+                    <XCircle className="w-6 h-6 text-red-600 shrink-0" />
+                  )}
+                </div>
+              </motion.button>
+            );
+          })}
+
+          {showExplanation && question.explanation && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-6 p-6 bg-blue-50 border-2 border-blue-200 rounded-xl"
+            >
+              <div className="flex items-start gap-3">
+                <Lightbulb className="w-6 h-6 text-blue-600 shrink-0 mt-1" />
+                <div>
+                  <h3 className="font-semibold text-blue-900 mb-2">Explanation</h3>
+                  <p className="text-blue-800">{question.explanation}</p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+}
+📁 components/quiz/QuizResults.js
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Trophy, Target, Clock, Home, PlayCircle, CheckCircle2, XCircle } from "lucide-react";
+import { motion } from "framer-motion";
+import confetti from "canvas-confetti";
+
+export default function QuizResults({ answers, score, questions, onPlayAgain, onBackHome }) {
+  React.useEffect(() => {
+    const correctCount = answers.filter(a => a.isCorrect).length;
+    const accuracy = (correctCount / answers.length) * 100;
+    
+    if (accuracy >= 80) {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+    }
+  }, []);
+
+  const correctCount = answers.filter(a => a.isCorrect).length;
+  const accuracy = Math.round((correctCount / answers.length) * 100);
+
+  return (
+    <div className="min-h-screen p-4 md:p-8">
+      <div className="max-w-4xl mx-auto space-y-6">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+        >
+          <Card className="border-none shadow-2xl bg-gradient-to-br from-purple-600 via-pink-600 to-blue-600 text-white overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+            <CardContent className="relative p-12 text-center">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: "spring" }}
+                className="w-24 h-24 mx-auto mb-6 bg-white/20 backdrop-blur rounded-full flex items-center justify-center"
+              >
+                <Trophy className="w-12 h-12" />
+              </motion.div>
+              <h1 className="text-4xl font-bold mb-4">Quiz Complete!</h1>
+              <p className="text-xl mb-8 text-white/90">Great job on finishing the quiz</p>
+              
+              <div className="grid grid-cols-3 gap-6 max-w-2xl mx-auto">
+                <div className="bg-white/20 backdrop-blur rounded-2xl p-6">
+                  <Target className="w-8 h-8 mx-auto mb-2" />
+                  <p className="text-3xl font-bold">{score}</p>
+                  <p className="text-sm text-white/80">Points Earned</p>
+                </div>
+                <div className="bg-white/20 backdrop-blur rounded-2xl p-6">
+                  <CheckCircle2 className="w-8 h-8 mx-auto mb-2" />
+                  <p className="text-3xl font-bold">{accuracy}%</p>
+                  <p className="text-sm text-white/80">Accuracy</p>
+                </div>
+                <div className="bg-white/20 backdrop-blur rounded-2xl p-6">
+                  <Clock className="w-8 h-8 mx-auto mb-2" />
+                  <p className="text-3xl font-bold">{correctCount}/{answers.length}</p>
+                  <p className="text-sm text-white/80">Correct</p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-4 justify-center mt-8">
+                <Button
+                  size="lg"
+                  variant="secondary"
+                  onClick={onPlayAgain}
+                  className="bg-white text-purple-600 hover:bg-white/90"
+                >
+                  <PlayCircle className="w-5 h-5 mr-2" />
+                  Play Again
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  onClick={onBackHome}
+                  className="border-white text-white hover:bg-white/10"
+                >
+                  <Home className="w-5 h-5 mr-2" />
+                  Back to Home
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        <Card className="border-none shadow-lg">
+          <CardHeader>
+            <CardTitle>Answer Review</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {answers.map((answer, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className={`p-6 rounded-xl border-2 ${
+                  answer.isCorrect
+                    ? 'bg-green-50 border-green-200'
+                    : 'bg-red-50 border-red-200'
+                }`}
+              >
+                <div className="flex items-start gap-4">
+                  <div className="shrink-0">
+                    {answer.isCorrect ? (
+                      <CheckCircle2 className="w-6 h-6 text-green-600" />
+                    ) : (
+                      <XCircle className="w-6 h-6 text-red-600" />
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-semibold mb-2">Question {index + 1}</p>
+                    <p className="text-gray-700 mb-3">{answer.question}</p>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Badge variant={answer.isCorrect ? "default" : "destructive"}>
+                          Your answer
+                        </Badge>
+                        <span className="text-sm">{answer.selectedAnswer || "No answer"}</span>
+                      </div>
+                      {!answer.isCorrect && (
+                        <div className="flex items-center gap-2">
+                          <Badge variant="default" className="bg-green-600">
+                            Correct answer
+                          </Badge>
+                          <span className="text-sm">{answer.correctAnswer}</span>
+                        </div>
+                      )}
+                    </div>
+                    {answer.isCorrect && (
+                      <Badge variant="secondary" className="mt-2">
+                        +{answer.points} points
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
+📦 Additional Notes
+Important: This code is designed for the base44 platform which provides:
+
+Entity SDK (@/entities/...)
+Integration SDK (@/integrations/...)
+Shadcn UI components (@/components/ui/...)
+Routing utilities (createPageUrl from @/utils)
+For local development outside base44, you'll need to:
+
+Set up a React app with React Router
+Install dependencies: shadcn/ui, lucide-react, framer-motion, canvas-confetti, date-fns
+Create mock implementations for the Entity SDK and Integrations
+Set up authentication/user management
+Configure a database backend
+The code is fully functional within the base44 ecosystem but requires adaptation for standalone deployment.
+
+2 hours ago
+what other requirements for adaption
+
+2 hours ago
+Revert this
+Base44 AI
+Base44
+
+Thought for 3s
+Complete Adaptation Requirements for Local Development
+🔧 Infrastructure & Backend
+1. Database Setup
+You'll need to set up a database and create tables for:
+
+quiz_questions - stores all quiz questions
+quiz_sessions - tracks completed quiz sessions
+users - user accounts with extended fields (total_points, streaks, achievements, etc.)
+Suggested Stack:
+
+PostgreSQL/MySQL for relational data
+Or Firebase/Supabase for easier setup
+2. Authentication System
+Replace User.me(), User.login(), User.logout() with:
+
+Firebase Auth
+Auth0
+Supabase Auth
+NextAuth.js (if using Next.js)
+Custom JWT-based auth
+Required Auth Features:
+
+User registration/login
+Session management
+Protected routes
+User profile storage
+3. API Layer
+Create REST/GraphQL APIs for:
+
+// Entity operations you need to implement:
+GET    /api/quiz-questions?subject=math&difficulty=easy
+POST   /api/quiz-questions (bulk create)
+GET    /api/quiz-sessions?user_id=xxx
+POST   /api/quiz-sessions
+GET    /api/users
+GET    /api/users/me
+PATCH  /api/users/me
+4. AI Integration Replacement
+The InvokeLLM integration needs replacement:
+
+Options:
+
+OpenAI API - GPT-4/3.5 for question generation
+Anthropic Claude API
+Google Gemini API
+Hugging Face API
+Implementation:
+
+// Replace InvokeLLM with:
+import OpenAI from 'openai';
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
+
+async function generateQuestions(config) {
+  const response = await openai.chat.completions.create({
+    model: "gpt-4",
+    messages: [{
+      role: "user",
+      content: `Generate ${config.questionCount} quiz questions...`
+    }],
+    response_format: { type: "json_object" }
+  });
+  
+  return JSON.parse(response.choices[0].message.content);
+}
+5. File Upload System
+Replace UploadFile integration:
+
+Options:
+
+AWS S3 + CloudFront
+Google Cloud Storage
+Cloudinary
+Firebase Storage
+Supabase Storage
+📦 Package Dependencies
+Install Required Packages:
+npm install react react-dom react-router-dom
+npm install lucide-react framer-motion canvas-confetti date-fns
+npm install @radix-ui/react-dialog @radix-ui/react-dropdown-menu
+npm install @radix-ui/react-label @radix-ui/react-radio-group
+npm install @radix-ui/react-select @radix-ui/react-progress
+npm install @radix-ui/react-alert-dialog @radix-ui/react-badge
+npm install tailwindcss postcss autoprefixer
+npm install class-variance-authority clsx tailwind-merge
+
+# For backend (if using Node.js):
+npm install express cors
+npm install pg # PostgreSQL
+# or
+npm install firebase-admin # Firebase
+# or  
+npm install @supabase/supabase-js # Supabase
+
+# For AI:
+npm install openai
+🔄 Code Adaptations Needed
+1. Replace Entity SDK
+Create a data service layer:
+
+// services/quizQuestionService.js
+export const QuizQuestion = {
+  async list() {
+    const response = await fetch('/api/quiz-questions');
+    return response.json();
+  },
+  
+  async filter(filters, orderBy, limit) {
+    const params = new URLSearchParams({
+      ...filters,
+      orderBy,
+      limit
+    });
+    const response = await fetch(`/api/quiz-questions?${params}`);
+    return response.json();
+  },
+  
+  async create(data) {
+    const response = await fetch('/api/quiz-questions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return response.json();
+  },
+  
+  async bulkCreate(questions) {
+    const response = await fetch('/api/quiz-questions/bulk', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(questions)
+    });
+    return response.json();
+  },
+  
+  schema() {
+    return {
+      // Return the JSON schema
+    };
+  }
+};
+
+// Similar for QuizSession and User entities
+2. Replace Routing Utility
+// utils/routing.js
+export function createPageUrl(pageName) {
+  const routes = {
+    'Home': '/',
+    'Quiz': '/quiz',
+    'Upload': '/upload',
+    'Leaderboard': '/leaderboard'
+  };
+  return routes[pageName] || '/';
+}
+3. Setup Shadcn UI
+npx shadcn-ui@latest init
+npx shadcn-ui@latest add button card badge alert
+npx shadcn-ui@latest add input textarea select radio-group
+npx shadcn-ui@latest add progress sidebar dialog
+4. Create Router Configuration
+// App.js or routes.js
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Layout from './Layout';
+import HomePage from './pages/Home';
+import QuizPage from './pages/Quiz';
+import UploadPage from './pages/Upload';
+import LeaderboardPage from './pages/Leaderboard';
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout><HomePage /></Layout>} />
+        <Route path="/quiz" element={<Layout><QuizPage /></Layout>} />
+        <Route path="/upload" element={<Layout><UploadPage /></Layout>} />
+        <Route path="/leaderboard" element={<Layout><LeaderboardPage /></Layout>} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+5. Update Import Paths
+Replace all base44-specific imports:
+
+// FROM:
+import { QuizQuestion } from "@/entities/QuizQuestion";
+import { InvokeLLM } from "@/integrations/Core";
+import { createPageUrl } from "@/utils";
+
+// TO:
+import { QuizQuestion } from "../services/quizQuestionService";
+import { generateQuestions } from "../services/aiService";
+import { createPageUrl } from "../utils/routing";
+🏗️ Project Structure
+quiz-app/
+├── public/
+├── src/
+│   ├── components/
+│   │   ├── ui/              # Shadcn components
+│   │   │   ├── button.jsx
+│   │   │   ├── card.jsx
+│   │   │   └── ...
+│   │   └── quiz/
+│   │       ├── QuizSetup.js
+│   │       ├── QuestionCard.js
+│   │       └── QuizResults.js
+│   ├── pages/
+│   │   ├── Home.js
+│   │   ├── Quiz.js
+│   │   ├── Upload.js
+│   │   └── Leaderboard.js
+│   ├── services/           # NEW - API/data layer
+│   │   ├── quizQuestionService.js
+│   │   ├── quizSessionService.js
+│   │   ├── userService.js
+│   │   └── aiService.js
+│   ├── utils/
+│   │   ├── routing.js
+│   │   └── auth.js        # NEW - Auth utilities
+│   ├── contexts/          # NEW - React contexts
+│   │   └── AuthContext.js
+│   ├── Layout.js
+│   ├── App.js
+│   └── index.js
+├── server/                 # NEW - Backend (optional if using serverless)
+│   ├── routes/
+│   │   ├── quizQuestions.js
+│   │   ├── quizSessions.js
+│   │   └── users.js
+│   ├── models/
+│   ├── middleware/
+│   └── server.js
+├── .env                    # Environment variables
+├── package.json
+└── tailwind.config.js
+🔐 Environment Variables
+Create .env file:
+
+# API Keys
+VITE_OPENAI_API_KEY=sk-...
+VITE_FIREBASE_API_KEY=...
+VITE_FIREBASE_AUTH_DOMAIN=...
+
+# Database (if not using Firebase/Supabase)
+DATABASE_URL=postgresql://user:pass@localhost:5432/quizapp
+
+# API endpoint
+VITE_API_URL=http://localhost:3000/api
+
+# Storage (if using cloud storage)
+AWS_ACCESS_KEY_ID=...
+AWS_SECRET_ACCESS_KEY=...
+AWS_BUCKET_NAME=...
+🎨 Tailwind Config
+Update tailwind.config.js:
+
+module.exports = {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,jsx,ts,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        // Add custom colors if needed
+      },
+      animation: {
+        // Add custom animations
+      }
+    },
+  },
+  plugins: [],
+}
+🚀 Deployment Considerations
+Frontend Options:
+Vercel (easiest for React)
+Netlify
+AWS Amplify
+GitHub Pages (static only)
+Backend Options:
+Vercel Serverless Functions
+AWS Lambda + API Gateway
+Google Cloud Functions
+Railway/Render (for Express backend)
+Supabase (backend-as-a-service)
+Database Options:
+Supabase (PostgreSQL + Auth + Storage)
+Firebase (NoSQL + Auth + Storage)
+PlanetScale (MySQL)
+Neon (Serverless PostgreSQL)
+🔒 Security Considerations
+API Key Protection
+
+Never expose API keys in frontend
+Use backend proxy for AI calls
+Authentication
+
+Implement proper session management
+Add CSRF protection
+Validate JWT tokens
+Rate Limiting
+
+Limit AI question generation
+Prevent quiz spam
+Input Validation
+
+Sanitize CSV/JSON uploads
+Validate question data
+📊 Monitoring & Analytics
+Consider adding:
+
+Sentry - Error tracking
+Google Analytics - User analytics
+LogRocket - Session replay
+Vercel Analytics - Performance monitoring
+🧪 Testing Setup
+npm install --save-dev jest @testing-library/react @testing-library/jest-dom
+npm install --save-dev vitest @vitest/ui
+Summary of Work Required:
+✅ Choose your stack (Firebase/Supabase vs custom backend)
+✅ Set up database with proper schema
+✅ Implement authentication
+✅ Create API layer (REST/GraphQL)
+✅ Replace AI integration (OpenAI/Claude API)
+✅ Set up file storage (if needed)
+✅ Install all packages and configure build tools
+✅ Update all imports to match new structure
+✅ Add environment variables
+✅ Deploy frontend and backend
+Estimated Time: 2-4 days for full adaptation depending on your chosen stack and experience level.
+
+Recommended Quick Start Path: Use Supabase (handles database + auth + storage) + Vercel (frontend hosting + serverless functions) + OpenAI API for fastest setup with minimal backend code.
+
+2 hours ago
+generate terminal commands to create all the files
+
+2 hours ago
+•
+see context
+Revert this
+Base44 AI
+Base44
+
+Thought for 2s
+Terminal Commands to Create Complete Project
+🚀 Quick Setup (One Command)
+# Complete project setup in one go
+mkdir quiz-app && cd quiz-app && \
+mkdir -p src/{components/{ui,quiz},pages,services,contexts,utils} server/{routes,models,middleware} public && \
+touch src/{App.jsx,main.jsx,index.css} && \
+touch src/Layout.js && \
+touch src/pages/{Home.js,Quiz.js,Upload.js,Leaderboard.js} && \
+touch src/components/quiz/{QuizSetup.js,QuestionCard.js,QuizResults.js} && \
+touch src/services/{quizQuestionService.js,quizSessionService.js,userService.js,aiService.js} && \
+touch src/contexts/AuthContext.js && \
+touch src/utils/{routing.js,auth.js} && \
+touch server/{server.js,config.js} && \
+touch server/routes/{quizQuestions.js,quizSessions.js,users.js,ai.js} && \
+touch server/models/{QuizQuestion.js,QuizSession.js,User.js} && \
+touch server/middleware/{auth.js,validation.js} && \
+touch {.env,.env.example,.gitignore,README.md} && \
+touch {package.json,vite.config.js,tailwind.config.js,postcss.config.js} && \
+echo "✅ Project structure created!"
+📝 Step-by-Step Commands
+1. Create Project Root
+mkdir quiz-app
+cd quiz-app
+2. Create Directory Structure
+# Frontend directories
+mkdir -p src/components/ui
+mkdir -p src/components/quiz
+mkdir -p src/pages
+mkdir -p src/services
+mkdir -p src/contexts
+mkdir -p src/utils
+mkdir -p public
+
+# Backend directories
+mkdir -p server/routes
+mkdir -p server/models
+mkdir -p server/middleware
+mkdir -p server/config
+3. Create Core Files
+# Root config files
+touch package.json
+touch vite.config.js
+touch tailwind.config.js
+touch postcss.config.js
+touch .env
+touch .env.example
+touch .gitignore
+touch README.md
+touch jsconfig.json
+4. Create Frontend Files
+# Main app files
+touch src/main.jsx
+touch src/App.jsx
+touch src/index.css
+touch src/Layout.js
+
+# Page files
+touch src/pages/Home.js
+touch src/pages/Quiz.js
+touch src/pages/Upload.js
+touch src/pages/Leaderboard.js
+
+# Component files
+touch src/components/quiz/QuizSetup.js
+touch src/components/quiz/QuestionCard.js
+touch src/components/quiz/QuizResults.js
+
+# Service files
+touch src/services/quizQuestionService.js
+touch src/services/quizSessionService.js
+touch src/services/userService.js
+touch src/services/aiService.js
+
+# Context files
+touch src/contexts/AuthContext.js
+
+# Utility files
+touch src/utils/routing.js
+touch src/utils/auth.js
+touch src/utils/cn.js
+5. Create Backend Files
+# Server main files
+touch server/server.js
+touch server/config.js
+
+# Route files
+touch server/routes/quizQuestions.js
+touch server/routes/quizSessions.js
+touch server/routes/users.js
+touch server/routes/ai.js
+
+# Model files
+touch server/models/QuizQuestion.js
+touch server/models/QuizSession.js
+touch server/models/User.js
+
+# Middleware files
+touch server/middleware/auth.js
+touch server/middleware/validation.js
+touch server/middleware/errorHandler.js
+6. Create Shadcn UI Component Files
+touch src/components/ui/button.jsx
+touch src/components/ui/card.jsx
+touch src/components/ui/badge.jsx
+touch src/components/ui/input.jsx
+touch src/components/ui/textarea.jsx
+touch src/components/ui/select.jsx
+touch src/components/ui/label.jsx
+touch src/components/ui/radio-group.jsx
+touch src/components/ui/progress.jsx
+touch src/components/ui/alert.jsx
+touch src/components/ui/sidebar.jsx
+📦 Initialize Package Files
+Create package.json
+cat > package.json << 'EOF'
+{
+  "name": "quiz-app",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "server": "node server/server.js",
+    "server:dev": "nodemon server/server.js"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.0",
+    "lucide-react": "^0.294.0",
+    "framer-motion": "^10.16.16",
+    "canvas-confetti": "^1.9.2",
+    "date-fns": "^3.0.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.0.0",
+    "tailwind-merge": "^2.2.0",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "openai": "^4.20.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.0.8",
+    "tailwindcss": "^3.4.0",
+    "postcss": "^8.4.32",
+    "autoprefixer": "^10.4.16",
+    "nodemon": "^3.0.2"
+  }
+}
+EOF
+Create vite.config.js
+cat > vite.config.js << 'EOF'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+});
+EOF
+Create tailwind.config.js
+cat > tailwind.config.js << 'EOF'
+/** @type {import('tailwindcss').Config} */
+export default {
+  darkMode: ["class"],
+  content: [
+    './pages/**/*.{js,jsx}',
+    './components/**/*.{js,jsx}',
+    './app/**/*.{js,jsx}',
+    './src/**/*.{js,jsx}',
+  ],
+  theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
+    extend: {
+      colors: {
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+      keyframes: {
+        "accordion-down": {
+          from: { height: 0 },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: 0 },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+      },
+    },
+  },
+  plugins: [require("tailwindcss-animate")],
+}
+EOF
+Create postcss.config.js
+cat > postcss.config.js << 'EOF'
+export default {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+}
+EOF
+Create jsconfig.json
+cat > jsconfig.json << 'EOF'
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
+EOF
+Create .gitignore
+cat > .gitignore << 'EOF'
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+
+# Production
+build/
+dist/
+
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local
+.vercel
+.netlify
+EOF
+Create .env.example
+cat > .env.example << 'EOF'
+# API Keys
+VITE_OPENAI_API_KEY=your_openai_api_key_here
+VITE_API_URL=http://localhost:3000/api
+
+# Database (choose one)
+# For PostgreSQL
+DATABASE_URL=postgresql://user:password@localhost:5432/quizapp
+
+# For Firebase
+VITE_FIREBASE_API_KEY=your_firebase_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your-app.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your-project-id
+
+# For Supabase
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_key
+
+# Server
+PORT=3000
+NODE_ENV=development
+JWT_SECRET=your_jwt_secret_here
+EOF
+Create README.md
+cat > README.md << 'EOF'
+# QuizMaster App
+
+A gamified quiz application with AI-generated questions and manual upload support.
+
+## Features
+
+- 🎮 Interactive quiz gameplay with timer
+- 🤖 AI-generated questions across multiple subjects
+- 📊 Progress tracking and leaderboards
+- 🏆 Achievement system with badges and streaks
+- 📤 Manual question upload via JSON/CSV
+- 📱 Responsive design for mobile and desktop
+
+## Tech Stack
+
+- **Frontend:** React, Vite, TailwindCSS, Framer Motion
+- **Backend:** Express.js (or serverless functions)
+- **Database:** PostgreSQL/Firebase/Supabase
+- **AI:** OpenAI API
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+ 
+- npm or yarn
+- OpenAI API key (for AI question generation)
+
+### Installation
+
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+Copy .env.example to .env and fill in your API keys:
+
+cp .env.example .env
+Start the development server:
+
+npm run dev
+(Optional) Start the backend server:
+
+npm run server:dev
+Project Structure
+quiz-app/
+├── src/                  # Frontend source
+│   ├── components/       # React components
+│   ├── pages/           # Page components
+│   ├── services/        # API services
+│   └── utils/           # Utility functions
+├── server/              # Backend API
+│   ├── routes/          # API routes
+│   ├── models/          # Data models
+│   └── middleware/      # Express middleware
+└── public/              # Static assets
+Available Scripts
+npm run dev - Start frontend development server
+npm run build - Build for production
+npm run preview - Preview production build
+npm run server - Start backend server
+npm run server:dev - Start backend with auto-reload
+Deployment
+See DEPLOYMENT.md for deployment instructions.
+
+License
+MIT EOF
+
+
+---
+
+## 🎯 Create Initial Source Files
+
+### Create src/main.jsx
+```bash
+cat > src/main.jsx << 'EOF'
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App'
+import './index.css'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)
+EOF
+Create src/App.jsx
+cat > src/App.jsx << 'EOF'
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Layout from './Layout';
+import HomePage from './pages/Home';
+import QuizPage from './pages/Quiz';
+import UploadPage from './pages/Upload';
+import LeaderboardPage from './pages/Leaderboard';
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout><HomePage /></Layout>} />
+        <Route path="/quiz" element={<Layout><QuizPage /></Layout>} />
+        <Route path="/upload" element={<Layout><UploadPage /></Layout>} />
+        <Route path="/leaderboard" element={<Layout><LeaderboardPage /></Layout>} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;
+EOF
+Create src/index.css
+cat > src/index.css << 'EOF'
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+EOF
+Create src/utils/routing.js
+cat > src/utils/routing.js << 'EOF'
+export function createPageUrl(pageName) {
+  const routes = {
+    'Home': '/',
+    'Quiz': '/quiz',
+    'Upload': '/upload',
+    'Leaderboard': '/leaderboard'
+  };
+  return routes[pageName] || '/';
+}
+EOF
+Create src/utils/cn.js
+cat > src/utils/cn.js << 'EOF'
+import { clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+export function cn(...inputs) {
+  return twMerge(clsx(inputs))
+}
+EOF
+Create index.html
+cat > index.html << 'EOF'
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href__="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QuizMaster - Challenge Yourself!</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+EOF
+🚀 Final Setup Commands
+# Install dependencies
+npm install
+
+# Install additional Tailwind dependencies
+npm install -D tailwindcss-animate
+
+# Install Shadcn UI (interactive)
+npx shadcn-ui@latest init
+
+# Add Shadcn components
+npx shadcn-ui@latest add button
+npx shadcn-ui@latest add card
+npx shadcn-ui@latest add badge
+npx shadcn-ui@latest add input
+npx shadcn-ui@latest add textarea
+npx shadcn-ui@latest add select
+npx shadcn-ui@latest add label
+npx shadcn-ui@latest add radio-group
+npx shadcn-ui@latest add progress
+npx shadcn-ui@latest add alert
+npx shadcn-ui@latest add sidebar
+
+# Create .env from example
+cp .env.example .env
+
+# Start development server
+npm run dev
+📊 Verify Structure
+# View the complete tree
+tree -I 'node_modules|dist|build' -L 3
+
+# Or without tree command:
+find . -not -path '*/node_modules/*' -not -path '*/dist/*' -not -path '*/.git/*' -type f | sort
+✅ Complete Setup Script
+Save this as setup.sh:
+
+#!/bin/bash
+
+echo "🚀 Setting up QuizMaster App..."
+
+# Create project
+mkdir quiz-app && cd quiz-app
+
+# Create all directories
+mkdir -p src/{components/{ui,quiz},pages,services,contexts,utils}
+mkdir -p server/{routes,models,middleware,config}
+mkdir -p public
+
+# Create all files
+touch src/{main.jsx,App.jsx,index.css,Layout.js}
+touch src/pages/{Home.js,Quiz.js,Upload.js,Leaderboard.js}
+touch src/components/quiz/{QuizSetup.js,QuestionCard.js,QuizResults.js}
+touch src/services/{quizQuestionService.js,quizSessionService.js,userService.js,aiService.js}
+touch src/contexts/AuthContext.js
+touch src/utils/{routing.js,auth.js,cn.js}
+touch server/{server.js,config.js}
+touch server/routes/{quizQuestions.js,quizSessions.js,users.js,ai.js}
+touch server/models/{QuizQuestion.js,QuizSession.js,User.js}
+touch server/middleware/{auth.js,validation.js,errorHandler.js}
+touch {.env,.env.example,.gitignore,README.md,index.html}
+touch {package.json,vite.config.js,tailwind.config.js,postcss.config.js,jsconfig.json}
+
+echo "✅ Project structure created!"
+echo "📦 Now run the configuration commands to set up package.json and configs"
+echo "📝 Then run: npm install && npm run dev"
+Make it executable and run:
+
+chmod +x setup.sh
+./setup.sh
+Now you have the complete project structure ready! Next, you'll need to copy the actual code content into each file from the previous message.
