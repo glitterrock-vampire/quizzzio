@@ -4,21 +4,35 @@ import { config } from '../config.js';
 
 const router = express.Router();
 
-const openai = new OpenAI({
-  apiKey: config.openai.apiKey
-});
+// Lazy initialization of OpenAI client
+let openai = null;
+
+function getOpenAIClient() {
+  if (!openai && config.openai.apiKey) {
+    openai = new OpenAI({
+      apiKey: config.openai.apiKey
+    });
+  }
+  return openai;
+}
+
+function hasOpenAIConfigured() {
+  return !!(config.openai.apiKey && getOpenAIClient());
+}
 
 // Generate quiz questions using AI
 router.post('/generate-questions', async (req, res, next) => {
   try {
     const { subject, questionCount, difficulty } = req.body;
     
-    if (!config.openai.apiKey) {
-      return res.status(500).json({ 
+    if (!hasOpenAIConfigured()) {
+      return res.status(500).json({
         error: 'OpenAI API key not configured',
         message: 'Please add OPENAI_API_KEY to your .env file'
       });
     }
+
+    const client = getOpenAIClient();
 
     const difficultyText = difficulty === "mixed" 
       ? "a mix of easy, medium, and hard questions"
@@ -47,7 +61,7 @@ Return a JSON object with this exact structure:
   ]
 }`;
 
-    const response = await openai.chat.completions.create({
+    const response = await client.chat.completions.create({
       model: "gpt-4",
       messages: [{
         role: "system",
@@ -88,26 +102,26 @@ Return a JSON object with this exact structure:
     }
     
     next(error);
-  }
 });
 
 // Test AI connection
 router.get('/test', async (req, res) => {
   try {
-    if (!config.openai.apiKey) {
-      return res.json({ 
+    if (!hasOpenAIConfigured()) {
+      return res.json({
         status: 'not_configured',
         message: 'OpenAI API key not set'
       });
     }
 
-    const response = await openai.chat.completions.create({
+    const client = getOpenAIClient();
+    const response = await client.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: "Say 'Hello'" }],
       max_tokens: 10
     });
 
-    res.json({ 
+    res.json({
       status: 'connected',
       message: 'OpenAI API is working',
       response: response.choices[0].message.content
