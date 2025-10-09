@@ -37,7 +37,25 @@ app.use(helmet({
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, etc.)
+    if (!origin) return callback(null, true);
+
+    const allowedOrigins = [
+      'http://localhost:5173',      // Development
+      'http://localhost:3000',      // Alternative dev port
+      'https://quizzzio.onrender.com', // Production Render
+      'https://quizzzio.vercel.app',   // Production Vercel
+      process.env.FRONTEND_URL       // Environment variable
+    ].filter(Boolean);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log('Blocked CORS request from origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 
