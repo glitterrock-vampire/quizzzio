@@ -5,7 +5,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # Production builds
-dist/
+# dist/  # Commented out to allow deployment of built files
 build/
 
 # Environment variables
