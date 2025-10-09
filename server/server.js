@@ -147,12 +147,27 @@ if (process.env.NODE_ENV === 'production') {
   }
 }
 
-// 404 handler for API routes
-app.use('/api', (req, res) => {
+// 404 handler for API routes (only for actual API requests, not preflight)
+app.use('/api', (req, res, next) => {
+  // Allow preflight OPTIONS requests to pass through
+  if (req.method === 'OPTIONS') {
+    return next();
+  }
+
+  // Only return 404 for actual API requests that don't match routes
   res.status(404).json({
     error: 'Route not found',
     path: req.path,
-    method: req.method
+    method: req.method,
+    availableRoutes: [
+      'POST /api/auth/login',
+      'POST /api/auth/register',
+      'GET /api/auth/user',
+      'POST /api/auth/change-password',
+      'GET /api/quiz-questions',
+      'POST /api/quiz-sessions',
+      'GET /api/users/debug'
+    ]
   });
 });
 
