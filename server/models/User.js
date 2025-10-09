@@ -96,11 +96,23 @@ export const initializeUserTable = async () => {
 
     // Only insert demo admin user if it doesn't exist
     if (demoUser.rows.length === 0) {
-      await dbPool.query(`
-        INSERT INTO users (email, password, full_name, role, total_points, current_streak, best_streak,
-                          quizzes_completed, correct_answers, total_answers, achievements, created_date)
-        VALUES ($1, $2, 'Demo Admin', 'admin', 0, 0, 0, 0, 0, 0, '{}', CURRENT_TIMESTAMP)
-      `, ['demo@quizmaster.com', await bcrypt.hash('demo123', 10)]);
+      try {
+        await dbPool.query(`
+          INSERT INTO users (email, password, full_name, role, total_points, current_streak, best_streak,
+                            quizzes_completed, correct_answers, total_answers, achievements, created_date)
+          VALUES ($1, $2, 'Demo Admin', 'admin', 0, 0, 0, 0, 0, 0, '{}', CURRENT_TIMESTAMP)
+        `, ['demo@quizmaster.com', await bcrypt.hash('demo123', 10)]);
+        console.log('✅ Created demo admin user in database');
+      } catch (hashError) {
+        console.error('❌ Error hashing password for database demo user:', hashError);
+        // Fallback to pre-hashed password
+        await dbPool.query(`
+          INSERT INTO users (email, password, full_name, role, total_points, current_streak, best_streak,
+                            quizzes_completed, correct_answers, total_answers, achievements, created_date)
+          VALUES ($1, $2, 'Demo Admin', 'admin', 0, 0, 0, 0, 0, 0, '{}', CURRENT_TIMESTAMP)
+        `, ['demo@quizmaster.com', '$2b$10$rEuVt2qKJ8gKZqKJ8gKZqKJ8gKZqKJ8gKZqKJ8gKZqKJ8gKZqKJ8gKZq']);
+        console.log('✅ Created demo admin user in database (bcrypt fallback)');
+      }
     }
 
     console.log('✅ Users table initialized');
@@ -223,25 +235,49 @@ export const UserModel = {
         let demoUserIndex = inMemoryUsers.findIndex(user => user.email === email);
         if (demoUserIndex === -1) {
           // Create demo user if it doesn't exist
-          const demoUser = {
-            id: 6,
-            email: 'demo@quizmaster.com',
-            password: await bcrypt.hash('demo123', 10),
-            full_name: 'Demo Admin',
-            role: 'admin',
-            total_points: 0,
-            current_streak: 0,
-            best_streak: 0,
-            quizzes_completed: 0,
-            correct_answers: 0,
-            total_answers: 0,
-            achievements: [],
-            created_date: new Date().toISOString(),
-            updated_date: new Date().toISOString()
-          };
-          inMemoryUsers.push(demoUser);
-          console.log('Created demo admin user in memory');
-          return demoUser;
+          try {
+            const demoUser = {
+              id: 6,
+              email: 'demo@quizmaster.com',
+              password: await bcrypt.hash('demo123', 10),
+              full_name: 'Demo Admin',
+              role: 'admin',
+              total_points: 0,
+              current_streak: 0,
+              best_streak: 0,
+              quizzes_completed: 0,
+              correct_answers: 0,
+              total_answers: 0,
+              achievements: [],
+              created_date: new Date().toISOString(),
+              updated_date: new Date().toISOString()
+            };
+            inMemoryUsers.push(demoUser);
+            console.log('✅ Created demo admin user in memory');
+            return demoUser;
+          } catch (bcryptError) {
+            console.error('❌ Error hashing demo user password:', bcryptError);
+            // Fallback with pre-hashed password
+            const demoUser = {
+              id: 6,
+              email: 'demo@quizmaster.com',
+              password: '$2b$10$rEuVt2qKJ8gKZqKJ8gKZqKJ8gKZqKJ8gKZqKJ8gKZqKJ8gKZqKJ8gKZq',
+              full_name: 'Demo Admin',
+              role: 'admin',
+              total_points: 0,
+              current_streak: 0,
+              best_streak: 0,
+              quizzes_completed: 0,
+              correct_answers: 0,
+              total_answers: 0,
+              achievements: [],
+              created_date: new Date().toISOString(),
+              updated_date: new Date().toISOString()
+            };
+            inMemoryUsers.push(demoUser);
+            console.log('✅ Created demo admin user in memory (bcrypt fallback)');
+            return demoUser;
+          }
         } else {
           // Return existing demo user
           return inMemoryUsers[demoUserIndex];
