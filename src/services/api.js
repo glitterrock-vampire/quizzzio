@@ -1,10 +1,11 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
-// Debug logging in development
-if (import.meta.env.DEV) {
-  console.log('API_BASE_URL:', API_BASE_URL);
-  console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
-}
+// Debug logging in development and production
+console.log('🔧 API Configuration:');
+console.log('  VITE_API_URL:', import.meta.env.VITE_API_URL);
+console.log('  API_BASE_URL:', API_BASE_URL);
+console.log('  Environment:', import.meta.env.MODE);
+console.log('  Production:', import.meta.env.PROD);
 
 async function request(endpoint, options = {}) {
   const headers = {
