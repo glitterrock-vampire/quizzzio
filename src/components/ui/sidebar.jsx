@@ -98,12 +98,13 @@ const SidebarMenuItem = React.forwardRef(({ className, ...props }, ref) => {
 });
 SidebarMenuItem.displayName = "SidebarMenuItem";
 
-const SidebarMenuButton = React.forwardRef(({ className, ...props }, ref) => {
+const SidebarMenuButton = React.forwardRef(({ className, isActive, ...props }, ref) => {
   return (
     <button
       ref={ref}
       className={cn(
         "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-medium hover:bg-accent hover:text-accent-foreground",
+        isActive && "bg-purple-50 text-purple-700 hover:bg-purple-100",
         className
       )}
       {...props}

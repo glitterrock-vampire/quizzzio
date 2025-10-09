@@ -15,7 +15,7 @@ import { config, dbPool } from './config.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = config.port;
 
 // Security middleware
 app.use(helmet({
@@ -67,6 +67,29 @@ app.use('/api/quiz-sessions', quizSessionsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/ai', aiRouter);
+
+// Root API endpoint
+app.get('/api', (req, res) => {
+  res.json({
+    message: 'Welcome to the QuizApp API',
+    version: process.env.npm_package_version || '1.0.0',
+    environment: process.env.NODE_ENV || 'development',
+    endpoints: {
+      auth: {
+        login: 'POST /api/auth/login',
+        register: 'POST /api/auth/register',
+        user: 'GET /api/auth/user',
+        logout: 'POST /api/auth/logout'
+      },
+      users: 'GET /api/users',
+      quizQuestions: 'GET /api/quiz-questions',
+      quizSessions: 'GET /api/quiz-sessions',
+      ai: 'POST /api/ai',
+      health: 'GET /api/health'
+    },
+    documentation: 'https://github.com/yourusername/quizapp/docs/api.md'
+  });
+});
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

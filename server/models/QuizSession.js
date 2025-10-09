@@ -59,41 +59,54 @@ export const QuizSessionModel = {
 
     try {
       const result = await dbPool.query('SELECT * FROM quiz_sessions WHERE id = $1', [id]);
-
-      if (result.rows.length === 0) return null;
-
-      return result.rows[0];
+      return result.rows[0] || null;
     } catch (error) {
       console.error('Error finding quiz session by ID:', error);
       return null;
     }
   },
 
-  // Find by user
-  async findByUser(userId, limit = 10) {
+  // Find by user with pagination
+  async findByUserWithPagination(userId, limit = 10, offset = 0) {
     if (!dbPool) {
-      return [];
+      return { rows: [], count: 0 };
     }
 
     try {
-      const result = await dbPool.query(`
-        SELECT * FROM quiz_sessions
-        WHERE user_id = $1
-        ORDER BY created_date DESC
-        LIMIT $2
-      `, [userId, limit]);
-
-      return result.rows;
+      // Get total count
+      const countResult = await dbPool.query(
+        'SELECT COUNT(*) FROM quiz_sessions WHERE user_id = $1',
+        [userId]
+      );
+      
+      // Get paginated results
+      const result = await dbPool.query(
+        `SELECT * FROM quiz_sessions 
+         WHERE user_id = $1 
+         ORDER BY COALESCE(completed_at, created_date) DESC 
+         LIMIT $2 OFFSET $3`,
+        [userId, limit, offset]
+      );
+      
+      return {
+        rows: result.rows,
+        count: parseInt(countResult.rows[0].count, 10)
+      };
     } catch (error) {
-      console.error('Error finding quiz sessions by user:', error);
-      return [];
+      console.error('Error finding quiz sessions by user with pagination:', error);
+      return { rows: [], count: 0 };
     }
+  },
+
+  // Find by user (backward compatibility)
+  async findByUser(userId, limit = 10) {
+    const { rows } = await this.findByUserWithPagination(userId, limit, 0);
+    return rows;
   },
 
   // Create session
   async create(data) {
     if (!dbPool) {
-      throw new Error('Database not available');
     }
 
     try {
@@ -168,6 +181,37 @@ export const QuizSessionModel = {
     }
   },
 
+  // Update leaderboard for a user
+  async updateLeaderboard(userId) {
+    if (!dbPool) return;
+
+    try {
+      await dbPool.query(`
+        INSERT INTO leaderboard (user_id, username, total_score, quizzes_completed, correct_answers, total_answers)
+        SELECT 
+          u.id as user_id,
+          u.email as username,
+          COALESCE(SUM(qs.score), 0) as total_score,
+          COUNT(qs.id) as quizzes_completed,
+          u.correct_answers,
+          u.total_answers
+        FROM users u
+        LEFT JOIN quiz_sessions qs ON u.id = qs.user_id
+        WHERE u.id = $1
+        GROUP BY u.id, u.email, u.correct_answers, u.total_answers
+        ON CONFLICT (user_id) 
+        DO UPDATE SET
+          total_score = EXCLUDED.total_score,
+          quizzes_completed = EXCLUDED.quizzes_completed,
+          correct_answers = EXCLUDED.correct_answers,
+          total_answers = EXCLUDED.total_answers,
+          last_updated = CURRENT_TIMESTAMP
+      `, [userId]);
+    } catch (error) {
+      console.error('Error updating leaderboard:', error);
+    }
+  },
+
   // Get leaderboard
   async getLeaderboard(limit = 10) {
     if (!dbPool) {
@@ -175,22 +219,58 @@ export const QuizSessionModel = {
     }
 
     try {
+      // First ensure leaderboard is up to date for all users
+      await dbPool.query(`
+        WITH user_stats AS (
+          SELECT 
+            u.id as user_id,
+            u.email as username,
+            COALESCE(SUM(qs.score), 0) as total_score,
+            COUNT(qs.id) as quizzes_completed,
+            u.correct_answers,
+            u.total_answers
+          FROM users u
+          LEFT JOIN quiz_sessions qs ON u.id = qs.user_id
+          GROUP BY u.id, u.email, u.correct_answers, u.total_answers
+        )
+        INSERT INTO leaderboard (user_id, username, total_score, quizzes_completed, correct_answers, total_answers)
+        SELECT user_id, username, total_score, quizzes_completed, correct_answers, total_answers
+        FROM user_stats
+        ON CONFLICT (user_id) 
+        DO UPDATE SET
+          total_score = EXCLUDED.total_score,
+          quizzes_completed = EXCLUDED.quizzes_completed,
+          correct_answers = EXCLUDED.correct_answers,
+          total_answers = EXCLUDED.total_answers,
+          last_updated = CURRENT_TIMESTAMP
+        WHERE leaderboard.last_updated < NOW() - INTERVAL '1 hour';
+      `);
+
+      // Now fetch the leaderboard
       const result = await dbPool.query(`
-        SELECT
+        SELECT 
           user_id,
-          SUM(score) as total_score,
-          COUNT(*) as sessions_count
-        FROM quiz_sessions
-        GROUP BY user_id
-        HAVING SUM(score) > 0
-        ORDER BY total_score DESC
+          username,
+          total_score,
+          quizzes_completed,
+          correct_answers,
+          total_answers,
+          ROUND((correct_answers::DECIMAL / NULLIF(total_answers, 0)) * 100, 0) as accuracy
+        FROM leaderboard
+        WHERE total_score > 0
+        ORDER BY total_score DESC, accuracy DESC
         LIMIT $1
       `, [limit]);
 
-      return result.rows.map(row => ({
+      return result.rows.map((row, index) => ({
+        rank: index + 1,
         user_id: row.user_id,
+        username: row.username,
         total_score: parseInt(row.total_score),
-        sessions_count: parseInt(row.sessions_count)
+        quizzes_completed: parseInt(row.quizzes_completed),
+        correct_answers: parseInt(row.correct_answers),
+        total_answers: parseInt(row.total_answers),
+        accuracy: row.accuracy ? parseInt(row.accuracy) : 0
       }));
     } catch (error) {
       console.error('Error getting leaderboard:', error);

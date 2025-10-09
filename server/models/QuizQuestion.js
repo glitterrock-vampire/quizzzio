@@ -1,5 +1,9 @@
 import { dbPool } from '../config.js';
 
+// In-memory storage for development
+let inMemoryQuestions = [];
+let nextId = 1;
+
 // Initialize database table
 export const initializeQuizQuestionTable = async () => {
   if (!dbPool) {
@@ -32,231 +36,331 @@ export const initializeQuizQuestionTable = async () => {
 export const QuizQuestionModel = {
   // Find all with filters
   async find(filters = {}, options = {}) {
-    if (!dbPool) {
-      return [];
-    }
+    if (dbPool) {
+      // Database implementation
+      try {
+        let whereClause = '';
+        let params = [];
+        let paramCount = 1;
 
-    try {
-      let whereClause = '';
-      let params = [];
-      let paramCount = 1;
+        if (filters.subject) {
+          whereClause += ` WHERE subject = $${paramCount}`;
+          params.push(filters.subject);
+          paramCount++;
+        }
+
+        if (filters.difficulty) {
+          if (whereClause) {
+            whereClause += ` AND difficulty = $${paramCount}`;
+          } else {
+            whereClause += ` WHERE difficulty = $${paramCount}`;
+          }
+          params.push(filters.difficulty);
+          paramCount++;
+        }
+
+        let orderClause = '';
+        if (options.orderBy) {
+          const field = options.orderBy.replace('-', '');
+          const desc = options.orderBy.startsWith('-');
+          orderClause = ` ORDER BY ${field} ${desc ? 'DESC' : 'ASC'}`;
+        }
+
+        let limitClause = '';
+        if (options.limit) {
+          limitClause = ` LIMIT $${paramCount}`;
+          params.push(options.limit);
+        }
+
+        const query = `SELECT * FROM quiz_questions${whereClause}${orderClause}${limitClause}`;
+        const result = await dbPool.query(query, params);
+
+        return result.rows;
+      } catch (error) {
+        console.error('Error finding quiz questions:', error);
+        return [];
+      }
+    } else {
+      // In-memory implementation
+      let results = [...inMemoryQuestions];
 
       if (filters.subject) {
-        whereClause += ` WHERE subject = $${paramCount}`;
-        params.push(filters.subject);
-        paramCount++;
+        results = results.filter(q => q.subject === filters.subject);
       }
 
       if (filters.difficulty) {
-        if (whereClause) {
-          whereClause += ` AND difficulty = $${paramCount}`;
-        } else {
-          whereClause += ` WHERE difficulty = $${paramCount}`;
-        }
-        params.push(filters.difficulty);
-        paramCount++;
+        results = results.filter(q => q.difficulty === filters.difficulty);
       }
 
-      let orderClause = '';
       if (options.orderBy) {
         const field = options.orderBy.replace('-', '');
         const desc = options.orderBy.startsWith('-');
-        orderClause = ` ORDER BY ${field} ${desc ? 'DESC' : 'ASC'}`;
+        results.sort((a, b) => {
+          if (desc) {
+            return a[field] < b[field] ? 1 : -1;
+          } else {
+            return a[field] > b[field] ? 1 : -1;
+          }
+        });
       }
 
-      let limitClause = '';
       if (options.limit) {
-        limitClause = ` LIMIT $${paramCount}`;
-        params.push(options.limit);
+        results = results.slice(0, options.limit);
       }
 
-      const query = `SELECT * FROM quiz_questions${whereClause}${orderClause}${limitClause}`;
-      const result = await dbPool.query(query, params);
-
-      return result.rows;
-    } catch (error) {
-      console.error('Error finding quiz questions:', error);
-      return [];
+      return results;
     }
   },
 
   // Find by ID
   async findById(id) {
-    if (!dbPool) {
-      return null;
-    }
-
-    try {
-      const result = await dbPool.query('SELECT * FROM quiz_questions WHERE id = $1', [id]);
-
-      if (result.rows.length === 0) return null;
-
-      return result.rows[0];
-    } catch (error) {
-      console.error('Error finding quiz question by ID:', error);
-      return null;
+    if (dbPool) {
+      // Database implementation
+      try {
+        const result = await dbPool.query('SELECT * FROM quiz_questions WHERE id = $1', [id]);
+        return result.rows.length === 0 ? null : result.rows[0];
+      } catch (error) {
+        console.error('Error finding quiz question by ID:', error);
+        return null;
+      }
+    } else {
+      // In-memory implementation
+      return inMemoryQuestions.find(q => q.id === parseInt(id)) || null;
     }
   },
 
   // Create single question
   async create(data) {
-    if (!dbPool) {
-      throw new Error('Database not available');
-    }
+    if (dbPool) {
+      // Database implementation
+      try {
+        const result = await dbPool.query(`
+          INSERT INTO quiz_questions (subject, question, options, correct_answer, difficulty, explanation, points, created_date, updated_date)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+          RETURNING *
+        `, [data.subject, data.question, data.options, data.correct_answer, data.difficulty, data.explanation, data.points]);
 
-    try {
-      const result = await dbPool.query(`
-        INSERT INTO quiz_questions (subject, question, options, correct_answer, difficulty, explanation, points, created_date, updated_date)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-        RETURNING *
-      `, [data.subject, data.question, data.options, data.correct_answer, data.difficulty, data.explanation, data.points]);
+        return result.rows[0];
+      } catch (error) {
+        console.error('Error creating quiz question:', error);
+        throw error;
+      }
+    } else {
+      // In-memory implementation
+      const question = {
+        id: nextId++,
+        subject: data.subject,
+        question: data.question,
+        options: data.options,
+        correct_answer: data.correct_answer,
+        difficulty: data.difficulty || 'medium',
+        explanation: data.explanation || '',
+        points: data.points || 10,
+        created_date: new Date().toISOString(),
+        updated_date: new Date().toISOString()
+      };
 
-      return result.rows[0];
-    } catch (error) {
-      console.error('Error creating quiz question:', error);
-      throw error;
+      inMemoryQuestions.push(question);
+      return question;
     }
   },
 
   // Bulk create
   async bulkCreate(data) {
-    if (!dbPool) {
-      throw new Error('Database not available');
-    }
+    if (dbPool) {
+      // Database implementation
+      try {
+        const values = data.map(q => `('${q.subject}', '${q.question.replace(/'/g, "''")}', ARRAY[${q.options.map(opt => `'${opt.replace(/'/g, "''")}'`).join(',')}], '${q.correct_answer.replace(/'/g, "''")}', '${q.difficulty}', '${(q.explanation || '').replace(/'/g, "''")}', ${q.points || 10}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`).join(', ');
 
-    try {
-      const values = data.map(q => `('${q.subject}', '${q.question.replace(/'/g, "''")}', ARRAY[${q.options.map(opt => `'${opt.replace(/'/g, "''")}'`).join(',')}], '${q.correct_answer.replace(/'/g, "''")}', '${q.difficulty}', '${(q.explanation || '').replace(/'/g, "''")}', ${q.points || 10}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`).join(', ');
+        const query = `
+          INSERT INTO quiz_questions (subject, question, options, correct_answer, difficulty, explanation, points, created_date, updated_date)
+          VALUES ${values}
+          RETURNING *
+        `;
 
-      const query = `
-        INSERT INTO quiz_questions (subject, question, options, correct_answer, difficulty, explanation, points, created_date, updated_date)
-        VALUES ${values}
-        RETURNING *
-      `;
+        const result = await dbPool.query(query);
+        return result.rows;
+      } catch (error) {
+        console.error('Error bulk creating quiz questions:', error);
+        throw error;
+      }
+    } else {
+      // In-memory implementation
+      const questions = data.map(q => ({
+        id: nextId++,
+        subject: q.subject,
+        question: q.question,
+        options: q.options,
+        correct_answer: q.correct_answer,
+        difficulty: q.difficulty || 'medium',
+        explanation: q.explanation || '',
+        points: q.points || 10,
+        created_date: new Date().toISOString(),
+        updated_date: new Date().toISOString()
+      }));
 
-      const result = await dbPool.query(query);
-      return result.rows;
-    } catch (error) {
-      console.error('Error bulk creating quiz questions:', error);
-      throw error;
+      inMemoryQuestions.push(...questions);
+      return questions;
     }
   },
 
   // Update question
   async update(id, data) {
-    if (!dbPool) {
-      throw new Error('Database not available');
-    }
+    if (dbPool) {
+      // Database implementation
+      try {
+        const fields = [];
+        const values = [];
+        let paramCount = 1;
 
-    try {
-      const fields = [];
-      const values = [];
-      let paramCount = 1;
+        if (data.subject !== undefined) {
+          fields.push(`subject = $${paramCount}`);
+          values.push(data.subject);
+          paramCount++;
+        }
 
-      if (data.subject !== undefined) {
-        fields.push(`subject = $${paramCount}`);
-        values.push(data.subject);
-        paramCount++;
+        if (data.question !== undefined) {
+          fields.push(`question = $${paramCount}`);
+          values.push(data.question);
+          paramCount++;
+        }
+
+        if (data.options !== undefined) {
+          fields.push(`options = $${paramCount}`);
+          values.push(data.options);
+          paramCount++;
+        }
+
+        if (data.correct_answer !== undefined) {
+          fields.push(`correct_answer = $${paramCount}`);
+          values.push(data.correct_answer);
+          paramCount++;
+        }
+
+        if (data.difficulty !== undefined) {
+          fields.push(`difficulty = $${paramCount}`);
+          values.push(data.difficulty);
+          paramCount++;
+        }
+
+        if (data.explanation !== undefined) {
+          fields.push(`explanation = $${paramCount}`);
+          values.push(data.explanation);
+          paramCount++;
+        }
+
+        if (data.points !== undefined) {
+          fields.push(`points = $${paramCount}`);
+          values.push(data.points);
+          paramCount++;
+        }
+
+        fields.push(`updated_date = CURRENT_TIMESTAMP`);
+        values.push(id);
+
+        const result = await dbPool.query(`
+          UPDATE quiz_questions SET ${fields.join(', ')}
+          WHERE id = $${paramCount}
+          RETURNING *
+        `, values);
+
+        if (result.rows.length === 0) return null;
+        return result.rows[0];
+      } catch (error) {
+        console.error('Error updating quiz question:', error);
+        throw error;
       }
+    } else {
+      // In-memory implementation
+      const index = inMemoryQuestions.findIndex(q => q.id === parseInt(id));
+      if (index === -1) return null;
 
-      if (data.question !== undefined) {
-        fields.push(`question = $${paramCount}`);
-        values.push(data.question);
-        paramCount++;
-      }
+      const updatedQuestion = {
+        ...inMemoryQuestions[index],
+        ...data,
+        updated_date: new Date().toISOString()
+      };
 
-      if (data.options !== undefined) {
-        fields.push(`options = $${paramCount}`);
-        values.push(data.options);
-        paramCount++;
-      }
-
-      if (data.correct_answer !== undefined) {
-        fields.push(`correct_answer = $${paramCount}`);
-        values.push(data.correct_answer);
-        paramCount++;
-      }
-
-      if (data.difficulty !== undefined) {
-        fields.push(`difficulty = $${paramCount}`);
-        values.push(data.difficulty);
-        paramCount++;
-      }
-
-      if (data.explanation !== undefined) {
-        fields.push(`explanation = $${paramCount}`);
-        values.push(data.explanation);
-        paramCount++;
-      }
-
-      if (data.points !== undefined) {
-        fields.push(`points = $${paramCount}`);
-        values.push(data.points);
-        paramCount++;
-      }
-
-      fields.push(`updated_date = CURRENT_TIMESTAMP`);
-      values.push(id);
-
-      const result = await dbPool.query(`
-        UPDATE quiz_questions SET ${fields.join(', ')}
-        WHERE id = $${paramCount}
-        RETURNING *
-      `, values);
-
-      if (result.rows.length === 0) return null;
-
-      return result.rows[0];
-    } catch (error) {
-      console.error('Error updating quiz question:', error);
-      throw error;
+      inMemoryQuestions[index] = updatedQuestion;
+      return updatedQuestion;
     }
   },
 
   // Delete question
   async delete(id) {
-    if (!dbPool) {
-      return false;
-    }
+    if (dbPool) {
+      // Database implementation
+      try {
+        const result = await dbPool.query('DELETE FROM quiz_questions WHERE id = $1', [id]);
+        return result.rowCount > 0;
+      } catch (error) {
+        console.error('Error deleting quiz question:', error);
+        return false;
+      }
+    } else {
+      // In-memory implementation
+      const index = inMemoryQuestions.findIndex(q => q.id === parseInt(id));
+      if (index === -1) return false;
 
-    try {
-      const result = await dbPool.query('DELETE FROM quiz_questions WHERE id = $1', [id]);
-      return result.rowCount > 0;
-    } catch (error) {
-      console.error('Error deleting quiz question:', error);
-      return false;
+      inMemoryQuestions.splice(index, 1);
+      return true;
     }
   },
 
   // Get random questions
   async random(filters = {}, count = 10) {
-    if (!dbPool) {
-      return [];
-    }
+    if (dbPool) {
+      // Database implementation
+      try {
+        const filtered = await this.find(filters);
+        const shuffled = filtered.sort(() => Math.random() - 0.5);
+        return shuffled.slice(0, count);
+      } catch (error) {
+        console.error('Error getting random quiz questions:', error);
+        return [];
+      }
+    } else {
+      // In-memory implementation
+      let results = [...inMemoryQuestions];
 
-    try {
-      const filtered = await this.find(filters);
+      if (filters.subject) {
+        results = results.filter(q => q.subject === filters.subject);
+      }
+
+      if (filters.difficulty && filters.difficulty !== 'mixed') {
+        results = results.filter(q => q.difficulty === filters.difficulty);
+      }
 
       // Randomly shuffle and return requested count
-      const shuffled = filtered.sort(() => Math.random() - 0.5);
+      const shuffled = results.sort(() => Math.random() - 0.5);
       return shuffled.slice(0, count);
-    } catch (error) {
-      console.error('Error getting random quiz questions:', error);
-      return [];
     }
   },
 
   // Get count
   async count(filters = {}) {
-    if (!dbPool) {
-      return 0;
-    }
+    if (dbPool) {
+      // Database implementation
+      try {
+        const result = await this.find(filters);
+        return result.length;
+      } catch (error) {
+        console.error('Error counting quiz questions:', error);
+        return 0;
+      }
+    } else {
+      // In-memory implementation
+      let results = [...inMemoryQuestions];
 
-    try {
-      const result = await this.find(filters);
-      return result.length;
-    } catch (error) {
-      console.error('Error counting quiz questions:', error);
-      return 0;
+      if (filters.subject) {
+        results = results.filter(q => q.subject === filters.subject);
+      }
+
+      if (filters.difficulty) {
+        results = results.filter(q => q.difficulty === filters.difficulty);
+      }
+
+      return results.length;
     }
   }
 };

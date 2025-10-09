@@ -1,5 +1,6 @@
 import express from 'express';
 import { QuizSessionModel } from '../models/QuizSession.js';
+import { authMiddleware as authenticate } from '../middleware/auth.js';
 
 const router = express.Router();
 

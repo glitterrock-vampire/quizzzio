@@ -6,7 +6,7 @@ const { Pool } = pkg;
 dotenv.config();
 
 export const config = {
-  port: process.env.PORT || 3000,
+  port: process.env.PORT || 3001,
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173',
 
   // Database (configure based on your choice)

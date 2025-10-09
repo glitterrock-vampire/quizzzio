@@ -24,7 +24,7 @@ function hasOpenAIConfigured() {
 router.post('/generate-questions', async (req, res, next) => {
   try {
     const { subject, questionCount, difficulty } = req.body;
-    
+
     if (!hasOpenAIConfigured()) {
       return res.status(500).json({
         error: 'OpenAI API key not configured',
@@ -34,7 +34,7 @@ router.post('/generate-questions', async (req, res, next) => {
 
     const client = getOpenAIClient();
 
-    const difficultyText = difficulty === "mixed" 
+    const difficultyText = difficulty === "mixed"
       ? "a mix of easy, medium, and hard questions"
       : `${difficulty} level questions`;
 
@@ -76,7 +76,7 @@ Return a JSON object with this exact structure:
     });
 
     const result = JSON.parse(response.choices[0].message.content);
-    
+
     // Add subject and points to each question
     const questions = result.questions.map(q => ({
       ...q,
@@ -84,7 +84,7 @@ Return a JSON object with this exact structure:
       points: q.difficulty === "easy" ? 10 : q.difficulty === "medium" ? 15 : 20
     }));
 
-    res.json({ 
+    res.json({
       questions,
       metadata: {
         model: response.model,
@@ -93,15 +93,16 @@ Return a JSON object with this exact structure:
     });
   } catch (error) {
     console.error('AI generation error:', error);
-    
+
     if (error.code === 'insufficient_quota') {
-      return res.status(402).json({ 
+      return res.status(402).json({
         error: 'OpenAI API quota exceeded',
         message: 'Please check your OpenAI account billing'
       });
     }
-    
+
     next(error);
+  }
 });
 
 // Test AI connection
@@ -127,7 +128,7 @@ router.get('/test', async (req, res) => {
       response: response.choices[0].message.content
     });
   } catch (error) {
-    res.status(500).json({ 
+    res.status(500).json({
       status: 'error',
       error: error.message
     });

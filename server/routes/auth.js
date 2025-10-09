@@ -1,128 +1,243 @@
 import express from 'express';
+import { body, validationResult } from 'express-validator';
+import bcrypt from 'bcrypt';
 import { UserModel } from '../models/User.js';
-import jwt from 'jsonwebtoken';
-import { config } from '../config.js';
+import { authMiddleware } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// Register new user
-router.post('/register', async (req, res, next) => {
-  try {
-    const { email, password, full_name } = req.body;
-    
-    // Check if user already exists
-    const existingUser = await UserModel.findByEmail(email);
-    if (existingUser) {
-      return res.status(400).json({ error: 'User already exists' });
+/**
+ * @route   POST api/auth/register
+ * @desc    Register a new user
+ * @access  Public
+ */
+router.post(
+  '/register',
+  [
+    body('full_name', 'Full name is required').not().isEmpty(),
+    body('email', 'Please include a valid email').isEmail(),
+    body('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 })
+  ],
+  async (req, res, next) => {
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ 
+        success: false, 
+        errors: errors.array() 
+      });
     }
-    
-    // Create user (in real app, hash password)
-    const user = await UserModel.create({
-      email,
-      password, // TODO: Hash this with bcrypt
-      full_name,
-      total_points: 0,
-      current_streak: 0,
-      best_streak: 0,
-      quizzes_completed: 0,
-      correct_answers: 0,
-      total_answers: 0,
-      achievements: []
-    });
-    
-    // Generate JWT token
-    const token = jwt.sign(
-      { userId: user.id, email: user.email },
-      config.jwt.secret,
-      { expiresIn: config.jwt.expiresIn }
-    );
-    
-    res.status(201).json({
-      message: 'User created successfully',
-      token,
-      user: {
-        id: user.id,
-        email: user.email,
-        full_name: user.full_name
-      }
-    });
-  } catch (error) {
-    next(error);
-  }
-});
 
-// Login
-router.post('/login', async (req, res, next) => {
-  try {
+    const { full_name, email, password } = req.body;
+
+    try {
+      // Check if user already exists
+      const existingUser = await UserModel.findByEmail(email);
+      if (existingUser) {
+        return res.status(400).json({ 
+          success: false,
+          error: 'User already exists' 
+        });
+      }
+      
+      // Create new user
+      const user = await UserModel.register({ 
+        email, 
+        password, 
+        full_name 
+      });
+
+      // Generate JWT token
+      const token = UserModel.generateToken(user);
+
+      res.status(201).json({
+        success: true,
+        message: 'User registered successfully',
+        token,
+        user: {
+          id: user.id,
+          email: user.email,
+          full_name: user.full_name,
+          created_date: user.created_date
+        }
+      });
+    } catch (error) {
+      console.error('Registration error:', error.message);
+      res.status(500).json({ 
+        success: false,
+        error: 'Server error during registration' 
+      });
+    }
+  }
+);
+
+/**
+ * @route   POST api/auth/login
+ * @desc    Authenticate user & get token
+ * @access  Public
+ */
+router.post(
+  '/login',
+  [
+    body('email', 'Please include a valid email').isEmail(),
+    body('password', 'Password is required').exists()
+  ],
+  async (req, res, next) => {
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ 
+        success: false, 
+        errors: errors.array() 
+      });
+    }
+
     const { email, password } = req.body;
-    
-    const user = await UserModel.findByEmail(email);
-    if (!user) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-    
-    // TODO: Compare hashed password with bcrypt
-    // For now, simple comparison (NOT SECURE)
-    if (user.password !== password) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-    
-    // Generate JWT token
-    const token = jwt.sign(
-      { userId: user.id, email: user.email },
-      config.jwt.secret,
-      { expiresIn: config.jwt.expiresIn }
-    );
-    
-    res.json({
-      message: 'Login successful',
-      token,
-      user: {
-        id: user.id,
-        email: user.email,
-        full_name: user.full_name,
-        total_points: user.total_points,
-        achievements: user.achievements
+
+    try {
+      // Validate user credentials
+      const user = await UserModel.validateCredentials(email, password);
+      
+      if (!user) {
+        return res.status(401).json({ 
+          success: false,
+          error: 'Invalid credentials' 
+        });
       }
-    });
-  } catch (error) {
-    next(error);
+
+      // Generate JWT token with updated user data
+      const token = UserModel.generateToken(user);
+
+      res.json({
+        success: true,
+        message: 'Login successful',
+        token,
+        user: {
+          id: user.id,
+          email: user.email,
+          full_name: user.full_name,
+          role: user.role,
+          total_points: user.total_points || 0,
+          current_streak: user.current_streak || 0,
+          best_streak: user.best_streak || 0,
+          quizzes_completed: user.quizzes_completed || 0,
+          correct_answers: user.correct_answers || 0,
+          total_answers: user.total_answers || 0,
+          achievements: user.achievements || []
+        }
+      });
+    } catch (error) {
+      console.error('Login error:', error.message);
+      res.status(500).json({ 
+        success: false,
+        error: 'Server error during login' 
+      });
+    }
   }
-});
+);
 
-// Logout
-router.post('/logout', (req, res) => {
-  // With JWT, logout is handled client-side by removing the token
-  res.json({ message: 'Logout successful' });
-});
-
-// Verify token
-router.get('/verify', async (req, res, next) => {
+/**
+ * @route   GET api/auth/user
+ * @desc    Get current user's data
+ * @access  Private
+ */
+router.get('/user', authMiddleware, async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
-    
-    if (!token) {
-      return res.status(401).json({ error: 'No token provided' });
-    }
-    
-    const decoded = jwt.verify(token, config.jwt.secret);
-    const user = await UserModel.findById(decoded.userId);
+    const user = await UserModel.findById(req.user.id);
     
     if (!user) {
-      return res.status(401).json({ error: 'Invalid token' });
+      return res.status(404).json({ 
+        success: false,
+        error: 'User not found' 
+      });
     }
+
+    // Remove sensitive data
+    const { password, ...userData } = user;
     
     res.json({
-      valid: true,
-      user: {
-        id: user.id,
-        email: user.email,
-        full_name: user.full_name
-      }
+      success: true,
+      user: userData
     });
   } catch (error) {
-    res.status(401).json({ error: 'Invalid token' });
+    console.error('Get user error:', error.message);
+    res.status(500).json({ 
+      success: false,
+      error: 'Server error' 
+    });
   }
+});
+
+/**
+ * @route   POST api/auth/change-password
+ * @desc    Change user's password
+ * @access  Private
+ */
+router.post(
+  '/change-password',
+  [
+    authMiddleware,
+    body('currentPassword', 'Current password is required').exists(),
+    body('newPassword', 'Please enter a new password with 6 or more characters').isLength({ min: 6 })
+  ],
+  async (req, res) => {
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ 
+        success: false, 
+        errors: errors.array() 
+      });
+    }
+
+    const { currentPassword, newPassword } = req.body;
+
+    try {
+      // Get user
+      const user = await UserModel.findById(req.user.id);
+      if (!user) {
+        return res.status(404).json({ 
+          success: false,
+          error: 'User not found' 
+        });
+      }
+
+      // Verify current password
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ 
+          success: false,
+          error: 'Current password is incorrect' 
+        });
+      }
+
+      // Update password
+      const success = await UserModel.updatePassword(user.id, newPassword);
+      
+      if (!success) {
+        throw new Error('Failed to update password');
+      }
+
+      res.json({ 
+        success: true,
+        message: 'Password updated successfully' 
+      });
+    } catch (error) {
+      console.error('Change password error:', error.message);
+      res.status(500).json({ 
+        success: false,
+        error: 'Server error while changing password' 
+      });
+    }
+  }
+);
+
+// Logout is handled client-side by removing the token
+router.post('/logout', (req, res) => {
+  res.json({ 
+    success: true,
+    message: 'Logout successful' 
+  });
 });
 
 export default router;
