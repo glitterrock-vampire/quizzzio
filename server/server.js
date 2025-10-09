@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import quizQuestionsRouter from './routes/quizQuestions.js';
 import quizSessionsRouter from './routes/quizSessions.js';
@@ -95,22 +96,50 @@ app.use('/api/ai', aiRouter);
 // Serve static files from the React app build directory
 if (process.env.NODE_ENV === 'production') {
   // In production, serve the built React app
-  const buildPath = path.join(__dirname, '../../dist');
-  app.use(express.static(buildPath));
+  // Try multiple possible paths for the dist directory
+  const possiblePaths = [
+    path.join(__dirname, '../../dist'),           // Standard project structure
+    path.join(__dirname, '../../../dist'),       // Alternative structure
+    path.join(process.cwd(), 'dist'),            // From project root
+    '/opt/render/project/dist'                   // Render-specific path
+  ];
 
-  // Catch-all handler: send back React's index.html file for client-side routing
-  app.get('*', (req, res) => {
-    // Don't serve index.html for API routes
-    if (req.path.startsWith('/api/')) {
-      return res.status(404).json({
-        error: 'Route not found',
-        path: req.path,
-        method: req.method
-      });
+  let buildPath = null;
+  for (const testPath of possiblePaths) {
+    if (fs.existsSync(testPath)) {
+      buildPath = testPath;
+      console.log(`✅ Found build directory at: ${testPath}`);
+      break;
     }
+  }
 
-    res.sendFile(path.join(buildPath, 'index.html'));
-  });
+  if (!buildPath) {
+    console.error('❌ Could not find build directory in any of these locations:');
+    possiblePaths.forEach(p => console.error(`   ${p}`));
+    console.error('❌ Make sure the React app is built and dist/ directory exists');
+  } else {
+    app.use(express.static(buildPath));
+
+    // Catch-all handler: send back React's index.html file for client-side routing
+    app.get('*', (req, res) => {
+      // Don't serve index.html for API routes
+      if (req.path.startsWith('/api/')) {
+        return res.status(404).json({
+          error: 'Route not found',
+          path: req.path,
+          method: req.method
+        });
+      }
+
+      const indexPath = path.join(buildPath, 'index.html');
+      if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+      } else {
+        console.error(`❌ index.html not found at: ${indexPath}`);
+        res.status(404).json({ error: 'Frontend not found' });
+      }
+    });
+  }
 }
 
 // 404 handler for API routes
