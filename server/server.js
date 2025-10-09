@@ -32,6 +32,11 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: ["'self'"],
       imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "https://quizzzio.onrender.com", "https://quizzzio.vercel.app"],
+      fontSrc: ["'self'", "https:", "data:"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"],
+      frameSrc: ["'none'"],
     },
   },
 }));
