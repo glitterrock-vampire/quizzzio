@@ -13,6 +13,8 @@ export const initializeUserTable = async () => {
   isInitialized = true;
 
   console.log('🔧 Initializing user system...');
+  console.log('🔧 Bcrypt available:', !!bcrypt);
+  console.log('🔧 Database pool available:', !!dbPool);
 
   // Always ensure demo admin user exists in memory for development
   if (!dbPool) {
@@ -21,7 +23,9 @@ export const initializeUserTable = async () => {
     // Check if demo user already exists
     if (!inMemoryUsers.find(user => user.email === 'demo@quizmaster.com')) {
       try {
+        console.log('🔧 Attempting to hash password with bcrypt...');
         const hashedPassword = await bcrypt.hash('demo123', 10);
+        console.log('🔧 Password hashed successfully');
         const demoAdminUser = {
           id: 6,
           email: 'demo@quizmaster.com',
@@ -229,13 +233,21 @@ export const UserModel = {
 
   // Find by email
   async findByEmail(email) {
+    console.log('🔍 Finding user by email:', email);
+
     if (!dbPool) {
+      console.log('🔍 Using in-memory storage');
       // For demo user, ensure it exists in memory with correct ID and admin role
       if (email === 'demo@quizmaster.com') {
+        console.log('🔍 Looking for demo user in memory');
         let demoUserIndex = inMemoryUsers.findIndex(user => user.email === email);
+        console.log('🔍 Demo user index:', demoUserIndex);
+
         if (demoUserIndex === -1) {
+          console.log('🔍 Demo user not found, creating...');
           // Create demo user if it doesn't exist
           try {
+            console.log('🔧 Attempting to hash demo user password...');
             const demoUser = {
               id: 6,
               email: 'demo@quizmaster.com',
@@ -279,15 +291,19 @@ export const UserModel = {
             return demoUser;
           }
         } else {
+          console.log('🔍 Found existing demo user');
           // Return existing demo user
           return inMemoryUsers[demoUserIndex];
         }
       }
+      console.log('🔍 Looking for regular user in memory');
       return inMemoryUsers.find(user => user.email === email) || null;
     }
 
+    console.log('🔍 Using database');
     try {
       const result = await dbPool.query('SELECT * FROM users WHERE email = $1', [email]);
+      console.log('🔍 Database query result:', result.rows.length, 'rows');
       return result.rows[0] || null;
     } catch (error) {
       console.error('Error finding user by email:', error);
