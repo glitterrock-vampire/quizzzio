@@ -1,5 +1,11 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
+// Debug logging in development
+if (import.meta.env.DEV) {
+  console.log('API_BASE_URL:', API_BASE_URL);
+  console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
+}
+
 async function request(endpoint, options = {}) {
   const headers = {
     'Content-Type': 'application/json',
@@ -18,7 +24,10 @@ async function request(endpoint, options = {}) {
   };
 
   try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+    const fullUrl = `${API_BASE_URL}${endpoint}`;
+    console.log('Making API request to:', fullUrl);
+
+    const response = await fetch(fullUrl, config);
     let data;
     
     try {
