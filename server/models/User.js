@@ -6,21 +6,14 @@ import { JWT_SECRET, SALT_ROUNDS } from '../config/auth.js';
 // In-memory storage fallback
 let inMemoryUsers = [];
 
-// Initialize database table
+// Initialize database table and create demo admin user
 export const initializeUserTable = async () => {
+  // Always ensure demo admin user exists in memory for development
   if (!dbPool) {
     console.log('⚠️  Using in-memory storage for users');
 
     // Check if demo user already exists
-    const existingDemoUser = inMemoryUsers.find(user => user.email === 'demo@quizmaster.com');
-
-    if (existingDemoUser) {
-      // Update existing demo user to admin
-      existingDemoUser.full_name = 'Demo Admin';
-      existingDemoUser.role = 'admin';
-      console.log('✅ Updated existing demo user to admin');
-    } else {
-      // Create demo admin user in memory
+    if (!inMemoryUsers.find(user => user.email === 'demo@quizmaster.com')) {
       const demoAdminUser = {
         id: 6,
         email: 'demo@quizmaster.com',
@@ -82,6 +75,28 @@ export const initializeUserTable = async () => {
     console.log('✅ Users table initialized');
   } catch (error) {
     console.error('❌ Error initializing users table:', error);
+    // Even if database fails, ensure demo user exists in memory
+    if (!inMemoryUsers.find(user => user.email === 'demo@quizmaster.com')) {
+      const demoAdminUser = {
+        id: 6,
+        email: 'demo@quizmaster.com',
+        password: await bcrypt.hash('demo123', 10),
+        full_name: 'Demo Admin',
+        role: 'admin',
+        total_points: 0,
+        current_streak: 0,
+        best_streak: 0,
+        quizzes_completed: 0,
+        correct_answers: 0,
+        total_answers: 0,
+        achievements: [],
+        created_date: new Date().toISOString(),
+        updated_date: new Date().toISOString()
+      };
+
+      inMemoryUsers.push(demoAdminUser);
+      console.log('✅ Created demo admin user in memory (fallback)');
+    }
   }
 };
 
@@ -241,8 +256,8 @@ export const UserModel = {
     try {
       const hashedPassword = await this.hashPassword(password);
       const result = await dbPool.query(
-        `INSERT INTO users (email, password, full_name) 
-         VALUES ($1, $2, $3) 
+        `INSERT INTO users (email, password, full_name)
+         VALUES ($1, $2, $3)
          RETURNING id, email, full_name, created_date`,
         [email, hashedPassword, full_name]
       );
@@ -419,7 +434,7 @@ export const UserModel = {
       return [];
     }
   },
-  
+
   // Update streak when user completes a quiz
   async updateStreak(userId) {
     if (!dbPool) return;
@@ -430,29 +445,29 @@ export const UserModel = {
         'SELECT last_activity, current_streak, best_streak FROM users WHERE id = $1',
         [userId]
       );
-      
+
       if (!result.rows.length) return;
-      
+
       const { last_activity, current_streak, best_streak } = result.rows[0];
       const today = new Date();
       const yesterday = new Date(today);
       yesterday.setDate(yesterday.getDate() - 1);
-      
+
       let newStreak = 1;
       let newBestStreak = best_streak || 0;
-      
+
       if (last_activity) {
         const lastDate = new Date(last_activity);
-        const isSameDay = (date1, date2) => 
+        const isSameDay = (date1, date2) =>
           date1.getDate() === date2.getDate() &&
           date1.getMonth() === date2.getMonth() &&
           date1.getFullYear() === date2.getFullYear();
-          
-        const isConsecutiveDay = 
+
+        const isConsecutiveDay =
           lastDate.getDate() === yesterday.getDate() &&
           lastDate.getMonth() === yesterday.getMonth() &&
-          lastDate.getFullYear() === yesterday.getYear();
-        
+          lastDate.getFullYear() === yesterday.getFullYear();
+
         if (isSameDay(lastDate, today)) {
           // Already logged today, don't update
           return;
@@ -462,20 +477,20 @@ export const UserModel = {
           newBestStreak = Math.max(newBestStreak, newStreak);
         }
       }
-      
+
       // Update user's streak
       await dbPool.query(`
-        UPDATE users 
-        SET 
+        UPDATE users
+        SET
           current_streak = $1,
           best_streak = $2,
           last_activity = CURRENT_DATE
         WHERE id = $3
       `, [newStreak, newBestStreak, userId]);
-      
+
       // Check for streak achievements
       await this.checkStreakAchievements(userId);
-      
+
       return { current_streak: newStreak, best_streak: newBestStreak };
     } catch (error) {
       console.error('Error updating streak:', error);
@@ -492,13 +507,13 @@ export const UserModel = {
         'SELECT current_streak, achievements FROM users WHERE id = $1',
         [userId]
       );
-      
+
       if (!result.rows.length) return [];
-      
+
       const { current_streak, achievements = [] } = result.rows[0];
       const newAchievements = [];
       const now = new Date().toISOString();
-      
+
       // Streak achievements
       if (current_streak >= 3 && !achievements.includes('streak_3')) {
         newAchievements.push(createAchievement('streak_3', '3-Day Streak!', now));
@@ -509,35 +524,35 @@ export const UserModel = {
       if (current_streak >= 30 && !achievements.includes('streak_30')) {
         newAchievements.push(createAchievement('streak_30', '30-Day Streak!', now));
       }
-      
+
       // Update user's achievements if there are new ones
       if (newAchievements.length > 0) {
         const achievementIds = newAchievements.map(a => a.achievement_id);
         await dbPool.query(`
-          UPDATE users 
+          UPDATE users
           SET achievements = array_cat(achievements, $1::text[])
           WHERE id = $2
         `, [achievementIds, userId]);
       }
-      
+
       return newAchievements;
     } catch (error) {
       console.error('Error checking streak achievements:', error);
       return [];
     }
   },
-  
+
   // Check and award all possible achievements
   async checkAllAchievements(userId) {
     if (!dbPool) return [];
-    
+
     try {
       const user = await this.findById(userId);
       if (!user) return [];
-      
+
       const now = new Date().toISOString();
       const newAchievements = [];
-      
+
       // Quiz count achievements
       if (user.quizzes_completed >= 1 && !user.achievements?.includes('first_quiz')) {
         newAchievements.push(createAchievement('first_quiz', 'First Quiz Completed!', now));
@@ -548,26 +563,26 @@ export const UserModel = {
       if (user.quizzes_completed >= 25 && !user.achievements?.includes('quiz_master')) {
         newAchievements.push(createAchievement('quiz_master', 'Quiz Master!', now));
       }
-      
+
       // Accuracy achievements
-      const accuracy = user.total_answers > 0 
-        ? (user.correct_answers / user.total_answers) * 100 
+      const accuracy = user.total_answers > 0
+        ? (user.correct_answers / user.total_answers) * 100
         : 0;
-      
+
       if (accuracy >= 90 && !user.achievements?.includes('accuracy_90')) {
         newAchievements.push(createAchievement('accuracy_90', 'Accuracy Master (90%+)', now));
       }
-      
+
       // Update user's achievements if there are new ones
       if (newAchievements.length > 0) {
         const achievementIds = newAchievements.map(a => a.achievement_id);
         await dbPool.query(`
-          UPDATE users 
+          UPDATE users
           SET achievements = array_cat(achievements, $1::text[])
           WHERE id = $2
         `, [achievementIds, userId]);
       }
-      
+
       return newAchievements;
     } catch (error) {
       console.error('Error checking all achievements:', error);
