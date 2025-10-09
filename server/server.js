@@ -3,6 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import quizQuestionsRouter from './routes/quizQuestions.js';
 import quizSessionsRouter from './routes/quizSessions.js';
 import usersRouter from './routes/users.js';
@@ -16,6 +18,10 @@ dotenv.config();
 
 const app = express();
 const PORT = config.port;
+
+// Get the directory name for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Security middleware
 app.use(helmet({
@@ -68,59 +74,29 @@ app.use('/api/users', usersRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/ai', aiRouter);
 
-// Root API endpoint
-app.get('/api', (req, res) => {
-  res.json({
-    message: 'Welcome to the QuizApp API',
-    version: process.env.npm_package_version || '1.0.0',
-    environment: process.env.NODE_ENV || 'development',
-    endpoints: {
-      auth: {
-        login: 'POST /api/auth/login',
-        register: 'POST /api/auth/register',
-        user: 'GET /api/auth/user',
-        logout: 'POST /api/auth/logout'
-      },
-      users: 'GET /api/users',
-      quizQuestions: 'GET /api/quiz-questions',
-      quizSessions: 'GET /api/quiz-sessions',
-      ai: 'POST /api/ai',
-      health: 'GET /api/health'
-    },
-    documentation: 'https://github.com/yourusername/quizapp/docs/api.md'
-  });
-});
+// Serve static files from the React app build directory
+if (process.env.NODE_ENV === 'production') {
+  // In production, serve the built React app
+  const buildPath = path.join(__dirname, '../../dist');
+  app.use(express.static(buildPath));
 
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-  const healthCheck = {
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development',
-    uptime: process.uptime(),
-    database: config.database.type === 'postgres' && dbPool ? 'connected' : 'memory',
-    version: process.env.npm_package_version || '1.0.0'
-  };
-
-  // Database health check
-  if (dbPool) {
-    dbPool.query('SELECT 1')
-      .then(() => {
-        healthCheck.database_status = 'healthy';
-        res.json(healthCheck);
-      })
-      .catch((err) => {
-        healthCheck.database_status = 'error';
-        healthCheck.database_error = err.message;
-        res.status(503).json(healthCheck);
+  // Catch-all handler: send back React's index.html file for client-side routing
+  app.get('*', (req, res) => {
+    // Don't serve index.html for API routes
+    if (req.path.startsWith('/api/')) {
+      return res.status(404).json({
+        error: 'Route not found',
+        path: req.path,
+        method: req.method
       });
-  } else {
-    res.json(healthCheck);
-  }
-});
+    }
 
-// 404 handler
-app.use((req, res) => {
+    res.sendFile(path.join(buildPath, 'index.html'));
+  });
+}
+
+// 404 handler for API routes
+app.use('/api', (req, res) => {
   res.status(404).json({
     error: 'Route not found',
     path: req.path,
