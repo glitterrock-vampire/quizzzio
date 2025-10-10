@@ -18,7 +18,7 @@ export const generalLimiter = rateLimit({
 // Stricter rate limiting for authentication routes
 export const authLimiter = rateLimit({
   windowMs: isDevelopment ? 60 * 1000 : 15 * 60 * 1000, // 1 min in dev, 15 min in prod
-  max: isDevelopment ? 100 : 20, // Higher limit in development, increased for prod testing
+  max: isDevelopment ? 100 : 100, // Higher limit for production testing
   message: {
     error: 'Too many authentication attempts, please try again later.'
   },
