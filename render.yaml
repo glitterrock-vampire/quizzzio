@@ -1,0 +1,22 @@
+build:
+  name: quizzio
+  buildCommand: ./render-build.sh
+  envVars:
+    - key: NODE_VERSION
+      value: 20.x
+    - key: NPM_CONFIG_PRODUCTION
+      value: "false"
+    - key: NODE_ENV
+      value: production
+
+services:
+  - type: web
+    name: quizzio
+    env: node
+    buildCommand: ./render-build.sh
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NPM_CONFIG_PRODUCTION
+        value: "false"
