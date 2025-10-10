@@ -21,6 +21,8 @@ export default function QuizPage() {
   const [streak, setStreak] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(30);
+  const [startTime, setStartTime] = useState(null);
 
   useEffect(() => {
     const subject = searchParams.get("subject");
