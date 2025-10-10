@@ -16,12 +16,13 @@ const dbConfig = {
   // Production-ready connection settings
   max: 20, // Maximum number of clients in the pool
   idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-  connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
+  connectionTimeoutMillis: 5000, // Increased timeout for SSL handshake
   maxUses: 7500, // Close (and replace) a connection after it has been used 7500 times
 
   // SSL configuration for production (Render PostgreSQL)
   ssl: process.env.NODE_ENV === 'production' ? {
-    rejectUnauthorized: false // Required for Render's self-signed certificates
+    rejectUnauthorized: false, // Required for Render's self-signed certificates
+    sslmode: 'require' // Explicitly require SSL
   } : false,
 
   // Keep connections alive
@@ -36,6 +37,7 @@ if (process.env.DB_HOST && process.env.DB_NAME && process.env.DB_USER && process
   dbPool = new Pool(dbConfig);
   console.log('🗄️  Database configuration found, connecting to PostgreSQL');
   console.log('📍 Database host:', process.env.DB_HOST);
+  console.log('🔒 SSL enabled:', process.env.NODE_ENV === 'production');
 } else {
   console.log('⚠️  Database credentials not found, using in-memory storage');
   console.log('�� Required environment variables: DB_HOST, DB_NAME, DB_USER, DB_PASSWORD');
@@ -52,7 +54,6 @@ if (dbPool) {
   dbPool.on('error', (err, client) => {
     console.error('❌ Unexpected error on idle PostgreSQL client:', err);
     // Don't exit the process, just log the error
-    // The pool will create a new client for the next query
   });
 
   dbPool.on('remove', (client) => {
@@ -76,7 +77,6 @@ export const testDatabaseConnection = async () => {
   } catch (err) {
     console.error('❌ Error connecting to PostgreSQL database:', err.message);
     console.error('❌ Database connection failed. Please check your database configuration.');
-    console.error('❌ Required environment variables: DB_HOST, DB_NAME, DB_USER, DB_PASSWORD');
     return false;
   } finally {
     if (client) {
