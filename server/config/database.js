@@ -1,7 +1,7 @@
 import pg from 'pg';
 import dotenv from 'dotenv';
 
-dotenv.config({ path: '../.env.local' });
+dotenv.config({ path: '.env.local' });
 
 const { Pool } = pg;
 
@@ -19,9 +19,9 @@ const dbConfig = {
   connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
   maxUses: 7500, // Close (and replace) a connection after it has been used 7500 times
 
-  // SSL configuration for production
+  // SSL configuration for production (Render PostgreSQL)
   ssl: process.env.NODE_ENV === 'production' ? {
-    rejectUnauthorized: false // For cloud databases that use self-signed certificates
+    rejectUnauthorized: false // Required for Render's self-signed certificates
   } : false,
 
   // Keep connections alive
@@ -35,9 +35,10 @@ let dbPool = null;
 if (process.env.DB_HOST && process.env.DB_NAME && process.env.DB_USER && process.env.DB_PASSWORD) {
   dbPool = new Pool(dbConfig);
   console.log('🗄️  Database configuration found, connecting to PostgreSQL');
+  console.log('📍 Database host:', process.env.DB_HOST);
 } else {
   console.log('⚠️  Database credentials not found, using in-memory storage');
-  console.log('📋 Required environment variables: DB_HOST, DB_NAME, DB_USER, DB_PASSWORD');
+  console.log('�� Required environment variables: DB_HOST, DB_NAME, DB_USER, DB_PASSWORD');
 }
 
 // Test the connection and handle errors properly (only if dbPool exists)
@@ -113,3 +114,5 @@ process.on('SIGTERM', async () => {
 });
 
 export { dbPool };
+
+export default config;
