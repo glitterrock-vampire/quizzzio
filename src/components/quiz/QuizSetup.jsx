@@ -3,20 +3,20 @@ import { Play, Sparkles, Database, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 
 const subjects = [
-  { id: "math", name: "Mathematics", icon: "🔢" },
-  { id: "science", name: "Science", icon: "🔬" },
-  { id: "history", name: "History", icon: "📜" },
-  { id: "geography", name: "Geography", icon: "🌍" },
-  { id: "literature", name: "Literature", icon: "📚" },
-  { id: "general_knowledge", name: "General Knowledge", icon: "🧠" }
+  { id: "Mathematics", name: "Mathematics", icon: "🔢" },
+  { id: "Science", name: "Science", icon: "🔬" },
+  { id: "History", name: "History", icon: "📜" },
+  { id: "Geography", name: "Geography", icon: "🌍" },
+  { id: "Literature", name: "Literature", icon: "📚" },
+  { id: "General Knowledge", name: "General Knowledge", icon: "🧠" }
 ];
 
 export default function QuizSetup({ onStart, loading }) {
   const [config, setConfig] = useState({
-    subject: "math",
+    subject: "Mathematics",
     difficulty: "mixed",
     questionCount: 10,
-    mode: "ai"
+    mode: "existing"
   });
 
   return (

@@ -186,6 +186,7 @@ if (process.env.NODE_ENV === 'development') {
       }
     });
   }
+}
 
 // Error handler (must be last)
 app.use(errorHandler);

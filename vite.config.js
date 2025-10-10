@@ -24,4 +24,8 @@ export default defineConfig({
   define: {
     __API_URL__: JSON.stringify(process.env.VITE_API_URL || 'https://quizzzio.onrender.com/api'),
   },
+  // Expose environment variables to the client
+  envPrefix: 'VITE_',
+  // Load .env.local explicitly
+  envDir: '.',
 });

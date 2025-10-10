@@ -1,0 +1,110 @@
+[
+  {
+    "subject": "science",
+    "question": "What is the center of an atom called?",
+    "options": ["Electron", "Nucleus", "Proton", "Neutron"],
+    "correct_answer": "Nucleus",
+    "difficulty": "easy",
+    "explanation": "The nucleus is the central core of an atom containing protons and neutrons.",
+    "points": 10
+  },
+  {
+    "subject": "science",
+    "question": "What planet is known as the Red Planet?",
+    "options": ["Venus", "Jupiter", "Mars", "Saturn"],
+    "correct_answer": "Mars",
+    "difficulty": "easy",
+    "explanation": "Mars appears red due to iron oxide on its surface.",
+    "points": 10
+  },
+  {
+    "subject": "history",
+    "question": "Who was Jamaica's first Prime Minister after independence in 1962?",
+    "options": ["Norman Manley", "Alexander Bustamante", "Edward Seaga", "Michael Manley"],
+    "correct_answer": "Alexander Bustamante",
+    "difficulty": "easy",
+    "explanation": "Sir Alexander Bustamante became Jamaica's first Prime Minister in 1962.",
+    "points": 10
+  },
+  {
+    "subject": "history",
+    "question": "In what year did the Morant Bay Rebellion occur?",
+    "options": ["1831", "1865", "1888", "1901"],
+    "correct_answer": "1865",
+    "difficulty": "medium",
+    "explanation": "The Morant Bay Rebellion, led by Paul Bogle, occurred in 1865.",
+    "points": 20
+  },
+  {
+    "subject": "geography",
+    "question": "What is the capital of Jamaica?",
+    "options": ["Montego Bay", "Portmore", "Kingston", "Ocho Rios"],
+    "correct_answer": "Kingston",
+    "difficulty": "easy",
+    "explanation": "Kingston is Jamaica's capital and largest city, located on the southeastern coast.",
+    "points": 10
+  },
+  {
+    "subject": "geography",
+    "question": "Which Caribbean island is known as the 'Land of 365 Beaches'?",
+    "options": ["Barbados", "Antigua", "Saint Lucia", "Grenada"],
+    "correct_answer": "Antigua",
+    "difficulty": "medium",
+    "explanation": "Antigua is famous for its many white-sand beaches—one for every day of the year.",
+    "points": 20
+  },
+  {
+    "subject": "literature",
+    "question": "Who wrote the poem 'A Far Cry from Africa'?",
+    "options": ["Derek Walcott", "Claude McKay", "Louise Bennett", "Kamau Brathwaite"],
+    "correct_answer": "Derek Walcott",
+    "difficulty": "medium",
+    "explanation": "Derek Walcott, from Saint Lucia, is the Nobel Laureate who wrote 'A Far Cry from Africa'.",
+    "points": 20
+  },
+  {
+    "subject": "literature",
+    "question": "Which Jamaican writer created 'Anancy Stories'?",
+    "options": ["Claude McKay", "Roger Mais", "Louise Bennett", "Lorna Goodison"],
+    "correct_answer": "Louise Bennett",
+    "difficulty": "easy",
+    "explanation": "Miss Lou popularized Anancy tales and Jamaican folklore through her storytelling.",
+    "points": 10
+  },
+  {
+    "subject": "general_knowledge",
+    "question": "What are Jamaica's national colours?",
+    "options": ["Red, white and blue", "Green, black and gold", "Black, yellow and red", "Blue, gold and white"],
+    "correct_answer": "Green, black and gold",
+    "difficulty": "easy",
+    "explanation": "The Jamaican flag features green for hope, black for strength, and gold for sunlight.",
+    "points": 10
+  },
+  {
+    "subject": "general_knowledge",
+    "question": "Who won the 100m gold medal for Jamaica at the 2008 Olympics?",
+    "options": ["Asafa Powell", "Usain Bolt", "Yohan Blake", "Nesta Carter"],
+    "correct_answer": "Usain Bolt",
+    "difficulty": "easy",
+    "explanation": "Usain Bolt set a world record while winning the 100m in Beijing 2008.",
+    "points": 10
+  },
+  {
+    "subject": "mathematics",
+    "question": "What is 15% of 200?",
+    "options": ["20", "25", "30", "35"],
+    "correct_answer": "30",
+    "difficulty": "easy",
+    "explanation": "15% of 200 = 0.15 × 200 = 30.",
+    "points": 10
+  },
+  {
+    "subject": "mathematics",
+    "question": "Simplify: (2x + 3x) - (x + 4)",
+    "options": ["4x - 4", "5x - 4", "3x - 4", "2x - 4"],
+    "correct_answer": "4x - 4",
+    "difficulty": "medium",
+    "explanation": "(2x + 3x) - (x + 4) = 5x - x - 4 = 4x - 4.",
+    "points": 20
+  }
+]

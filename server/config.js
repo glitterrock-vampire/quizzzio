@@ -3,7 +3,7 @@ import pkg from 'pg';
 
 const { Pool } = pkg;
 
-dotenv.config();
+dotenv.config({ path: '.env.local' });
 
 export const config = {
   port: process.env.PORT || 3001,
