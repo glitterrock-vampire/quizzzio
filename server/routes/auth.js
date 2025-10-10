@@ -58,6 +58,14 @@ router.post(
           id: user.id,
           email: user.email,
           full_name: user.full_name,
+          role: user.role || 'user',
+          total_points: user.total_points || 0,
+          current_streak: user.current_streak || 0,
+          best_streak: user.best_streak || 0,
+          quizzes_completed: user.quizzes_completed || 0,
+          correct_answers: user.correct_answers || 0,
+          total_answers: user.total_answers || 0,
+          achievements: user.achievements || [],
           created_date: user.created_date
         }
       });

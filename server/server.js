@@ -13,12 +13,12 @@ import authRouter from './routes/auth.js';
 import aiRouter from './routes/ai.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { generalLimiter, authLimiter, aiLimiter } from './middleware/rateLimit.js';
-import { config, dbPool } from './config.js';
+import { testDatabaseConnection } from './config/database.js';
 
 dotenv.config();
 
 const app = express();
-const PORT = config.port;
+const PORT = process.env.PORT || 3000;
 
 // Get the directory name for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -48,7 +48,9 @@ app.use(cors({
     if (!origin) return callback(null, true);
 
     const allowedOrigins = [
-      'http://localhost:5173',      // Development
+      'http://localhost:5173',      // Development (default Vite port)
+      'http://localhost:5174',      // Development (alternative Vite port)
+      'http://localhost:5175',      // Development (current Vite port)
       'http://localhost:3000',      // Alternative dev port
       'https://quizzzio.onrender.com', // Production Render
       'https://quizzzio.vercel.app',   // Production Vercel
@@ -174,17 +176,21 @@ if (process.env.NODE_ENV === 'production') {
 // Error handler (must be last)
 app.use(errorHandler);
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log('');
   console.log('🚀 Quizzio Server Started!');
   console.log(`📡 Server running on http://localhost:${PORT}`);
   console.log(`🌐 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
   console.log(`📝 API endpoint: http://localhost:${PORT}/api`);
-  if (config.database.type === 'postgres') {
-    console.log(`🗄️  Database: PostgreSQL (${config.database.type})`);
+
+  // Test database connection
+  const dbConnected = await testDatabaseConnection();
+  if (dbConnected) {
+    console.log(`🗄️  Database: PostgreSQL (${process.env.DB_HOST || 'localhost'})`);
   } else {
-    console.log(`🗄️  Database: In-Memory (${config.database.type})`);
+    console.log(`🗄️  Database: In-Memory (fallback mode)`);
   }
+
   console.log(`🔒 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log('');
 });

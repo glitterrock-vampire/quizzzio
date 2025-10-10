@@ -74,8 +74,13 @@ export function AuthProvider({ children }) {
       setLoading(true);
       setError(null);
       const response = await authService.register(userData);
-      const userDataFromApi = await authService.getCurrentUser();
-      setUser(userDataFromApi);
+
+      // Use the user data from the registration response directly
+      // instead of calling getCurrentUser() which might fail during registration
+      if (response.user) {
+        setUser(response.user);
+      }
+
       return response;
     } catch (error) {
       console.error('Registration error:', error);

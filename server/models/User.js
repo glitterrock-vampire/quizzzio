@@ -3,8 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET, SALT_ROUNDS } from '../config/auth.js';
 
-// In-memory storage fallback
-let inMemoryUsers = [];
+// Production-ready User model - database only, no in-memory fallback
 let isInitialized = false;
 
 // Initialize database table and create demo admin user
@@ -13,66 +12,15 @@ export const initializeUserTable = async () => {
   isInitialized = true;
 
   console.log('🔧 Initializing user system...');
-  console.log('🔧 Bcrypt available:', !!bcrypt);
-  console.log('🔧 Database pool available:', !!dbPool);
 
-  // Always ensure demo admin user exists in memory for development
+  // Check if database is available
   if (!dbPool) {
-    console.log('⚠️  Using in-memory storage for users');
-
-    // Check if demo user already exists
-    if (!inMemoryUsers.find(user => user.email === 'demo@quizmaster.com')) {
-      try {
-        console.log('🔧 Attempting to hash password with bcrypt...');
-        const hashedPassword = await bcrypt.hash('demo123', 10);
-        console.log('🔧 Password hashed successfully');
-        const demoAdminUser = {
-          id: 6,
-          email: 'demo@quizmaster.com',
-          password: hashedPassword,
-          full_name: 'Demo Admin',
-          role: 'admin',
-          total_points: 0,
-          current_streak: 0,
-          best_streak: 0,
-          quizzes_completed: 0,
-          correct_answers: 0,
-          total_answers: 0,
-          achievements: [],
-          created_date: new Date().toISOString(),
-          updated_date: new Date().toISOString()
-        };
-
-        inMemoryUsers.push(demoAdminUser);
-        console.log('✅ Created demo admin user in memory');
-      } catch (error) {
-        console.error('❌ Error hashing password for demo user:', error);
-        // Create user without bcrypt for fallback
-        const demoAdminUser = {
-          id: 6,
-          email: 'demo@quizmaster.com',
-          password: '$2b$10$rEuVt2qKJ8gKZqKJ8gKZqKJ8gKZqKJ8gKZqKJ8gKZqKJ8gKZqKJ8gKZq', // Pre-hashed demo123
-          full_name: 'Demo Admin',
-          role: 'admin',
-          total_points: 0,
-          current_streak: 0,
-          best_streak: 0,
-          quizzes_completed: 0,
-          correct_answers: 0,
-          total_answers: 0,
-          achievements: [],
-          created_date: new Date().toISOString(),
-          updated_date: new Date().toISOString()
-        };
-
-        inMemoryUsers.push(demoAdminUser);
-        console.log('✅ Created demo admin user in memory (bcrypt fallback)');
-      }
-    }
-    return;
+    console.error('❌ Database pool not available');
+    throw new Error('Database connection not available');
   }
 
   try {
+    // Create users table if it doesn't exist
     await dbPool.query(`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
@@ -101,74 +49,23 @@ export const initializeUserTable = async () => {
     // Only insert demo admin user if it doesn't exist
     if (demoUser.rows.length === 0) {
       try {
+        const hashedPassword = await bcrypt.hash('demo123', 10);
         await dbPool.query(`
           INSERT INTO users (email, password, full_name, role, total_points, current_streak, best_streak,
                             quizzes_completed, correct_answers, total_answers, achievements, created_date)
           VALUES ($1, $2, 'Demo Admin', 'admin', 0, 0, 0, 0, 0, 0, '{}', CURRENT_TIMESTAMP)
-        `, ['demo@quizmaster.com', await bcrypt.hash('demo123', 10)]);
+        `, ['demo@quizmaster.com', hashedPassword]);
         console.log('✅ Created demo admin user in database');
       } catch (hashError) {
-        console.error('❌ Error hashing password for database demo user:', hashError);
-        // Fallback to pre-hashed password
-        await dbPool.query(`
-          INSERT INTO users (email, password, full_name, role, total_points, current_streak, best_streak,
-                            quizzes_completed, correct_answers, total_answers, achievements, created_date)
-          VALUES ($1, $2, 'Demo Admin', 'admin', 0, 0, 0, 0, 0, 0, '{}', CURRENT_TIMESTAMP)
-        `, ['demo@quizmaster.com', '$2b$10$rEuVt2qKJ8gKZqKJ8gKZqKJ8gKZqKJ8gKZqKJ8gKZqKJ8gKZqKJ8gKZq']);
-        console.log('✅ Created demo admin user in database (bcrypt fallback)');
+        console.error('❌ Error creating demo user:', hashError);
+        throw hashError;
       }
     }
 
     console.log('✅ Users table initialized');
   } catch (error) {
     console.error('❌ Error initializing users table:', error);
-    // Even if database fails, ensure demo user exists in memory
-    if (!inMemoryUsers.find(user => user.email === 'demo@quizmaster.com')) {
-      try {
-        const hashedPassword = await bcrypt.hash('demo123', 10);
-        const demoAdminUser = {
-          id: 6,
-          email: 'demo@quizmaster.com',
-          password: hashedPassword,
-          full_name: 'Demo Admin',
-          role: 'admin',
-          total_points: 0,
-          current_streak: 0,
-          best_streak: 0,
-          quizzes_completed: 0,
-          correct_answers: 0,
-          total_answers: 0,
-          achievements: [],
-          created_date: new Date().toISOString(),
-          updated_date: new Date().toISOString()
-        };
-
-        inMemoryUsers.push(demoAdminUser);
-        console.log('✅ Created demo admin user in memory (fallback)');
-      } catch (bcryptError) {
-        console.error('❌ Error with bcrypt fallback:', bcryptError);
-        // Final fallback - create user with simple password
-        const demoAdminUser = {
-          id: 6,
-          email: 'demo@quizmaster.com',
-          password: 'demo123', // Plain text fallback
-          full_name: 'Demo Admin',
-          role: 'admin',
-          total_points: 0,
-          current_streak: 0,
-          best_streak: 0,
-          quizzes_completed: 0,
-          correct_answers: 0,
-          total_answers: 0,
-          achievements: [],
-          created_date: new Date().toISOString(),
-          updated_date: new Date().toISOString()
-        };
-
-        inMemoryUsers.push(demoAdminUser);
-        console.log('✅ Created demo admin user in memory (plain text fallback)');
-      }
-    }
+    throw error;
   }
 };
 
@@ -187,8 +84,7 @@ export const UserModel = {
   // Find all users
   async findAll() {
     if (!dbPool) {
-      // Fallback to in-memory if no database
-      return inMemoryUsers;
+      throw new Error('Database not available');
     }
 
     try {
@@ -200,23 +96,10 @@ export const UserModel = {
     }
   },
 
-  // Update user in memory storage
-  async updateInMemoryUser(userId, updates) {
-    if (!dbPool) {
-      const userIndex = inMemoryUsers.findIndex(user => user.id === parseInt(userId));
-      if (userIndex !== -1) {
-        inMemoryUsers[userIndex] = { ...inMemoryUsers[userIndex], ...updates };
-        return inMemoryUsers[userIndex];
-      }
-      return null;
-    }
-    return null;
-  },
-
   // Find by ID
   async findById(id) {
     if (!dbPool) {
-      return inMemoryUsers.find(user => user.id === parseInt(id)) || null;
+      throw new Error('Database not available');
     }
 
     try {
@@ -236,71 +119,9 @@ export const UserModel = {
     console.log('🔍 Finding user by email:', email);
 
     if (!dbPool) {
-      console.log('🔍 Using in-memory storage');
-      // For demo user, ensure it exists in memory with correct ID and admin role
-      if (email === 'demo@quizmaster.com') {
-        console.log('🔍 Looking for demo user in memory');
-        let demoUserIndex = inMemoryUsers.findIndex(user => user.email === email);
-        console.log('🔍 Demo user index:', demoUserIndex);
-
-        if (demoUserIndex === -1) {
-          console.log('🔍 Demo user not found, creating...');
-          // Create demo user if it doesn't exist
-          try {
-            console.log('🔧 Attempting to hash demo user password...');
-            const demoUser = {
-              id: 6,
-              email: 'demo@quizmaster.com',
-              password: await bcrypt.hash('demo123', 10),
-              full_name: 'Demo Admin',
-              role: 'admin',
-              total_points: 0,
-              current_streak: 0,
-              best_streak: 0,
-              quizzes_completed: 0,
-              correct_answers: 0,
-              total_answers: 0,
-              achievements: [],
-              created_date: new Date().toISOString(),
-              updated_date: new Date().toISOString()
-            };
-            inMemoryUsers.push(demoUser);
-            console.log('✅ Created demo admin user in memory');
-            return demoUser;
-          } catch (bcryptError) {
-            console.error('❌ Error hashing demo user password:', bcryptError);
-            // Fallback with pre-hashed password
-            const demoUser = {
-              id: 6,
-              email: 'demo@quizmaster.com',
-              password: '$2b$10$rEuVt2qKJ8gKZqKJ8gKZqKJ8gKZqKJ8gKZqKJ8gKZqKJ8gKZqKJ8gKZq',
-              full_name: 'Demo Admin',
-              role: 'admin',
-              total_points: 0,
-              current_streak: 0,
-              best_streak: 0,
-              quizzes_completed: 0,
-              correct_answers: 0,
-              total_answers: 0,
-              achievements: [],
-              created_date: new Date().toISOString(),
-              updated_date: new Date().toISOString()
-            };
-            inMemoryUsers.push(demoUser);
-            console.log('✅ Created demo admin user in memory (bcrypt fallback)');
-            return demoUser;
-          }
-        } else {
-          console.log('🔍 Found existing demo user');
-          // Return existing demo user
-          return inMemoryUsers[demoUserIndex];
-        }
-      }
-      console.log('🔍 Looking for regular user in memory');
-      return inMemoryUsers.find(user => user.email === email) || null;
+      throw new Error('Database not available');
     }
 
-    console.log('🔍 Using database');
     try {
       const result = await dbPool.query('SELECT * FROM users WHERE email = $1', [email]);
       console.log('🔍 Database query result:', result.rows.length, 'rows');
@@ -324,11 +145,6 @@ export const UserModel = {
       if (email === 'demo@quizmaster.com' && user.role !== 'admin') {
         user.role = 'admin';
         user.full_name = 'Demo Admin';
-
-        // Update in-memory storage if using in-memory
-        if (!dbPool) {
-          await this.updateInMemoryUser(user.id, { role: 'admin', full_name: 'Demo Admin' });
-        }
       }
 
       // Remove password from returned user object
@@ -361,6 +177,10 @@ export const UserModel = {
 
   // Create user with hashed password
   async register({ email, password, full_name }) {
+    if (!dbPool) {
+      throw new Error('Database not available');
+    }
+
     try {
       const hashedPassword = await this.hashPassword(password);
       const result = await dbPool.query(
@@ -382,6 +202,10 @@ export const UserModel = {
 
   // Update user password
   async updatePassword(userId, newPassword) {
+    if (!dbPool) {
+      throw new Error('Database not available');
+    }
+
     try {
       const hashedPassword = await this.hashPassword(newPassword);
       await dbPool.query(
