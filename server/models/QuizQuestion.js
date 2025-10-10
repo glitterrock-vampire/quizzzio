@@ -168,18 +168,30 @@ export const QuizQuestionModel = {
   // Bulk create
   async bulkCreate(data) {
     if (dbPool) {
-      // Database implementation
+      // Database implementation - using parameterized queries for safety
       try {
-        const values = data.map(q => `('${q.subject}', '${q.question.replace(/'/g, "''")}', ARRAY[${q.options.map(opt => `'${opt.replace(/'/g, "''")}'`).join(',')}], '${q.correct_answer.replace(/'/g, "''")}', '${q.difficulty}', '${(q.explanation || '').replace(/'/g, "''")}', ${q.points || 10}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`).join(', ');
+        const results = [];
 
-        const query = `
-          INSERT INTO quiz_questions (subject, question, options, correct_answer, difficulty, explanation, points, created_date, updated_date)
-          VALUES ${values}
-          RETURNING *
-        `;
+        // Insert each question individually to avoid SQL injection and syntax issues
+        for (const question of data) {
+          const result = await dbPool.query(`
+            INSERT INTO quiz_questions (subject, question, options, correct_answer, difficulty, explanation, points, created_date, updated_date)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+            RETURNING *
+          `, [
+            question.subject,
+            question.question,
+            question.options,
+            question.correct_answer,
+            question.difficulty,
+            question.explanation || '',
+            question.points || 10
+          ]);
 
-        const result = await dbPool.query(query);
-        return result.rows;
+          results.push(result.rows[0]);
+        }
+
+        return results;
       } catch (error) {
         console.error('Error bulk creating quiz questions:', error);
         throw error;
