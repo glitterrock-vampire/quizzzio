@@ -114,5 +114,3 @@ process.on('SIGTERM', async () => {
 });
 
 export { dbPool };
-
-export default config;
