@@ -29,28 +29,43 @@ const dbConfig = {
   keepAliveInitialDelayMillis: 0,
 };
 
-// Create a new pool instance
-const dbPool = new Pool(dbConfig);
+// Create a new pool instance only if we have database credentials
+let dbPool = null;
 
-// Test the connection and handle errors properly
-dbPool.on('connect', (client) => {
-  if (client.processID) {
-    console.log('✅ New client connected to PostgreSQL database');
-  }
-});
+if (process.env.DB_HOST && process.env.DB_NAME && process.env.DB_USER && process.env.DB_PASSWORD) {
+  dbPool = new Pool(dbConfig);
+  console.log('🗄️  Database configuration found, connecting to PostgreSQL');
+} else {
+  console.log('⚠️  Database credentials not found, using in-memory storage');
+  console.log('📋 Required environment variables: DB_HOST, DB_NAME, DB_USER, DB_PASSWORD');
+}
 
-dbPool.on('error', (err, client) => {
-  console.error('❌ Unexpected error on idle PostgreSQL client:', err);
-  // Don't exit the process, just log the error
-  // The pool will create a new client for the next query
-});
+// Test the connection and handle errors properly (only if dbPool exists)
+if (dbPool) {
+  dbPool.on('connect', (client) => {
+    if (client.processID) {
+      console.log('✅ New client connected to PostgreSQL database');
+    }
+  });
 
-dbPool.on('remove', (client) => {
-  console.log('✅ PostgreSQL client removed from pool');
-});
+  dbPool.on('error', (err, client) => {
+    console.error('❌ Unexpected error on idle PostgreSQL client:', err);
+    // Don't exit the process, just log the error
+    // The pool will create a new client for the next query
+  });
+
+  dbPool.on('remove', (client) => {
+    console.log('✅ PostgreSQL client removed from pool');
+  });
+}
 
 // Test connection function for startup
 export const testDatabaseConnection = async () => {
+  if (!dbPool) {
+    console.log('⚠️  No database connection available, using in-memory storage');
+    return false;
+  }
+
   let client;
   try {
     client = await dbPool.connect();
@@ -71,6 +86,11 @@ export const testDatabaseConnection = async () => {
 
 // Graceful shutdown handling
 export const closeDatabaseConnection = async () => {
+  if (!dbPool) {
+    console.log('✅ No database connection to close');
+    return;
+  }
+
   try {
     await dbPool.end();
     console.log('✅ PostgreSQL connection pool closed');
