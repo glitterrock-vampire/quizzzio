@@ -1,11 +1,53 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, XCircle, Lightbulb } from "lucide-react";
+import { CheckCircle2, XCircle, Lightbulb, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 
-export default function QuestionCard({ question, onAnswer, showExplanation, selectedAnswer }) {
+export default function QuestionCard({ 
+  question, 
+  onAnswer, 
+  showExplanation, 
+  selectedAnswer,
+  timeLeft = 30,
+  onTimeUp,
+  questionNumber,
+  totalQuestions
+}) {
+  const [displayTime, setDisplayTime] = useState(timeLeft);
   const isCorrect = selectedAnswer === question.correct_answer;
+
+  useEffect(() => {
+    setDisplayTime(timeLeft);
+  }, [timeLeft]);
+
+  useEffect(() => {
+    if (timeLeft <= 0 || showExplanation) return;
+
+    const timer = setInterval(() => {
+      setDisplayTime(prev => {
+        if (prev <= 1) {
+          onTimeUp?.();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [timeLeft, showExplanation, onTimeUp]);
+
+  const getTimerColor = () => {
+    if (displayTime > 10) return "text-green-600";
+    if (displayTime > 5) return "text-yellow-600";
+    return "text-red-600";
+  };
+
+  const getTimerBgColor = () => {
+    if (displayTime > 10) return "bg-green-100";
+    if (displayTime > 5) return "bg-yellow-100";
+    return "bg-red-100";
+  };
 
   return (
     <motion.div
@@ -18,14 +60,28 @@ export default function QuestionCard({ question, onAnswer, showExplanation, sele
         <div className="h-2 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500" />
         
         <CardHeader className="p-8 bg-gradient-to-br from-purple-50 to-pink-50">
-          <div className="flex items-start justify_between gap-4 mb-4">
+          <div className="flex items-start justify-between gap-4 mb-4">
             <h2 className="text-2xl font-bold text-gray-900 leading-tight">
               {question.question}
             </h2>
-            <Badge variant="secondary" className="capitalize shrink-0">
-              {question.difficulty || 'medium'}
-            </Badge>
+            <div className="flex items-center gap-3 shrink-0">
+              <Badge variant="secondary" className="capitalize">
+                {question.difficulty || 'medium'}
+              </Badge>
+              <div className={`flex items-center gap-2 px-3 py-2 rounded-full ${getTimerBgColor()}`}>
+                <Clock className={`w-4 h-4 ${getTimerColor()}`} />
+                <span className={`font-bold ${getTimerColor()}`}>
+                  {displayTime}s
+                </span>
+              </div>
+            </div>
           </div>
+          
+          {questionNumber && totalQuestions && (
+            <div className="text-sm text-gray-600">
+              Question {questionNumber} of {totalQuestions}
+            </div>
+          )}
         </CardHeader>
 
         <CardContent className="p-8 space-y-4">
@@ -89,5 +145,3 @@ export default function QuestionCard({ question, onAnswer, showExplanation, sele
     </motion.div>
   );
 }
-
-
