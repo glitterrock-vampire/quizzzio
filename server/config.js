@@ -37,10 +37,10 @@ export const config = {
   }
 };
 
-// PostgreSQL connection pool (only if using postgres)
+// PostgreSQL connection pool (only if using postgres and credentials are available)
 let dbPool = null;
 
-if (config.database.type === 'postgres') {
+if (config.database.type === 'postgres' && process.env.DB_HOST && process.env.DB_NAME && process.env.DB_USER && process.env.DB_PASSWORD) {
   dbPool = new Pool({
     host: config.database.host,
     port: config.database.port,
@@ -52,16 +52,23 @@ if (config.database.type === 'postgres') {
     connectionTimeoutMillis: 2000, // return an error after 2 seconds if connection could not be established
   });
 
-  // Test the connection
-  dbPool.on('connect', (client) => {
-    if (client.processID) {
-      console.log('✅ PostgreSQL connected successfully');
-    }
-  });
+  console.log('🗄️  Database configuration found, connecting to PostgreSQL');
 
-  dbPool.on('error', (err) => {
-    console.error('❌ PostgreSQL connection error:', err);
-  });
+  // Test the connection (only if dbPool exists)
+  if (dbPool) {
+    dbPool.on('connect', (client) => {
+      if (client.processID) {
+        console.log('✅ PostgreSQL connected successfully');
+      }
+    });
+
+    dbPool.on('error', (err) => {
+      console.error('❌ PostgreSQL connection error:', err);
+    });
+  }
+} else {
+  console.log('⚠️  Database credentials not found or not using PostgreSQL, using in-memory storage');
+  console.log('📋 Required environment variables: DB_HOST, DB_NAME, DB_USER, DB_PASSWORD');
 }
 
 export { dbPool };
