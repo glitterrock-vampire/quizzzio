@@ -23,6 +23,8 @@ export default function QuizPage() {
   const [error, setError] = useState(null);
   const [timeLeft, setTimeLeft] = useState(30);
   const [startTime, setStartTime] = useState(null);
+  const [showExplanation, setShowExplanation] = useState(false);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
 
   useEffect(() => {
     const subject = searchParams.get("subject");
@@ -36,6 +38,8 @@ export default function QuizPage() {
   useEffect(() => {
     if (stage === "playing" && currentQuestionIndex < questions.length) {
       setTimeLeft(30);
+      setShowExplanation(false);
+      setSelectedAnswer(null);
     }
   }, [stage, currentQuestionIndex, questions]);
 
@@ -78,6 +82,11 @@ export default function QuizPage() {
   };
 
   const handleAnswer = (answer) => {
+    if (showExplanation) return; // Prevent multiple answers
+    
+    setSelectedAnswer(answer);
+    setShowExplanation(true);
+    
     const currentQuestion = questions[currentQuestionIndex];
     const isCorrect = answer === currentQuestion.correct_answer;
 
@@ -89,7 +98,12 @@ export default function QuizPage() {
     }
 
     setAnswers([...answers, { question: currentQuestion, answer, isCorrect }]);
-    setCurrentQuestionIndex(currentQuestionIndex + 1);
+    
+    // Auto-advance after showing explanation for 3 seconds
+    setTimeout(() => {
+      setShowExplanation(false);
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    }, 3000);
   };
 
   const handleTimeUp = () => {
@@ -122,6 +136,8 @@ export default function QuizPage() {
     setStreak(0);
     setError(null);
     setLoading(false);
+    setShowExplanation(false);
+    setSelectedAnswer(null);
   };
 
   if (stage === "setup") {
@@ -143,6 +159,8 @@ export default function QuizPage() {
         onAnswer={handleAnswer}
         onTimeUp={handleTimeUp}
         streak={streak}
+        showExplanation={showExplanation}
+        selectedAnswer={selectedAnswer}
       />
     );
   }
