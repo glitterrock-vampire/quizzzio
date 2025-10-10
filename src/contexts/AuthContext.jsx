@@ -26,6 +26,8 @@ export function AuthProvider({ children }) {
       }
 
       try {
+        // Add a small delay to ensure login process is complete
+        await new Promise(resolve => setTimeout(resolve, 100));
         const userData = await authService.getCurrentUser();
         if (isMounted) {
           setUser(userData);
@@ -49,7 +51,7 @@ export function AuthProvider({ children }) {
     return () => {
       isMounted = false;
     };
-  }, [window.location.pathname]);
+  }, []);
 
   // Login function
   const login = async (credentials) => {
@@ -57,7 +59,13 @@ export function AuthProvider({ children }) {
       setLoading(true);
       setError(null);
       const userData = await authService.login(credentials);
+      
+      // Set user data immediately after successful login
       setUser(userData);
+      
+      // Add a small delay to ensure token is properly stored
+      await new Promise(resolve => setTimeout(resolve, 50));
+      
       return userData;
     } catch (error) {
       console.error('Login error:', error);
@@ -76,7 +84,6 @@ export function AuthProvider({ children }) {
       const response = await authService.register(userData);
 
       // Use the user data from the registration response directly
-      // instead of calling getCurrentUser() which might fail during registration
       if (response.user) {
         setUser(response.user);
       }
