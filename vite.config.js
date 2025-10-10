@@ -9,12 +9,19 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3001',
-        changeOrigin: true,
+  // Vercel deployment configuration
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
       },
     },
+  },
+  // Define environment variables for build time
+  define: {
+    __API_URL__: JSON.stringify(process.env.VITE_API_URL || 'https://quizzzio.onrender.com/api'),
   },
 });
