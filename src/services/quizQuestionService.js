@@ -8,14 +8,25 @@ export const QuizQuestionService = {
   },
 
   async filter(filters, orderBy = '', limit = 100) {
+    console.log('QuizQuestionService.filter called with:', filters, 'limit:', limit);
     const params = new URLSearchParams({
       ...filters,
       orderBy,
       limit: limit.toString()
     });
+    
+    console.log('Making API call to:', `${API_URL}/quiz-questions?${params}`);
     const response = await fetch(`${API_URL}/quiz-questions?${params}`);
-    if (!response.ok) throw new Error('Failed to filter questions');
-    return response.json();
+    
+    if (!response.ok) {
+      console.error('API call failed:', response.status, response.statusText);
+      throw new Error('Failed to filter questions');
+    }
+    
+    const questions = await response.json();
+    console.log('Received questions:', questions.length, 'questions');
+    
+    return questions;
   },
 
   async create(data) {
