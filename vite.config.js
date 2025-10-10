@@ -4,12 +4,12 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  base: '/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
   },
-  // Vercel deployment configuration
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
@@ -20,12 +20,9 @@ export default defineConfig({
       },
     },
   },
-  // Define environment variables for build time
   define: {
     __API_URL__: JSON.stringify(process.env.VITE_API_URL || 'https://quizzzio.onrender.com/api'),
   },
-  // Expose environment variables to the client
   envPrefix: 'VITE_',
-  // Load .env.local explicitly
   envDir: '.',
 });
