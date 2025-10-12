@@ -114,16 +114,64 @@ export const QuizSessionModel = {
         INSERT INTO quiz_sessions (user_id, subject, difficulty, total_questions, correct_answers, score, status, answers, started_at, created_date)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
         RETURNING *
-      `, [data.user_id, data.subject, data.difficulty, data.total_questions, data.correct_answers || 0, data.score || 0, data.status || 'in_progress', JSON.stringify(data.answers || [])]);
+      `, [data.user_id, data.subject, data.difficulty || null, data.total_questions, data.correct_answers || 0, data.score || 0, data.status || 'in_progress', JSON.stringify(data.answers || [])]);
 
-      return result.rows[0];
+      const session = result.rows[0];
+
+      // Update user statistics after creating session
+      await this.updateUserStats(data.user_id);
+
+      return session;
     } catch (error) {
       console.error('Error creating quiz session:', error);
       throw error;
     }
   },
 
-  // Get user statistics
+  // Update user statistics after creating a session
+  async updateUserStats(userId) {
+    if (!dbPool) return;
+
+    try {
+      // Get all user's quiz sessions to calculate cumulative stats
+      const sessionsResult = await dbPool.query(`
+        SELECT total_questions, correct_answers, score
+        FROM quiz_sessions
+        WHERE user_id = $1
+      `, [userId]);
+
+      const sessions = sessionsResult.rows;
+      const totalSessions = sessions.length;
+
+      if (totalSessions === 0) return;
+
+      // Calculate cumulative stats
+      const totalQuestions = sessions.reduce((sum, session) => sum + (session.total_questions || 0), 0);
+      const totalCorrectAnswers = sessions.reduce((sum, session) => sum + (session.correct_answers || 0), 0);
+      const totalScore = sessions.reduce((sum, session) => sum + (session.score || 0), 0);
+
+      // Calculate streak and other stats
+      const maxScore = Math.max(...sessions.map(s => s.score || 0));
+      const avgAccuracy = totalQuestions > 0 ? (totalCorrectAnswers / totalQuestions) * 100 : 0;
+
+      // Update user record with cumulative stats
+      await dbPool.query(`
+        UPDATE users
+        SET
+          total_points = $1,
+          correct_answers = $2,
+          total_answers = $3,
+          quizzes_completed = $4,
+          best_streak = GREATEST(best_streak, $5),
+          accuracy = $6,
+          updated_date = CURRENT_TIMESTAMP
+        WHERE id = $7
+      `, [totalScore, totalCorrectAnswers, totalQuestions, totalSessions, maxScore, Math.round(avgAccuracy), userId]);
+
+    } catch (error) {
+      console.error('Error updating user stats:', error);
+    }
+  },
   async getUserStats(userId) {
     if (!dbPool) {
       return {

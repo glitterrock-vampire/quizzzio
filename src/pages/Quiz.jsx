@@ -154,6 +154,7 @@ export default function QuizPage() {
         const sessionData = {
           user_id: user.id,
           subject: quizConfig.subject,
+          difficulty: quizConfig.difficulty,
           total_questions: questions.length,
           correct_answers: score,
           score: score * 10, // 10 points per correct answer
@@ -217,7 +218,8 @@ export default function QuizPage() {
         answers={answers}
         score={score}
         totalQuestions={questions.length}
-        onRetake={resetQuiz}
+        onPlayAgain={resetQuiz}
+        onBackHome={() => navigate('/')}
         loading={loading}
       />
     );

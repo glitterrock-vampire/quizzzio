@@ -113,7 +113,7 @@ export default function QuizResults({ answers, score, questions, onPlayAgain, on
                   </div>
                   <div className="flex-1">
                     <p className="font-semibold mb-2">Question {index + 1}</p>
-                    <p className="text-gray-700 mb-3">{answer.question}</p>
+                    <p className="text-gray-700 mb-3">{answer.question.question}</p>
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
                         <Badge variant={answer.isCorrect ? "default" : "destructive"}>
@@ -126,13 +126,13 @@ export default function QuizResults({ answers, score, questions, onPlayAgain, on
                           <Badge variant="default" className="bg-green-600">
                             Correct answer
                           </Badge>
-                          <span className="text-sm">{answer.correctAnswer}</span>
+                          <span className="text-sm">{answer.question.correct_answer}</span>
                         </div>
                       )}
                     </div>
                     {answer.isCorrect && (
                       <Badge variant="secondary" className="mt-2">
-                        +{answer.points} points
+                        +{answer.question.points} points
                       </Badge>
                     )}
                   </div>
