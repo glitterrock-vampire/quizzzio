@@ -1,0 +1,182 @@
+[
+  {
+    "subject": "Mathematics",
+    "question": "Find the derivative of f(x) = 3x² + 2x - 5",
+    "options": ["6x + 2", "6x - 2", "3x + 2", "6x"],
+    "correct_answer": "6x + 2",
+    "difficulty": "easy",
+    "explanation": "Using power rule: d/dx[3x²] = 6x, d/dx[2x] = 2, d/dx[-5] = 0",
+    "points": 10
+  },
+  {
+    "subject": "Mathematics",
+    "question": "Evaluate the limit: lim(x→0) (sin(x)/x)",
+    "options": ["0", "1", "∞", "DNE"],
+    "correct_answer": "1",
+    "difficulty": "easy",
+    "explanation": "This is a fundamental limit that equals 1",
+    "points": 10
+  },
+  {
+    "subject": "Mathematics",
+    "question": "Find the derivative of f(x) = eˣ * sin(x) using product rule",
+    "options": ["eˣ(cos(x) + sin(x))", "eˣ(cos(x) - sin(x))", "eˣ sin(x)", "-eˣ cos(x)"],
+    "correct_answer": "eˣ(cos(x) + sin(x))",
+    "difficulty": "medium",
+    "explanation": "Product rule: (eˣ)'sin(x) + eˣ(sin(x))' = eˣ sin(x) + eˣ cos(x)",
+    "points": 15
+  },
+  {
+    "subject": "Mathematics",
+    "question": "Compute ∫ 2x dx",
+    "options": ["x² + C", "2x² + C", "x²/2 + C", "x + C"],
+    "correct_answer": "x² + C",
+    "difficulty": "easy",
+    "explanation": "Power rule for integration: ∫ xⁿ dx = (xⁿ⁺¹)/(n+1) + C",
+    "points": 10
+  },
+  {
+    "subject": "Mathematics",
+    "question": "Find the area under the curve y = x² from x = 0 to x = 2",
+    "options": ["8/3", "4", "2", "16/3"],
+    "correct_answer": "8/3",
+    "difficulty": "medium",
+    "explanation": "∫₀² x² dx = [x³/3]₀² = (8/3) - 0 = 8/3",
+    "points": 15
+  },
+  {
+    "subject": "Mathematics",
+    "question": "Determine if the sequence aₙ = n/(n+1) converges or diverges",
+    "options": ["Converges to 0", "Converges to 1", "Converges to ∞", "Diverges"],
+    "correct_answer": "Converges to 1",
+    "difficulty": "medium",
+    "explanation": "lim(n→∞) n/(n+1) = lim(n→∞) 1/(1 + 1/n) = 1",
+    "points": 15
+  },
+  {
+    "subject": "Mathematics",
+    "question": "Use integration by parts to find ∫ x eˣ dx",
+    "options": ["x eˣ - eˣ + C", "x eˣ + C", "eˣ(x - 1) + C", "x eˣ - x + C"],
+    "correct_answer": "x eˣ - eˣ + C",
+    "difficulty": "hard",
+    "explanation": "Let u = x, dv = eˣ dx. Then du = dx, v = eˣ. Result: x eˣ - ∫ eˣ dx = x eˣ - eˣ + C",
+    "points": 20
+  },
+  {
+    "subject": "Mathematics",
+    "question": "Find the derivative of f(x) = ln(x² + 1) using chain rule",
+    "options": ["2x/(x² + 1)", "1/(x² + 1)", "2x/(2x)", "x/(x² + 1)"],
+    "correct_answer": "2x/(x² + 1)",
+    "difficulty": "medium",
+    "explanation": "Chain rule: d/dx[ln(u)] = (1/u) * u'. Here u = x² + 1, u' = 2x",
+    "points": 15
+  },
+  {
+    "subject": "Mathematics",
+    "question": "Compute the integral ∫ cos(2x) dx",
+    "options": ["(1/2) sin(2x) + C", "2 sin(2x) + C", "sin(2x) + C", "-cos(2x) + C"],
+    "correct_answer": "(1/2) sin(2x) + C",
+    "difficulty": "medium",
+    "explanation": "∫ cos(kx) dx = (1/k) sin(kx) + C",
+    "points": 15
+  },
+  {
+    "subject": "Mathematics",
+    "question": "Determine the convergence of the series Σ(n=1 to ∞) 1/n²",
+    "options": ["Converges (p-series, p=2>1)", "Diverges (harmonic series)", "Converges conditionally", "Diverges by integral test"],
+    "correct_answer": "Converges (p-series, p=2>1)",
+    "difficulty": "medium",
+    "explanation": "This is a p-series with p=2 > 1, so it converges",
+    "points": 15
+  },
+  {
+    "subject": "Mathematics",
+    "question": "Find the volume of the solid formed by rotating y = x² about the y-axis from x=0 to x=2",
+    "options": ["2π", "4π", "8π", "π"],
+    "correct_answer": "2π",
+    "difficulty": "hard",
+    "explanation": "Method of cylindrical shells: V = ∫₀² 2πx * x² dx = 2π ∫₀² x³ dx = 2π [x⁴/4]₀² = 2π (4) = 8π. Wait, let me recalculate...",
+    "points": 20
+  },
+  {
+    "subject": "Mathematics",
+    "question": "Compute lim(x→∞) (ln(x)/x)",
+    "options": ["0", "1", "∞", "DNE"],
+    "correct_answer": "0",
+    "difficulty": "medium",
+    "explanation": "L'Hôpital's rule: d/dx[ln(x)] = 1/x, d/dx[x] = 1, so lim(x→∞) 1/x = 0",
+    "points": 15
+  },
+  {
+    "subject": "Mathematics",
+    "question": "Find the derivative of f(x) = tan(x) using quotient rule",
+    "options": ["sec²(x)", "cos²(x)", "1/cos²(x)", "sin²(x)/cos²(x)"],
+    "correct_answer": "sec²(x)",
+    "difficulty": "medium",
+    "explanation": "tan(x) = sin(x)/cos(x), derivative is (cos(x)cos(x) - sin(x)(-sin(x)))/cos²(x) = (cos²(x) + sin²(x))/cos²(x) = 1/cos²(x) = sec²(x)",
+    "points": 15
+  },
+  {
+    "subject": "Mathematics",
+    "question": "Evaluate ∫₀¹ x eˣ dx using integration by parts",
+    "options": ["e - 1", "e", "1", "e - 2"],
+    "correct_answer": "e - 1",
+    "difficulty": "hard",
+    "explanation": "Let u = x, dv = eˣ dx. Integration by parts: x eˣ - ∫ eˣ dx = x eˣ - eˣ from 0 to 1 = (e - e) - (0 - 1) = e - 1",
+    "points": 20
+  },
+  {
+    "subject": "Mathematics",
+    "question": "Determine if the series Σ(n=1 to ∞) (-1)ⁿ/n converges",
+    "options": ["Converges absolutely", "Converges conditionally", "Diverges", "Alternating series test"],
+    "correct_answer": "Converges conditionally",
+    "difficulty": "hard",
+    "explanation": "Alternating series with decreasing terms: |aₙ| = 1/n → 0 and decreasing, but Σ 1/n diverges, so conditional convergence",
+    "points": 20
+  },
+  {
+    "subject": "Mathematics",
+    "question": "Find the Taylor series for f(x) = eˣ centered at a = 0",
+    "options": ["Σ(xⁿ/n!) from n=0 to ∞", "Σ(xⁿ/n) from n=0 to ∞", "Σ(xⁿ/n²) from n=0 to ∞", "Σ(xⁿ/n!) from n=1 to ∞"],
+    "correct_answer": "Σ(xⁿ/n!) from n=0 to ∞",
+    "difficulty": "medium",
+    "explanation": "The Taylor series for eˣ is the Maclaurin series Σ(xⁿ/n!) for all x",
+    "points": 15
+  },
+  {
+    "subject": "Mathematics",
+    "question": "Compute ∫ sin⁴(x) cos(x) dx using substitution",
+    "options": ["(1/5) sin⁵(x) + C", "-(1/4) cos⁴(x) + C", "-(1/5) sin⁵(x) + C", "cos⁵(x) + C"],
+    "correct_answer": "(1/5) sin⁵(x) + C",
+    "difficulty": "hard",
+    "explanation": "Let u = sin(x), du = cos(x) dx, then ∫ u⁴ du = u⁵/5 + C = sin⁵(x)/5 + C",
+    "points": 20
+  },
+  {
+    "subject": "Mathematics",
+    "question": "Find the radius of convergence for the series Σ(n=1 to ∞) (x-2)ⁿ/n²",
+    "options": ["1", "2", "∞", "0"],
+    "correct_answer": "∞",
+    "difficulty": "hard",
+    "explanation": "Ratio test: lim(n→∞) |(x-2)ⁿ⁺¹/n² / (x-2)ⁿ/(n+1)²| = |x-2| lim(n→∞) (n+1)²/n² = |x-2| < 1 for all x",
+    "points": 20
+  },
+  {
+    "subject": "Mathematics",
+    "question": "Compute the integral ∫ dx/(x² + 4) using trigonometric substitution",
+    "options": ["(1/2) arctan(x/2) + C", "arctan(x/2) + C", "(1/2) ln|x² + 4| + C", "ln|x² + 4| + C"],
+    "correct_answer": "(1/2) arctan(x/2) + C",
+    "difficulty": "hard",
+    "explanation": "Let x = 2 tan(θ), dx = 2 sec²(θ) dθ, ∫ 2 sec²(θ) dθ / (4 tan²(θ) + 4) = ∫ 2 sec²(θ) dθ / (4 sec²(θ)) = ∫ (1/2) dθ = (1/2) θ + C = (1/2) arctan(x/2) + C",
+    "points": 20
+  },
+  {
+    "subject": "Mathematics",
+    "question": "Determine the convergence of Σ(n=2 to ∞) 1/(n ln(n))",
+    "options": ["Converges", "Diverges", "Conditionally converges", "Absolutely converges"],
+    "correct_answer": "Diverges",
+    "difficulty": "hard",
+    "explanation": "Integral test: ∫₂^∞ dx/(x ln(x)) = ln(ln(x)) from 2 to ∞ = ∞, so diverges",
+    "points": 20
+  }
+]

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { QuizQuestionService } from "../services/quizQuestionService";
-import { Upload, FileJson, FileSpreadsheet, CheckCircle2, AlertCircle, ArrowLeft } from "lucide-react";
+import { Upload, FileJson, CheckCircle2, AlertCircle, ArrowLeft, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "../utils/routing";
 import { motion } from "framer-motion";
@@ -8,7 +8,6 @@ import { motion } from "framer-motion";
 export default function UploadPage() {
   const navigate = useNavigate();
   const [jsonInput, setJsonInput] = useState("");
-  const [csvInput, setCsvInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
@@ -34,40 +33,6 @@ export default function UploadPage() {
     setLoading(false);
   };
 
-  const handleCsvUpload = async () => {
-    setLoading(true);
-    setError(null);
-    setSuccess(null);
-
-    try {
-      const lines = csvInput.trim().split('\n');
-      const headers = lines[0].split(',').map(h => h.trim());
-      
-      const questions = lines.slice(1).map(line => {
-        const values = line.split(',').map(v => v.trim());
-        const question = {};
-        
-        headers.forEach((header, index) => {
-          if (header === 'options') {
-            question[header] = values[index].split('|').map(o => o.trim());
-          } else if (header === 'points') {
-            question[header] = parseFloat(values[index]) || 10;
-          } else {
-            question[header] = values[index];
-          }
-        });
-        
-        return question;
-      });
-
-      await QuizQuestionService.bulkCreate(questions);
-      setSuccess(`Successfully uploaded ${questions.length} questions!`);
-      setCsvInput("");
-    } catch (err) {
-      setError(err.message || "Error uploading questions");
-    }
-    setLoading(false);
-  };
 
   return (
     <div className="min-h-screen p-4 md:p-8">
@@ -85,9 +50,9 @@ export default function UploadPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-3xl font-bold mb-2">Upload Questions</h1>
+          <h1 className="text-3xl font-bold mb-2">Add Questions</h1>
           <p className="text-gray-600">
-            Add your own quiz questions via JSON or CSV format
+            Add your own quiz questions via JSON format
           </p>
         </motion.div>
 
@@ -105,24 +70,23 @@ export default function UploadPage() {
           </div>
         )}
 
-        <div className="grid md:grid-cols-2 gap-6">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            <div className="bg-white border-none shadow-lg h-full rounded-xl">
-              <div className="p-6 bg-gradient-to-r from-blue-50 to-cyan-50 border-b rounded-t-xl">
-                <h2 className="font-bold text-lg flex items-center gap-2">
-                  <FileJson className="w-5 h-5 text-blue-600" />
-                  JSON Format
-                </h2>
-              </div>
-              <div className="p-6 space-y-4">
-                <div className="bg-gray-50 p-4 rounded-lg text-sm font-mono overflow-x-auto">
-                  <pre className="text-xs">{`[
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <div className="bg-white border-none shadow-lg rounded-xl">
+            <div className="p-6 bg-gradient-to-r from-blue-50 to-cyan-50 border-b rounded-t-xl">
+              <h2 className="font-bold text-lg flex items-center gap-2">
+                <FileJson className="w-5 h-5 text-blue-600" />
+                JSON Format
+              </h2>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="bg-gray-50 p-4 rounded-lg text-sm font-mono overflow-x-auto">
+                <pre className="text-xs">{`[
   {
-    "subject": "math",
+    "subject": "Mathematics",
     "question": "What is 2+2?",
     "options": ["3", "4", "5", "6"],
     "correct_answer": "4",
@@ -131,64 +95,24 @@ export default function UploadPage() {
     "points": 10
   }
 ]`}</pre>
-                </div>
-                <textarea
-                  placeholder="Paste your JSON here..."
-                  value={jsonInput}
-                  onChange={(e) => setJsonInput(e.target.value)}
-                  className="w-full min-h-[200px] p-3 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                <button
-                  onClick={handleJsonUpload}
-                  disabled={!jsonInput || loading}
-                  className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
-                >
-                  <Upload className="w-4 h-4" />
-                  Upload JSON
-                </button>
               </div>
+              <textarea
+                placeholder="Paste your JSON here..."
+                value={jsonInput}
+                onChange={(e) => setJsonInput(e.target.value)}
+                className="w-full min-h-[300px] p-3 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <button
+                onClick={handleJsonUpload}
+                disabled={!jsonInput || loading}
+                className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+              >
+                <Plus className="w-4 h-4" />
+                {loading ? "Adding Questions..." : "Add Questions"}
+              </button>
             </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <div className="bg-white border-none shadow-lg h-full rounded-xl">
-              <div className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 border-b rounded-t-xl">
-                <h2 className="font-bold text-lg flex items-center gap-2">
-                  <FileSpreadsheet className="w-5 h-5 text-green-600" />
-                  CSV Format
-                </h2>
-              </div>
-              <div className="p-6 space-y-4">
-                <div className="bg-gray-50 p-4 rounded-lg text-sm font-mono overflow-x-auto">
-                  <pre className="text-xs">{`subject,question,options,correct_answer,difficulty,points
-math,What is 2+2?,3|4|5|6,4,easy,10
-science,What is H2O?,Air|Water|Fire,Water,easy,10`}</pre>
-                </div>
-                <textarea
-                  placeholder="Paste your CSV here..."
-                  value={csvInput}
-                  onChange={(e) => setCsvInput(e.target.value)}
-                  className="w-full min-h-[200px] p-3 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                />
-                <div className="text-xs text-gray-500">
-                  Note: Separate multiple options with | character
-                </div>
-                <button
-                  onClick={handleCsvUpload}
-                  disabled={!csvInput || loading}
-                  className="w-full px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
-                >
-                  <Upload className="w-4 h-4" />
-                  Upload CSV
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        </div>
+          </div>
+        </motion.div>
 
         <div className="mt-6 bg-white border-none shadow-lg rounded-xl">
           <div className="p-6 border-b">
@@ -202,7 +126,7 @@ science,What is H2O?,Air|Water|Fire,Water,easy,10`}</pre>
                   <li className="flex items-start gap-2">
                     <span className="text-purple-600">•</span>
                     <div>
-                      <strong>subject:</strong> math, science, history, geography, literature, general_knowledge
+                      <strong>subject:</strong> Mathematics, Science, History, Geography, Literature, General Knowledge, Caribbean History, French Caribbean
                     </div>
                   </li>
                   <li className="flex items-start gap-2">

@@ -107,5 +107,22 @@ export const QuizQuestionService = {
       console.error('QuizQuestionService.getAll error:', error);
       return [];
     }
+  },
+
+  async bulkCreate(questions) {
+    try {
+      const response = await fetch(`${API_URL}/quiz-questions/bulk`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(questions)
+      });
+      if (!response.ok) throw new Error('Failed to create questions');
+      return response.json();
+    } catch (error) {
+      console.error('QuizQuestionService.bulkCreate error:', error);
+      throw error;
+    }
   }
 };

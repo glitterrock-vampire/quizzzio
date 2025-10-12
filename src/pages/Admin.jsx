@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { QuizQuestionService } from '../services/quizQuestionService';
-import { Database, Search, Filter, Eye, Edit, Trash2, Plus } from 'lucide-react';
+import { Database, Search, Filter, Eye, Edit, Trash2, Plus, Upload } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function AdminPage() {
   const { user, hasRole } = useAuth();
+  const navigate = useNavigate();
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -90,9 +92,12 @@ export default function AdminPage() {
               <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
               <p className="text-gray-600">Manage questions and view statistics</p>
             </div>
-            <button className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2">
+            <button 
+              onClick={() => navigate('/upload')}
+              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2"
+            >
               <Plus className="w-4 h-4" />
-              Add Question
+              Add Questions
             </button>
           </div>
 
