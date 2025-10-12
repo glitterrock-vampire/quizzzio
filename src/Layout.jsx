@@ -10,7 +10,8 @@ import {
   LogOut,
   Zap,
   Menu,
-  X
+  X,
+  Settings
 } from "lucide-react";
 import { useAuth } from "./contexts/AuthContext";
 
@@ -19,6 +20,7 @@ const authenticatedNavItems = [
   { title: "Home", url: "/", icon: Home },
   { title: "Play Quiz", url: "/quiz", icon: Play },
   { title: "Upload Questions", url: "/upload", icon: Upload, adminOnly: true },
+  { title: "Admin Panel", url: "/admin", icon: Settings, adminOnly: true },
   { title: "Leaderboard", url: "/leaderboard", icon: Trophy },
 ];
 

@@ -136,6 +136,18 @@ export function AuthProvider({ children }) {
     return user?.role === role;
   }, [user]);
 
+  // Refresh user data
+  const refreshUser = useCallback(async () => {
+    if (!authService.isAuthenticated()) return;
+    
+    try {
+      const userData = await authService.getCurrentUser();
+      setUser(userData);
+    } catch (error) {
+      console.error('Error refreshing user data:', error);
+    }
+  }, []);
+
   const value = {
     user,
     loading,
@@ -146,6 +158,7 @@ export function AuthProvider({ children }) {
     register,
     logout,
     changePassword,
+    refreshUser,
     setError
   };
 

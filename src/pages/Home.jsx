@@ -16,12 +16,14 @@ const subjectIcons = {
 };
 
 const subjects = [
-  { id: "math", name: "Mathematics", color: "from-blue-500 to-cyan-500", icon: "🔢" },
-  { id: "science", name: "Science", color: "from-green-500 to-emerald-500", icon: "🔬" },
-  { id: "history", name: "History", color: "from-amber-500 to-orange-500", icon: "📜" },
-  { id: "geography", name: "Geography", color: "from-teal-500 to-cyan-500", icon: "🌍" },
-  { id: "literature", name: "Literature", color: "from-purple-500 to-pink-500", icon: "📚" },
-  { id: "general_knowledge", name: "General Knowledge", color: "from-indigo-500 to-purple-500", icon: "🧠" }
+  { id: "Mathematics", name: "Mathematics", color: "from-blue-500 to-cyan-500", icon: "🔢" },
+  { id: "Science", name: "Science", color: "from-green-500 to-emerald-500", icon: "🔬" },
+  { id: "History", name: "History", color: "from-amber-500 to-orange-500", icon: "📜" },
+  { id: "Geography", name: "Geography", color: "from-teal-500 to-cyan-500", icon: "🌍" },
+  { id: "Literature", name: "Literature", color: "from-purple-500 to-pink-500", icon: "📚" },
+  { id: "General Knowledge", name: "General Knowledge", color: "from-indigo-500 to-purple-500", icon: "🧠" },
+  { id: "Caribbean History", name: "Caribbean History", color: "from-orange-500 to-red-500", icon: "🏝️" },
+  { id: "French Caribbean", name: "French Caribbean", color: "from-blue-500 to-indigo-500", icon: "🇫🇷" }
 ];
 
 const achievements = [

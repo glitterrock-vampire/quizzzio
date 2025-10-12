@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { QuizQuestionService } from '../services/quizQuestionService';
+import { QuizSessionService } from '../services/quizSessionService';
 import { AIService } from '../services/aiService';
 import QuizSetup from '../components/quiz/QuizSetup';
 import QuestionCard from '../components/quiz/QuestionCard';
@@ -130,7 +131,12 @@ export default function QuizPage() {
     // Auto-advance after showing explanation for 3 seconds
     setTimeout(() => {
       setShowExplanation(false);
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      const nextIndex = currentQuestionIndex + 1;
+      if (nextIndex >= questions.length) {
+        handleQuizComplete();
+      } else {
+        setCurrentQuestionIndex(nextIndex);
+      }
     }, 3000);
   };
 
@@ -143,12 +149,23 @@ export default function QuizPage() {
     setLoading(true);
 
     try {
-      // Update user stats
+      // Save quiz session and update user stats
       if (user) {
+        const sessionData = {
+          user_id: user.id,
+          subject: quizConfig.subject,
+          total_questions: questions.length,
+          correct_answers: score,
+          score: score * 10, // 10 points per correct answer
+          time_taken: Math.round((Date.now() - startTime) / 1000),
+          answers: answers
+        };
+
+        await QuizSessionService.create(sessionData);
         await refreshUser();
       }
     } catch (error) {
-      console.error("Error updating user stats:", error);
+      console.error("Error saving quiz session:", error);
     }
 
     setLoading(false);
@@ -189,6 +206,7 @@ export default function QuizPage() {
         streak={streak}
         showExplanation={showExplanation}
         selectedAnswer={selectedAnswer}
+        timeLeft={timeLeft}
       />
     );
   }

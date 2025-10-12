@@ -8,7 +8,9 @@ const subjects = [
   { id: "History", name: "History", icon: "📜" },
   { id: "Geography", name: "Geography", icon: "🌍" },
   { id: "Literature", name: "Literature", icon: "📚" },
-  { id: "General Knowledge", name: "General Knowledge", icon: "🧠" }
+  { id: "General Knowledge", name: "General Knowledge", icon: "🧠" },
+  { id: "Caribbean History", name: "Caribbean History", icon: "🏝️" },
+  { id: "French Caribbean", name: "French Caribbean", icon: "🇫🇷" }
 ];
 
 export default function QuizSetup({ onStart, loading }) {
@@ -51,28 +53,34 @@ export default function QuizSetup({ onStart, loading }) {
 
           <div>
             <label className="text-base font-semibold mb-4 block">Difficulty Level</label>
-            <div className="space-y-3">
-              {["easy", "medium", "hard", "mixed"].map((diff) => (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {[
+                { value: "easy", label: "Easy", color: "green", time: "30s" },
+                { value: "medium", label: "Medium", color: "yellow", time: "45s" },
+                { value: "hard", label: "Hard", color: "red", time: "60s" },
+                { value: "mixed", label: "Mixed", color: "purple", time: "Variable" }
+              ].map((diff) => (
                 <div
-                  key={diff}
-                  onClick={() => setConfig({ ...config, difficulty: diff })}
-                  className={`flex items-center space-x-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                    config.difficulty === diff
-                      ? 'border-purple-500 bg-purple-50'
-                      : 'border-gray-200 hover:border-purple-300'
+                  key={diff.value}
+                  onClick={() => setConfig({ ...config, difficulty: diff.value })}
+                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all text-center ${
+                    config.difficulty === diff.value
+                      ? `border-${diff.color}-500 bg-${diff.color}-50 shadow-lg`
+                      : 'border-gray-200 hover:border-purple-300 hover:bg-gray-50'
                   }`}
                 >
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                    config.difficulty === diff
-                      ? 'border-purple-500 bg-purple-500'
+                  <div className={`w-6 h-6 rounded-full border-2 mx-auto mb-2 flex items-center justify-center ${
+                    config.difficulty === diff.value
+                      ? `border-${diff.color}-500 bg-${diff.color}-500`
                       : 'border-gray-300'
                   }`}>
-                    {config.difficulty === diff && (
+                    {config.difficulty === diff.value && (
                       <div className="w-2 h-2 bg-white rounded-full" />
                     )}
                   </div>
-                  <div className="flex-1">
-                    <span className="font-semibold">{diff[0].toUpperCase() + diff.slice(1)}</span>
+                  <div>
+                    <span className="font-semibold block">{diff.label}</span>
+                    <span className="text-xs text-gray-500">{diff.time}</span>
                   </div>
                 </div>
               ))}
@@ -98,35 +106,25 @@ export default function QuizSetup({ onStart, loading }) {
 
           <div>
             <label className="text-base font-semibold mb-4 block">Question Source</label>
-            <div className="space-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
-                { value: "ai", icon: Sparkles, label: "AI Generated" },
-                { value: "existing", icon: Database, label: "Existing Database" }
+                { value: "ai", icon: Sparkles, label: "AI Generated", description: "Fresh questions created by AI" },
+                { value: "existing", icon: Database, label: "Database Questions", description: "Questions from our database" }
               ].map((source) => (
                 <div
                   key={source.value}
                   onClick={() => setConfig({ ...config, mode: source.value })}
-                  className={`flex items-center space-x-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                  className={`p-6 rounded-xl border-2 cursor-pointer transition-all ${
                     config.mode === source.value
-                      ? 'border-purple-500 bg-purple-50'
-                      : 'border-gray-200 hover:border-purple-300'
+                      ? 'border-purple-500 bg-purple-50 shadow-lg'
+                      : 'border-gray-200 hover:border-purple-300 hover:bg-gray-50'
                   }`}
                 >
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                    config.mode === source.value
-                      ? 'border-purple-500 bg-purple-500'
-                      : 'border-gray-300'
-                  }`}>
-                    {config.mode === source.value && (
-                      <div className="w-2 h-2 bg-white rounded-full" />
-                    )}
+                  <div className="flex items-center gap-3 mb-2">
+                    <source.icon className="w-6 h-6 text-purple-600" />
+                    <span className="font-semibold text-lg">{source.label}</span>
                   </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <source.icon className="w-4 h-4" />
-                      <span className="font-semibold">{source.label}</span>
-                    </div>
-                  </div>
+                  <p className="text-sm text-gray-600">{source.description}</p>
                 </div>
               ))}
             </div>

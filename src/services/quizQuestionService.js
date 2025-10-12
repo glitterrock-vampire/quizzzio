@@ -96,5 +96,16 @@ export const QuizQuestionService = {
       console.error('QuizQuestionService.delete error:', error);
       throw error;
     }
+  },
+
+  async getAll() {
+    try {
+      const response = await fetch(`${API_URL}/quiz-questions?limit=1000`);
+      if (!response.ok) throw new Error('Failed to fetch all questions');
+      return response.json();
+    } catch (error) {
+      console.error('QuizQuestionService.getAll error:', error);
+      return [];
+    }
   }
 };

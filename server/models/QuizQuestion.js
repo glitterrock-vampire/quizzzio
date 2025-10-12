@@ -85,36 +85,45 @@ export const QuizQuestionModel = {
           const query = `SELECT * FROM ${tableName}${whereClause}${orderClause}${limitClause}`;
           queries.push({ query, params: allParams.concat(params) });
         } else {
-          // All subjects
+          // All subjects - use UNION to combine all tables
+          const tableQueries = [];
+          let paramCount = 1;
+          let allParams = [];
+
           for (const subject of Object.keys(SUBJECT_TABLES)) {
             const tableName = SUBJECT_TABLES[subject];
             let whereClause = '';
             let params = [];
-            let paramCount = 1;
 
             if (filters.difficulty) {
-              whereClause = ` WHERE difficulty = $${paramCount + paramOffset}`;
+              whereClause = ` WHERE difficulty = $${paramCount}`;
               params.push(filters.difficulty);
               paramCount++;
             }
 
-            let orderClause = '';
-            if (options.orderBy) {
-              const field = options.orderBy.replace('-', '');
-              const desc = options.orderBy.startsWith('-');
-              orderClause = ` ORDER BY ${field} ${desc ? 'DESC' : 'ASC'}`;
-            }
-
-            let limitClause = '';
-            if (options.limit) {
-              limitClause = ` LIMIT $${paramCount + paramOffset}`;
-              params.push(options.limit);
-            }
-
-            const query = `SELECT * FROM ${tableName}${whereClause}${orderClause}${limitClause}`;
-            queries.push({ query, params: allParams.concat(params) });
-            paramOffset += params.length;
+            const query = `SELECT * FROM ${tableName}${whereClause}`;
+            tableQueries.push(query);
+            allParams.push(...params);
           }
+
+          // Combine all tables with UNION
+          const combinedQuery = tableQueries.join(' UNION ALL ');
+
+          let orderClause = '';
+          if (options.orderBy) {
+            const field = options.orderBy.replace('-', '');
+            const desc = options.orderBy.startsWith('-');
+            orderClause = ` ORDER BY ${field} ${desc ? 'DESC' : 'ASC'}`;
+          }
+
+          let limitClause = '';
+          if (options.limit) {
+            limitClause = ` LIMIT $${paramCount}`;
+            allParams.push(options.limit);
+          }
+
+          const finalQuery = `SELECT * FROM (${combinedQuery}) AS combined${orderClause}${limitClause}`;
+          queries.push({ query: finalQuery, params: allParams });
         }
 
         const results = [];
