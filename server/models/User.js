@@ -25,7 +25,7 @@ export const initializeUserTable = async () => {
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         email VARCHAR(255) UNIQUE NOT NULL,
-        password VARCHAR(255) NOT NULL,
+        password VARCHAR(255),
         full_name VARCHAR(255),
         role VARCHAR(50) DEFAULT 'user',
         total_points INTEGER DEFAULT 0,
@@ -35,6 +35,8 @@ export const initializeUserTable = async () => {
         correct_answers INTEGER DEFAULT 0,
         total_answers INTEGER DEFAULT 0,
         achievements TEXT[] DEFAULT '{}',
+        google_id VARCHAR(255),
+        facebook_id VARCHAR(255),
         created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
@@ -230,24 +232,47 @@ export const UserModel = {
     }
   },
 
-  // Create user
+  // Create user (supports both regular and OAuth users)
   async create(data) {
     if (!dbPool) {
       throw new Error('Database not available');
     }
 
     try {
-      const hashedPassword = await bcrypt.hash(data.password, 10);
+      let hashedPassword = null;
+      
+      // Only hash password if it's provided (not for OAuth users)
+      if (data.password) {
+        hashedPassword = await bcrypt.hash(data.password, 10);
+      }
 
       const result = await dbPool.query(`
-        INSERT INTO users (email, password, full_name, created_date)
-        VALUES ($1, $2, $3, CURRENT_TIMESTAMP)
-        RETURNING id, email, full_name, total_points, current_streak, best_streak, quizzes_completed, correct_answers, total_answers, achievements, created_date
-      `, [data.email, hashedPassword, data.full_name]);
+        INSERT INTO users (email, password, full_name, google_id, facebook_id, role, total_points, current_streak, best_streak, quizzes_completed, correct_answers, total_answers, achievements, created_date)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, CURRENT_TIMESTAMP)
+        RETURNING id, email, full_name, role, total_points, current_streak, best_streak, quizzes_completed, correct_answers, total_answers, achievements, google_id, facebook_id, created_date
+      `, [
+        data.email, 
+        hashedPassword, 
+        data.full_name, 
+        data.google_id || null, 
+        data.facebook_id || null,
+        data.role || 'user',
+        data.total_points || 0,
+        data.current_streak || 0,
+        data.best_streak || 0,
+        data.quizzes_completed || 0,
+        data.correct_answers || 0,
+        data.total_answers || 0,
+        data.achievements || '{}'
+      ]);
 
       return result.rows[0];
     } catch (error) {
       console.error('Error creating user:', error);
+      // Handle duplicate email error
+      if (error.code === '23505') {
+        throw new Error('Email already in use');
+      }
       throw error;
     }
   },

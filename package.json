@@ -11,6 +11,7 @@
     "start": "node server/server.js"
   },
   "dependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.16",
     "bcrypt": "^6.0.0",
     "canvas-confetti": "^1.9.2",
@@ -21,6 +22,7 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-rate-limit": "^8.1.0",
+    "express-session": "^1.18.2",
     "express-validator": "^7.2.1",
     "framer-motion": "^10.16.16",
     "helmet": "^8.1.0",
@@ -29,6 +31,9 @@
     "lucide-react": "^0.294.0",
     "morgan": "^1.10.1",
     "openai": "^4.20.1",
+    "passport": "^0.7.0",
+    "passport-facebook": "^3.0.0",
+    "passport-google-oauth20": "^2.0.0",
     "pg": "^8.16.3",
     "postcss": "^8.4.32",
     "react": "^18.2.0",
@@ -37,8 +42,7 @@
     "tailwind-merge": "^2.2.0",
     "tailwindcss": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",
-    "vite": "^5.0.8",
-    "@vitejs/plugin-react": "^4.2.1"
+    "vite": "^5.0.8"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

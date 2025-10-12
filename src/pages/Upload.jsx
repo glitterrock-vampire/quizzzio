@@ -24,8 +24,34 @@ export default function UploadPage() {
         throw new Error("JSON must be an array of questions");
       }
 
-      await QuizQuestionService.bulkCreate(questions);
-      setSuccess(`Successfully uploaded ${questions.length} questions!`);
+      const result = await QuizQuestionService.bulkCreate(questions);
+      
+      // Handle the new response format with duplicate checking
+      if (result.summary) {
+        const { total, created, duplicates, skipped } = result.summary;
+        
+        let message = `Upload completed! `;
+        message += `✅ Created: ${created} questions`;
+        
+        if (duplicates > 0) {
+          message += ` | ⚠️ Duplicates skipped: ${duplicates}`;
+        }
+        
+        if (skipped > 0) {
+          message += ` | ❌ Errors: ${skipped}`;
+        }
+        
+        setSuccess(message);
+        
+        // Show duplicate details if any
+        if (result.duplicates && result.duplicates.length > 0) {
+          console.log('Duplicate questions found:', result.duplicates);
+        }
+      } else {
+        // Fallback for old response format
+        setSuccess(`Successfully uploaded ${questions.length} questions!`);
+      }
+      
       setJsonInput("");
     } catch (err) {
       setError(err.message || "Error uploading questions");

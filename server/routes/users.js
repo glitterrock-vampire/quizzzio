@@ -5,6 +5,28 @@ import { authMiddleware } from '../middleware/auth.js';
 
 const router = express.Router();
 
+// Get all users (for leaderboard)
+router.get('/', async (req, res, next) => {
+  try {
+    const users = await UserModel.findAll();
+    // Return users with public information only
+    const publicUsers = users.map(user => ({
+      id: user.id,
+      full_name: user.full_name,
+      email: user.email,
+      total_points: user.total_points || 0,
+      best_streak: user.best_streak || 0,
+      accuracy: user.accuracy || 0,
+      quizzes_completed: user.quizzes_completed || 0,
+      role: user.role
+    }));
+    
+    res.json(publicUsers);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // Get current user (requires authentication)
 router.get('/me', authMiddleware, async (req, res, next) => {
   try {

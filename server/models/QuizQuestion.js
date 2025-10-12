@@ -192,11 +192,42 @@ export const QuizQuestionModel = {
     }
   },
 
-  // Create single question
+  // Check for duplicate question
+  async checkDuplicate(question, subject) {
+    if (dbPool) {
+      try {
+        const tableName = getTableName(subject);
+        const result = await dbPool.query(`
+          SELECT id, question FROM ${tableName} 
+          WHERE LOWER(TRIM(question)) = LOWER(TRIM($1))
+        `, [question]);
+        
+        return result.rows.length > 0 ? result.rows[0] : null;
+      } catch (error) {
+        console.error('Error checking for duplicate:', error);
+        return null;
+      }
+    } else {
+      // In-memory implementation
+      const existing = inMemoryQuestions.find(q => 
+        q.subject === subject && 
+        q.question.toLowerCase().trim() === question.toLowerCase().trim()
+      );
+      return existing || null;
+    }
+  },
+
+  // Create single question with duplicate check
   async create(data) {
     if (dbPool) {
       // Database implementation
       try {
+        // Check for duplicates first
+        const duplicate = await this.checkDuplicate(data.question, data.subject);
+        if (duplicate) {
+          throw new Error(`Duplicate question found: "${data.question.substring(0, 50)}..." (ID: ${duplicate.id})`);
+        }
+
         const tableName = getTableName(data.subject);
         const result = await dbPool.query(`
           INSERT INTO ${tableName} (subject, question, options, correct_answer, difficulty, explanation, points, created_date, updated_date)
@@ -211,6 +242,11 @@ export const QuizQuestionModel = {
       }
     } else {
       // In-memory implementation
+      const duplicate = await this.checkDuplicate(data.question, data.subject);
+      if (duplicate) {
+        throw new Error(`Duplicate question found: "${data.question.substring(0, 50)}..." (ID: ${duplicate.id})`);
+      }
+
       const question = {
         id: nextId++,
         subject: data.subject,
@@ -229,12 +265,14 @@ export const QuizQuestionModel = {
     }
   },
 
-  // Bulk create
+  // Bulk create with duplicate checking
   async bulkCreate(data) {
     if (dbPool) {
       // Database implementation - using parameterized queries for safety
       try {
         const results = [];
+        const duplicates = [];
+        const skipped = [];
 
         // Group by subject
         const bySubject = {};
@@ -245,50 +283,107 @@ export const QuizQuestionModel = {
           bySubject[question.subject].push(question);
         }
 
-        // Insert into appropriate tables
+        // Check for duplicates and insert
         for (const subject of Object.keys(bySubject)) {
           const tableName = getTableName(subject);
           for (const question of bySubject[subject]) {
-            const result = await dbPool.query(`
-              INSERT INTO ${tableName} (subject, question, options, correct_answer, difficulty, explanation, points, created_date, updated_date)
-              VALUES ($1, $2, $3, $4, $5, $6, $7, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-              RETURNING *
-            `, [
-              question.subject,
-              question.question,
-              question.options,
-              question.correct_answer,
-              question.difficulty,
-              question.explanation || '',
-              question.points || 10
-            ]);
+            try {
+              // Check for duplicates first
+              const duplicate = await this.checkDuplicate(question.question, question.subject);
+              if (duplicate) {
+                duplicates.push({
+                  question: question.question,
+                  existingId: duplicate.id,
+                  subject: question.subject
+                });
+                skipped.push(question);
+                continue;
+              }
 
-            results.push(result.rows[0]);
+              const result = await dbPool.query(`
+                INSERT INTO ${tableName} (subject, question, options, correct_answer, difficulty, explanation, points, created_date, updated_date)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                RETURNING *
+              `, [
+                question.subject,
+                question.question,
+                question.options,
+                question.correct_answer,
+                question.difficulty,
+                question.explanation || '',
+                question.points || 10
+              ]);
+
+              results.push(result.rows[0]);
+            } catch (error) {
+              console.error(`Error inserting question: ${question.question.substring(0, 50)}...`, error);
+              skipped.push(question);
+            }
           }
         }
 
-        return results;
+        // Return results with duplicate information
+        return {
+          created: results,
+          duplicates: duplicates,
+          skipped: skipped,
+          summary: {
+            total: data.length,
+            created: results.length,
+            duplicates: duplicates.length,
+            skipped: skipped.length
+          }
+        };
       } catch (error) {
         console.error('Error bulk creating quiz questions:', error);
         throw error;
       }
     } else {
       // In-memory implementation
-      const questions = data.map(q => ({
-        id: nextId++,
-        subject: q.subject,
-        question: q.question,
-        options: q.options,
-        correct_answer: q.correct_answer,
-        difficulty: q.difficulty || 'medium',
-        explanation: q.explanation || '',
-        points: q.points || 10,
-        created_date: new Date().toISOString(),
-        updated_date: new Date().toISOString()
-      }));
+      const results = [];
+      const duplicates = [];
+      const skipped = [];
 
-      inMemoryQuestions.push(...questions);
-      return questions;
+      for (const question of data) {
+        const duplicate = await this.checkDuplicate(question.question, question.subject);
+        if (duplicate) {
+          duplicates.push({
+            question: question.question,
+            existingId: duplicate.id,
+            subject: question.subject
+          });
+          skipped.push(question);
+          continue;
+        }
+
+        const newQuestion = {
+          id: nextId++,
+          subject: question.subject,
+          question: question.question,
+          options: question.options,
+          correct_answer: question.correct_answer,
+          difficulty: question.difficulty || 'medium',
+          explanation: question.explanation || '',
+          points: question.points || 10,
+          created_date: new Date().toISOString(),
+          updated_date: new Date().toISOString()
+        };
+
+        inMemoryQuestions.push(newQuestion);
+        results.push(newQuestion);
+      }
+
+      return {
+        created: results,
+        duplicates: duplicates,
+        skipped: skipped,
+        summary: {
+          total: data.length,
+          created: results.length,
+          duplicates: duplicates.length,
+          skipped: skipped.length
+        }
+      };
     }
   },
 

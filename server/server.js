@@ -5,15 +5,18 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import path from 'path';
 import fs from 'fs';
+import session from 'express-session';
 import { fileURLToPath } from 'url';
 import quizQuestionsRouter from './routes/quizQuestions.js';
 import quizSessionsRouter from './routes/quizSessions.js';
 import usersRouter from './routes/users.js';
 import authRouter from './routes/auth.js';
+import oauthRouter from './routes/oauth.js';
 import aiRouter from './routes/ai.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { generalLimiter, authLimiter, aiLimiter } from './middleware/rateLimit.js';
 import { testDatabaseConnection } from './config/database.js';
+import passport from './config/oauth.js';
 
 dotenv.config({ path: '.env.local' });
 
@@ -71,6 +74,21 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Session middleware for OAuth
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'your-secret-key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Logging middleware (only in development)
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('combined'));
@@ -98,6 +116,7 @@ app.use('/api/quiz-questions', quizQuestionsRouter);
 app.use('/api/quiz-sessions', quizSessionsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/auth', oauthRouter); // OAuth routes
 app.use('/api/ai', aiRouter);
 
 // 404 handler for API routes (only for actual API requests, not preflight)
