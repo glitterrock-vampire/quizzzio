@@ -37,11 +37,38 @@ export default function QuizPage() {
 
   useEffect(() => {
     if (stage === "playing" && currentQuestionIndex < questions.length) {
-      setTimeLeft(30);
+      const currentQ = questions[currentQuestionIndex];
+      setTimeLeft(getTimerDuration(currentQ.difficulty));
       setShowExplanation(false);
       setSelectedAnswer(null);
     }
   }, [stage, currentQuestionIndex, questions]);
+
+
+
+  useEffect(() => {
+    if (stage !== "playing" || showExplanation || timeLeft <= 0) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        const newTime = prev - 1;
+        if (newTime <= 0) {
+          handleTimeUp();
+          return 0;
+        }
+        return newTime;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [stage, currentQuestionIndex, showExplanation, timeLeft]);
+
+  const getTimerDuration = (difficulty) => {
+    if (difficulty === 'easy') return 30;
+    if (difficulty === 'medium') return 45;
+    if (difficulty === 'hard' || difficulty === 'difficult') return 60;
+    return 30; // default
+  };
 
   const handleStartQuiz = async (config) => {
     setLoading(true);
@@ -73,7 +100,8 @@ export default function QuizPage() {
       setQuestions(quizQuestions);
       setStage("playing");
       setStartTime(Date.now());
-      setTimeLeft(30);
+      const firstQ = quizQuestions[0];
+      setTimeLeft(getTimerDuration(firstQ.difficulty));
     } catch (error) {
       console.error("Error starting quiz:", error);
       setError("Failed to load questions. Please check your connection and try again.");

@@ -8,6 +8,8 @@ router.get('/', async (req, res, next) => {
   try {
     const { subject, difficulty, orderBy, limit } = req.query;
     
+    console.log('QuizQuestions GET request:', { subject, difficulty, orderBy, limit });
+    
     const filters = {};
     if (subject) filters.subject = subject;
     if (difficulty) filters.difficulty = difficulty;
@@ -16,6 +18,8 @@ router.get('/', async (req, res, next) => {
       orderBy,
       limit: limit ? parseInt(limit) : 100
     });
+    
+    console.log(`Returning ${questions.length} questions for subject: ${subject}`);
     
     res.json(questions);
   } catch (error) {

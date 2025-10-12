@@ -66,36 +66,66 @@ async function importQuestions() {
     
     await client.query('BEGIN');
     
-    // Clear existing questions
+    // Clear existing questions from all subject tables
     console.log('Clearing existing questions...');
-    await client.query('TRUNCATE TABLE quiz_questions RESTART IDENTITY CASCADE');
-    
-    // Insert new questions
-    console.log('Importing questions...');
-    for (const [index, q] of questions.entries()) {
-      await client.query(
-        `INSERT INTO quiz_questions 
-         (subject, question, options, correct_answer, difficulty, explanation, points)
-         VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-        [
-          q.subject || 'general',
-          q.question,
-          q.options,
-          q.correct_answer,
-          (q.difficulty || 'easy').toLowerCase(),
-          q.explanation || null,
-          q.points || 10
-        ]
-      );
-      
-      // Show progress
-      if ((index + 1) % 10 === 0 || index === questions.length - 1) {
-        process.stdout.write(`\rImported ${index + 1} of ${questions.length} questions...`);
-      }
+    const subjectTables = [
+      'caribbean_history_questions',
+      'geography_questions',
+      'french_caribbean_questions',
+      'science_questions',
+      'history_questions',
+      'general_knowledge_questions',
+      'literature_questions',
+      'mathematics_questions'
+    ];
+    for (const table of subjectTables) {
+      await client.query(`TRUNCATE TABLE ${table} RESTART IDENTITY CASCADE`);
     }
     
-    await client.query('COMMIT');
-    console.log('\n✅ Successfully imported all questions!');
+    // Insert new questions into appropriate tables
+    console.log('Importing questions...');
+    const bySubject = {};
+    for (const q of questions) {
+      const subject = q.subject || 'general';
+      if (!bySubject[subject]) {
+        bySubject[subject] = [];
+      }
+      bySubject[subject].push(q);
+    }
+
+    const subjectTableMap = {
+      'Caribbean History': 'caribbean_history_questions',
+      'Geography': 'geography_questions',
+      'French Caribbean': 'french_caribbean_questions',
+      'Science': 'science_questions',
+      'History': 'history_questions',
+      'General Knowledge': 'general_knowledge_questions',
+      'Literature': 'literature_questions',
+      'Mathematics': 'mathematics_questions'
+    };
+
+    for (const [subject, qList] of Object.entries(bySubject)) {
+      const table = subjectTableMap[subject] || 'general_knowledge_questions';
+      for (const q of qList) {
+        await client.query(
+          `INSERT INTO ${table} 
+           (subject, question, options, correct_answer, difficulty, explanation, points)
+           VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+          [
+            subject,
+            q.question,
+            q.options,
+            q.correct_answer,
+            (q.difficulty || 'easy').toLowerCase(),
+            q.explanation || null,
+            q.points || 10
+          ]
+        );
+      }
+    }
+
+    console.log(`
+✅ Successfully imported all questions into subject-specific tables!`);
   } catch (error) {
     await client.query('ROLLBACK');
     console.error('\n❌ Error importing questions:', error);

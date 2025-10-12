@@ -4,33 +4,46 @@ import { dbPool } from '../config.js';
 let inMemoryQuestions = [];
 let nextId = 1;
 
+// Mapping of subject to table name
+const SUBJECT_TABLES = {
+  'Caribbean History': 'caribbean_history_questions',
+  'Geography': 'geography_questions',
+  'French Caribbean': 'french_caribbean_questions',
+  'Science': 'science_questions',
+  'History': 'history_questions',
+  'General Knowledge': 'general_knowledge_questions',
+  'Literature': 'literature_questions',
+  'Mathematics': 'mathematics_questions'
+};
+
+// Normalize subject to match keys in SUBJECT_TABLES
+function normalizeSubject(subject) {
+  const lower = subject.toLowerCase();
+  const mappings = {
+    'mathematics': 'Mathematics',
+    'math': 'Mathematics',
+    'science': 'Science',
+    'history': 'History',
+    'geography': 'Geography',
+    'literature': 'Literature',
+    'general knowledge': 'General Knowledge',
+    'general_knowledge': 'General Knowledge',
+    'caribbean history': 'Caribbean History',
+    'french caribbean': 'French Caribbean'
+  };
+  return mappings[lower] || subject;
+}
+
+// Get table name for subject
+function getTableName(subject) {
+  const normalized = normalizeSubject(subject);
+  return SUBJECT_TABLES[normalized] || 'quiz_questions';
+}
+
 // Initialize database table
 export const initializeQuizQuestionTable = async () => {
-  if (!dbPool) {
-    console.log('⚠️  Using in-memory storage for quiz questions');
-    return;
-  }
-
-  try {
-    await dbPool.query(`
-      CREATE TABLE IF NOT EXISTS quiz_questions (
-        id SERIAL PRIMARY KEY,
-        subject VARCHAR(100) NOT NULL,
-        question TEXT NOT NULL,
-        options TEXT[] NOT NULL,
-        correct_answer TEXT NOT NULL,
-        difficulty VARCHAR(20) NOT NULL,
-        explanation TEXT,
-        points INTEGER DEFAULT 10,
-        created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-
-    console.log('✅ Quiz questions table initialized');
-  } catch (error) {
-    console.error('❌ Error initializing quiz questions table:', error);
-  }
+  // Tables are already created, no need to initialize here
+  console.log('✅ Subject-specific question tables are ready');
 };
 
 export const QuizQuestionModel = {
@@ -39,43 +52,78 @@ export const QuizQuestionModel = {
     if (dbPool) {
       // Database implementation
       try {
-        let whereClause = '';
-        let params = [];
-        let paramCount = 1;
+        let queries = [];
+        let allParams = [];
+        let paramOffset = 0;
 
         if (filters.subject) {
-          whereClause += ` WHERE subject = $${paramCount}`;
-          params.push(filters.subject);
-          paramCount++;
-        }
+          // Single subject
+          const tableName = getTableName(filters.subject);
+          let whereClause = '';
+          let params = [];
+          let paramCount = 1;
 
-        if (filters.difficulty) {
-          if (whereClause) {
-            whereClause += ` AND difficulty = $${paramCount}`;
-          } else {
-            whereClause += ` WHERE difficulty = $${paramCount}`;
+          if (filters.difficulty) {
+            whereClause = ` WHERE difficulty = $${paramCount}`;
+            params.push(filters.difficulty);
+            paramCount++;
           }
-          params.push(filters.difficulty);
-          paramCount++;
+
+          let orderClause = '';
+          if (options.orderBy) {
+            const field = options.orderBy.replace('-', '');
+            const desc = options.orderBy.startsWith('-');
+            orderClause = ` ORDER BY ${field} ${desc ? 'DESC' : 'ASC'}`;
+          }
+
+          let limitClause = '';
+          if (options.limit) {
+            limitClause = ` LIMIT $${paramCount}`;
+            params.push(options.limit);
+          }
+
+          const query = `SELECT * FROM ${tableName}${whereClause}${orderClause}${limitClause}`;
+          queries.push({ query, params: allParams.concat(params) });
+        } else {
+          // All subjects
+          for (const subject of Object.keys(SUBJECT_TABLES)) {
+            const tableName = SUBJECT_TABLES[subject];
+            let whereClause = '';
+            let params = [];
+            let paramCount = 1;
+
+            if (filters.difficulty) {
+              whereClause = ` WHERE difficulty = $${paramCount + paramOffset}`;
+              params.push(filters.difficulty);
+              paramCount++;
+            }
+
+            let orderClause = '';
+            if (options.orderBy) {
+              const field = options.orderBy.replace('-', '');
+              const desc = options.orderBy.startsWith('-');
+              orderClause = ` ORDER BY ${field} ${desc ? 'DESC' : 'ASC'}`;
+            }
+
+            let limitClause = '';
+            if (options.limit) {
+              limitClause = ` LIMIT $${paramCount + paramOffset}`;
+              params.push(options.limit);
+            }
+
+            const query = `SELECT * FROM ${tableName}${whereClause}${orderClause}${limitClause}`;
+            queries.push({ query, params: allParams.concat(params) });
+            paramOffset += params.length;
+          }
         }
 
-        let orderClause = '';
-        if (options.orderBy) {
-          const field = options.orderBy.replace('-', '');
-          const desc = options.orderBy.startsWith('-');
-          orderClause = ` ORDER BY ${field} ${desc ? 'DESC' : 'ASC'}`;
+        const results = [];
+        for (const { query, params } of queries) {
+          const result = await dbPool.query(query, params);
+          results.push(...result.rows);
         }
 
-        let limitClause = '';
-        if (options.limit) {
-          limitClause = ` LIMIT $${paramCount}`;
-          params.push(options.limit);
-        }
-
-        const query = `SELECT * FROM quiz_questions${whereClause}${orderClause}${limitClause}`;
-        const result = await dbPool.query(query, params);
-
-        return result.rows;
+        return results;
       } catch (error) {
         console.error('Error finding quiz questions:', error);
         return [];
@@ -117,8 +165,14 @@ export const QuizQuestionModel = {
     if (dbPool) {
       // Database implementation
       try {
-        const result = await dbPool.query('SELECT * FROM quiz_questions WHERE id = $1', [id]);
-        return result.rows.length === 0 ? null : result.rows[0];
+        // Since IDs are unique across tables, but to find, we need to search all tables
+        for (const tableName of Object.values(SUBJECT_TABLES)) {
+          const result = await dbPool.query(`SELECT * FROM ${tableName} WHERE id = $1`, [id]);
+          if (result.rows.length > 0) {
+            return result.rows[0];
+          }
+        }
+        return null;
       } catch (error) {
         console.error('Error finding quiz question by ID:', error);
         return null;
@@ -134,8 +188,9 @@ export const QuizQuestionModel = {
     if (dbPool) {
       // Database implementation
       try {
+        const tableName = getTableName(data.subject);
         const result = await dbPool.query(`
-          INSERT INTO quiz_questions (subject, question, options, correct_answer, difficulty, explanation, points, created_date, updated_date)
+          INSERT INTO ${tableName} (subject, question, options, correct_answer, difficulty, explanation, points, created_date, updated_date)
           VALUES ($1, $2, $3, $4, $5, $6, $7, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
           RETURNING *
         `, [data.subject, data.question, data.options, data.correct_answer, data.difficulty, data.explanation, data.points]);
@@ -172,23 +227,35 @@ export const QuizQuestionModel = {
       try {
         const results = [];
 
-        // Insert each question individually to avoid SQL injection and syntax issues
+        // Group by subject
+        const bySubject = {};
         for (const question of data) {
-          const result = await dbPool.query(`
-            INSERT INTO quiz_questions (subject, question, options, correct_answer, difficulty, explanation, points, created_date, updated_date)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-            RETURNING *
-          `, [
-            question.subject,
-            question.question,
-            question.options,
-            question.correct_answer,
-            question.difficulty,
-            question.explanation || '',
-            question.points || 10
-          ]);
+          if (!bySubject[question.subject]) {
+            bySubject[question.subject] = [];
+          }
+          bySubject[question.subject].push(question);
+        }
 
-          results.push(result.rows[0]);
+        // Insert into appropriate tables
+        for (const subject of Object.keys(bySubject)) {
+          const tableName = getTableName(subject);
+          for (const question of bySubject[subject]) {
+            const result = await dbPool.query(`
+              INSERT INTO ${tableName} (subject, question, options, correct_answer, difficulty, explanation, points, created_date, updated_date)
+              VALUES ($1, $2, $3, $4, $5, $6, $7, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+              RETURNING *
+            `, [
+              question.subject,
+              question.question,
+              question.options,
+              question.correct_answer,
+              question.difficulty,
+              question.explanation || '',
+              question.points || 10
+            ]);
+
+            results.push(result.rows[0]);
+          }
         }
 
         return results;
@@ -221,63 +288,70 @@ export const QuizQuestionModel = {
     if (dbPool) {
       // Database implementation
       try {
-        const fields = [];
-        const values = [];
-        let paramCount = 1;
+        // Find which table the question is in
+        for (const tableName of Object.values(SUBJECT_TABLES)) {
+          const check = await dbPool.query(`SELECT id FROM ${tableName} WHERE id = $1`, [id]);
+          if (check.rows.length > 0) {
+            const fields = [];
+            const values = [];
+            let paramCount = 1;
 
-        if (data.subject !== undefined) {
-          fields.push(`subject = $${paramCount}`);
-          values.push(data.subject);
-          paramCount++;
+            if (data.subject !== undefined) {
+              fields.push(`subject = $${paramCount}`);
+              values.push(data.subject);
+              paramCount++;
+            }
+
+            if (data.question !== undefined) {
+              fields.push(`question = $${paramCount}`);
+              values.push(data.question);
+              paramCount++;
+            }
+
+            if (data.options !== undefined) {
+              fields.push(`options = $${paramCount}`);
+              values.push(data.options);
+              paramCount++;
+            }
+
+            if (data.correct_answer !== undefined) {
+              fields.push(`correct_answer = $${paramCount}`);
+              values.push(data.correct_answer);
+              paramCount++;
+            }
+
+            if (data.difficulty !== undefined) {
+              fields.push(`difficulty = $${paramCount}`);
+              values.push(data.difficulty);
+              paramCount++;
+            }
+
+            if (data.explanation !== undefined) {
+              fields.push(`explanation = $${paramCount}`);
+              values.push(data.explanation);
+              paramCount++;
+            }
+
+            if (data.points !== undefined) {
+              fields.push(`points = $${paramCount}`);
+              values.push(data.points);
+              paramCount++;
+            }
+
+            fields.push(`updated_date = CURRENT_TIMESTAMP`);
+            values.push(id);
+
+            const result = await dbPool.query(`
+              UPDATE ${tableName} SET ${fields.join(', ')}
+              WHERE id = $${paramCount}
+              RETURNING *
+            `, values);
+
+            if (result.rows.length === 0) return null;
+            return result.rows[0];
+          }
         }
-
-        if (data.question !== undefined) {
-          fields.push(`question = $${paramCount}`);
-          values.push(data.question);
-          paramCount++;
-        }
-
-        if (data.options !== undefined) {
-          fields.push(`options = $${paramCount}`);
-          values.push(data.options);
-          paramCount++;
-        }
-
-        if (data.correct_answer !== undefined) {
-          fields.push(`correct_answer = $${paramCount}`);
-          values.push(data.correct_answer);
-          paramCount++;
-        }
-
-        if (data.difficulty !== undefined) {
-          fields.push(`difficulty = $${paramCount}`);
-          values.push(data.difficulty);
-          paramCount++;
-        }
-
-        if (data.explanation !== undefined) {
-          fields.push(`explanation = $${paramCount}`);
-          values.push(data.explanation);
-          paramCount++;
-        }
-
-        if (data.points !== undefined) {
-          fields.push(`points = $${paramCount}`);
-          values.push(data.points);
-          paramCount++;
-        }
-
-        fields.push(`updated_date = CURRENT_TIMESTAMP`);
-        values.push(id);
-
-        const result = await dbPool.query(`
-          UPDATE quiz_questions SET ${fields.join(', ')}
-          WHERE id = $${paramCount}
-          RETURNING *
-        `, values);
-
-        if (result.rows.length === 0) return null;
-        return result.rows[0];
+        return null;
       } catch (error) {
         console.error('Error updating quiz question:', error);
         throw error;
@@ -303,8 +377,14 @@ export const QuizQuestionModel = {
     if (dbPool) {
       // Database implementation
       try {
-        const result = await dbPool.query('DELETE FROM quiz_questions WHERE id = $1', [id]);
-        return result.rowCount > 0;
+        // Find and delete from the appropriate table
+        for (const tableName of Object.values(SUBJECT_TABLES)) {
+          const result = await dbPool.query(`DELETE FROM ${tableName} WHERE id = $1`, [id]);
+          if (result.rowCount > 0) {
+            return true;
+          }
+        }
+        return false;
       } catch (error) {
         console.error('Error deleting quiz question:', error);
         return false;
