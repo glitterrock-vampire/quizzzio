@@ -15,7 +15,7 @@ import oauthRouter from './routes/oauth.js';
 import aiRouter from './routes/ai.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { generalLimiter, authLimiter, aiLimiter } from './middleware/rateLimit.js';
-import { testDatabaseConnection } from './config/database.js';
+import { testDatabaseConnection, dbPool } from './config/database.js';
 import passport from './config/oauth.js';
 
 dotenv.config({ path: '.env.local' });
@@ -251,49 +251,52 @@ app.listen(PORT, async () => {
   if (dbConnected && process.env.NODE_ENV === 'production') {
     try {
       console.log('🔧 Checking questions in production...');
-      const { pool } = await import('./config/database.js');
 
-      // Check if questions exist
-      const result = await pool.query('SELECT COUNT(*) as count FROM geography_questions');
-      const questionCount = parseInt(result.rows[0].count);
+      // Check if questions exist using the database pool
+      if (dbPool) {
+        const result = await dbPool.query('SELECT COUNT(*) as count FROM geography_questions');
+        const questionCount = parseInt(result.rows[0].count);
 
-      if (questionCount === 0) {
-        console.log('🔧 No questions found, importing sample questions...');
+        if (questionCount === 0) {
+          console.log('🔧 No questions found, importing sample questions...');
 
-        // Import a few sample questions
-        const sampleQuestions = [
-          {
-            subject: 'Geography',
-            question: 'What is the capital of France?',
-            options: ['London', 'Berlin', 'Paris', 'Rome'],
-            correct_answer: 'Paris',
-            difficulty: 'easy',
-            explanation: 'Paris, located on the Seine River, is the capital and most populous city of France.',
-            points: 10
-          },
-          {
-            subject: 'Geography',
-            question: 'Which is the largest ocean on Earth?',
-            options: ['Atlantic Ocean', 'Indian Ocean', 'Arctic Ocean', 'Pacific Ocean'],
-            correct_answer: 'Pacific Ocean',
-            difficulty: 'easy',
-            explanation: 'The Pacific Ocean is the largest and deepest of the world\'s ocean basins.',
-            points: 10
+          // Import a few sample questions
+          const sampleQuestions = [
+            {
+              subject: 'Geography',
+              question: 'What is the capital of France?',
+              options: ['London', 'Berlin', 'Paris', 'Rome'],
+              correct_answer: 'Paris',
+              difficulty: 'easy',
+              explanation: 'Paris, located on the Seine River, is the capital and most populous city of France.',
+              points: 10
+            },
+            {
+              subject: 'Geography',
+              question: 'Which is the largest ocean on Earth?',
+              options: ['Atlantic Ocean', 'Indian Ocean', 'Arctic Ocean', 'Pacific Ocean'],
+              correct_answer: 'Pacific Ocean',
+              difficulty: 'easy',
+              explanation: 'The Pacific Ocean is the largest and deepest of the world\'s ocean basins.',
+              points: 10
+            }
+          ];
+
+          for (const q of sampleQuestions) {
+            await dbPool.query(
+              `INSERT INTO geography_questions
+               (subject, question, options, correct_answer, difficulty, explanation, points)
+               VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+              [q.subject, q.question, q.options, q.correct_answer, q.difficulty, q.explanation, q.points]
+            );
           }
-        ];
 
-        for (const q of sampleQuestions) {
-          await pool.query(
-            `INSERT INTO geography_questions
-             (subject, question, options, correct_answer, difficulty, explanation, points)
-             VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-            [q.subject, q.question, q.options, q.correct_answer, q.difficulty, q.explanation, q.points]
-          );
+          console.log('✅ Sample questions imported to production database');
+        } else {
+          console.log(`✅ Questions already exist in production database (${questionCount} questions)`);
         }
-
-        console.log('✅ Sample questions imported to production database');
       } else {
-        console.log(`✅ Questions already exist in production database (${questionCount} questions)`);
+        console.log('ℹ️ Database pool not available for questions import');
       }
     } catch (error) {
       console.error('❌ Error checking/importing questions:', error.message);

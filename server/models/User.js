@@ -106,7 +106,7 @@ export const UserModel = {
     }
 
     try {
-      const result = await dbPool.query('SELECT id, email, full_name, role, total_points, current_streak, best_streak, quizzes_completed, correct_answers, total_answers, achievements, accuracy, created_date FROM users WHERE id = $1', [id]);
+      const result = await dbPool.query('SELECT id, email, full_name, role, total_points, current_streak, best_streak, quizzes_completed, correct_answers, total_answers, achievements, created_date FROM users WHERE id = $1', [id]);
 
       if (result.rows.length === 0) return null;
 
@@ -347,7 +347,7 @@ export const UserModel = {
       const result = await dbPool.query(`
         UPDATE users SET ${fields.join(', ')}
         WHERE id = $${paramCount}
-        RETURNING id, email, full_name, total_points, current_streak, best_streak, quizzes_completed, correct_answers, total_answers, achievements, accuracy, created_date
+        RETURNING id, email, full_name, total_points, current_streak, best_streak, quizzes_completed, correct_answers, total_answers, achievements, created_date
       `, values);
 
       if (result.rows.length === 0) return null;
@@ -382,7 +382,7 @@ export const UserModel = {
 
     try {
       const result = await dbPool.query(`
-        SELECT id, email, full_name, total_points, current_streak, best_streak, quizzes_completed, correct_answers, total_answers, achievements, accuracy, created_date
+        SELECT id, email, full_name, total_points, current_streak, best_streak, quizzes_completed, correct_answers, total_answers, achievements, created_date
         FROM users
         WHERE total_points > 0
         ORDER BY total_points DESC
