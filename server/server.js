@@ -159,7 +159,7 @@ if (process.env.NODE_ENV === 'development') {
       ]
     });
   });
-}
+} else {
   // In production, serve the built React app
   // Try multiple possible paths for the dist directory
   const possiblePaths = [
@@ -205,6 +205,7 @@ if (process.env.NODE_ENV === 'development') {
       }
     });
   }
+}
 
 // Error handler (must be last)
 app.use(errorHandler);
@@ -244,6 +245,8 @@ app.listen(PORT, async () => {
     } catch (error) {
       console.error('❌ Error creating demo user:', error.message);
     }
+  }
+
   // Import questions if database is connected and in production
   if (dbConnected && process.env.NODE_ENV === 'production') {
     try {
