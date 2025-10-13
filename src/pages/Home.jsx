@@ -41,6 +41,14 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('🏠 Home component user data changed:', {
+      total_points: user?.total_points,
+      quizzes_completed: user?.quizzes_completed,
+      correct_answers: user?.correct_answers,
+      total_answers: user?.total_answers,
+      accuracy: user?.accuracy,
+      best_streak: user?.best_streak
+    });
     loadData();
   }, [user]);
 

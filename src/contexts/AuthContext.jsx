@@ -30,7 +30,7 @@ export function AuthProvider({ children }) {
         await new Promise(resolve => setTimeout(resolve, 100));
         const userData = await authService.getCurrentUser();
         if (isMounted) {
-          setUser(userData);
+          setUser({ ...userData });
           setError(null);
         }
       } catch (error) {
@@ -59,13 +59,13 @@ export function AuthProvider({ children }) {
       setLoading(true);
       setError(null);
       const userData = await authService.login(credentials);
-      
+
       // Set user data immediately after successful login
-      setUser(userData);
-      
+      setUser({ ...userData });
+
       // Add a small delay to ensure token is properly stored
       await new Promise(resolve => setTimeout(resolve, 50));
-      
+
       return userData;
     } catch (error) {
       console.error('Login error:', error);
@@ -85,7 +85,7 @@ export function AuthProvider({ children }) {
 
       // Use the user data from the registration response directly
       if (response.user) {
-        setUser(response.user);
+        setUser({ ...response.user });
       }
 
       return response;
@@ -144,7 +144,7 @@ export function AuthProvider({ children }) {
       console.log('🔄 Refreshing user data...');
       const userData = await authService.getCurrentUser();
       console.log('✅ User data refreshed:', userData);
-      setUser(userData);
+      setUser({ ...userData }); // Create new object reference to force re-render
       console.log('✅ User context updated');
     } catch (error) {
       console.error('❌ Error refreshing user data:', error);
