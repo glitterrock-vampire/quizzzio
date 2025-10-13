@@ -66,6 +66,7 @@ router.post(
           correct_answers: user.correct_answers || 0,
           total_answers: user.total_answers || 0,
           achievements: user.achievements || [],
+          accuracy: user.accuracy || 0,
           created_date: user.created_date
         }
       });
@@ -131,7 +132,8 @@ router.post(
           quizzes_completed: user.quizzes_completed || 0,
           correct_answers: user.correct_answers || 0,
           total_answers: user.total_answers || 0,
-          achievements: user.achievements || []
+          achievements: user.achievements || [],
+          accuracy: user.accuracy || 0
         }
       });
     } catch (error) {
