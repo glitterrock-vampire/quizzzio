@@ -134,9 +134,11 @@ export default function HomePage() {
                   <div>
                     <p className="text-sm text-gray-600 font-medium">Accuracy</p>
                     <p className="text-3xl font-bold text-green-600 mt-1">
-                      {user.total_answers > 0 
-                        ? Math.round((user.correct_answers / user.total_answers) * 100)
-                        : 0}%
+                      {user.accuracy !== undefined && user.accuracy !== null
+                        ? `${Math.round(user.accuracy)}%`
+                        : user.total_answers > 0
+                          ? `${Math.round((user.correct_answers / user.total_answers) * 100)}%`
+                          : '0%'}
                     </p>
                   </div>
                   <div className="w-14 h-14 bg-green-500 rounded-2xl flex items-center justify-center">

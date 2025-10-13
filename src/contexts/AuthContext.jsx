@@ -139,12 +139,15 @@ export function AuthProvider({ children }) {
   // Refresh user data
   const refreshUser = useCallback(async () => {
     if (!authService.isAuthenticated()) return;
-    
+
     try {
+      console.log('🔄 Refreshing user data...');
       const userData = await authService.getCurrentUser();
+      console.log('✅ User data refreshed:', userData);
       setUser(userData);
+      console.log('✅ User context updated');
     } catch (error) {
-      console.error('Error refreshing user data:', error);
+      console.error('❌ Error refreshing user data:', error);
     }
   }, []);
 

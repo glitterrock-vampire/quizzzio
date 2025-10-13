@@ -162,7 +162,17 @@ router.get('/user', authMiddleware, async (req, res) => {
 
     // Remove sensitive data
     const { password, ...userData } = user;
-    
+
+    console.log('🔍 Returning user data:', {
+      id: userData.id,
+      total_points: userData.total_points,
+      quizzes_completed: userData.quizzes_completed,
+      correct_answers: userData.correct_answers,
+      total_answers: userData.total_answers,
+      accuracy: userData.accuracy,
+      best_streak: userData.best_streak
+    });
+
     res.json({
       success: true,
       user: userData

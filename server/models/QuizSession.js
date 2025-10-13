@@ -133,6 +133,8 @@ export const QuizSessionModel = {
     if (!dbPool) return;
 
     try {
+      console.log(`🔄 Updating stats for user ${userId}`);
+
       // Get all user's quiz sessions to calculate cumulative stats
       const sessionsResult = await dbPool.query(`
         SELECT total_questions, correct_answers, score
@@ -143,7 +145,10 @@ export const QuizSessionModel = {
       const sessions = sessionsResult.rows;
       const totalSessions = sessions.length;
 
-      if (totalSessions === 0) return;
+      if (totalSessions === 0) {
+        console.log('⚠️ No sessions found for user');
+        return;
+      }
 
       // Calculate cumulative stats
       const totalQuestions = sessions.reduce((sum, session) => sum + (session.total_questions || 0), 0);
@@ -153,6 +158,14 @@ export const QuizSessionModel = {
       // Calculate streak and other stats
       const maxScore = Math.max(...sessions.map(s => s.score || 0));
       const avgAccuracy = totalQuestions > 0 ? (totalCorrectAnswers / totalQuestions) * 100 : 0;
+
+      console.log(`📊 Stats calculated:`, {
+        totalSessions,
+        totalScore,
+        totalQuestions,
+        totalCorrectAnswers,
+        avgAccuracy: Math.round(avgAccuracy)
+      });
 
       // Update user record with cumulative stats
       await dbPool.query(`
@@ -168,8 +181,9 @@ export const QuizSessionModel = {
         WHERE id = $7
       `, [totalScore, totalCorrectAnswers, totalQuestions, totalSessions, maxScore, Math.round(avgAccuracy), userId]);
 
+      console.log(`✅ User ${userId} stats updated successfully`);
     } catch (error) {
-      console.error('Error updating user stats:', error);
+      console.error('❌ Error updating user stats:', error);
     }
   },
   async getUserStats(userId) {

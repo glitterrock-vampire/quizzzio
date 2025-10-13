@@ -151,6 +151,7 @@ export default function QuizPage() {
     try {
       // Save quiz session and update user stats
       if (user) {
+        console.log('📝 Creating quiz session for user:', user.id);
         const sessionData = {
           user_id: user.id,
           subject: quizConfig.subject,
@@ -162,11 +163,16 @@ export default function QuizPage() {
           answers: answers
         };
 
+        console.log('📊 Session data:', sessionData);
         await QuizSessionService.create(sessionData);
+        console.log('✅ Quiz session created');
+
+        console.log('🔄 Refreshing user data...');
         await refreshUser();
+        console.log('✅ User data refreshed');
       }
     } catch (error) {
-      console.error("Error saving quiz session:", error);
+      console.error("❌ Error saving quiz session:", error);
     }
 
     setLoading(false);
