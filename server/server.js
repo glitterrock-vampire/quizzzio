@@ -224,6 +224,28 @@ app.listen(PORT, async () => {
     console.log(`🗄️  Database: In-Memory (fallback mode)`);
   }
 
+  // Create demo user if database is connected and in production
+  if (dbConnected && process.env.NODE_ENV === 'production') {
+    try {
+      console.log('🔧 Creating demo user for production...');
+      const { UserModel } = await import('./models/User.js');
+      const existingDemo = await UserModel.findByEmail('demo@quizmaster.com');
+
+      if (!existingDemo) {
+        const demoUser = await UserModel.register({
+          email: 'demo@quizmaster.com',
+          password: 'demo123',
+          full_name: 'Demo User'
+        });
+        console.log('✅ Demo user created:', demoUser.email);
+      } else {
+        console.log('✅ Demo user already exists:', existingDemo.email);
+      }
+    } catch (error) {
+      console.error('❌ Error creating demo user:', error.message);
+    }
+  }
+
   console.log(`🔒 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log('');
 });
