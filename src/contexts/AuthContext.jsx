@@ -53,23 +53,26 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
-  // Login function
-  const login = async (credentials) => {
+  // OAuth Login function
+  const oauthLogin = async (token) => {
     try {
       setLoading(true);
       setError(null);
-      const userData = await authService.login(credentials);
 
-      // Set user data immediately after successful login
-      setUser({ ...userData });
+      // Store the token
+      localStorage.setItem('token', token);
 
-      // Add a small delay to ensure token is properly stored
-      await new Promise(resolve => setTimeout(resolve, 50));
+      // Get user data using the token
+      const userData = await authService.getCurrentUser();
+
+      if (userData) {
+        setUser({ ...userData });
+      }
 
       return userData;
     } catch (error) {
-      console.error('Login error:', error);
-      setError(error.message || 'Login failed');
+      console.error('OAuth login error:', error);
+      setError(error.message || 'OAuth login failed');
       throw error;
     } finally {
       setLoading(false);
@@ -162,6 +165,7 @@ export function AuthProvider({ children }) {
     isAuthenticated,
     hasRole,
     login,
+    oauthLogin,
     register,
     logout,
     changePassword,

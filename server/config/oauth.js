@@ -8,13 +8,15 @@ import jwt from 'jsonwebtoken';
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: "/api/auth/google/callback"
+  callbackURL: `http://localhost:${process.env.PORT || 3000}/api/auth/google/callback`
 }, async (accessToken, refreshToken, profile, done) => {
   try {
+    console.log('🔐 Google OAuth profile received:', profile.displayName, profile.emails[0].value);
     // Check if user already exists
     let user = await UserModel.findByEmail(profile.emails[0].value);
     
     if (user) {
+      console.log('✅ Existing user found:', user.email);
       // Update OAuth info if needed
       if (!user.google_id) {
         await UserModel.update(user.id, { google_id: profile.id });
@@ -22,6 +24,7 @@ passport.use(new GoogleStrategy({
       return done(null, user);
     }
     
+    console.log('✅ Creating new user for OAuth');
     // Create new user
     const newUser = await UserModel.create({
       full_name: profile.displayName,
@@ -34,8 +37,10 @@ passport.use(new GoogleStrategy({
       quizzes_completed: 0
     });
     
+    console.log('✅ New user created:', newUser.email);
     return done(null, newUser);
   } catch (error) {
+    console.error('❌ OAuth error:', error);
     return done(error, null);
   }
 }));

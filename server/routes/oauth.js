@@ -12,11 +12,15 @@ router.get('/google', passport.authenticate('google', {
 router.get('/google/callback', 
   passport.authenticate('google', { failureRedirect: '/login?error=oauth_failed' }),
   (req, res) => {
+    console.log('🔐 OAuth callback received for user:', req.user?.email);
     // Generate JWT token
     const token = generateOAuthToken(req.user);
+    console.log('✅ JWT token generated for OAuth user');
     
     // Redirect to frontend with token
-    res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}&provider=google`);
+    const redirectUrl = `${process.env.FRONTEND_URL}/auth/callback?token=${token}&provider=google`;
+    console.log('🔄 Redirecting to frontend:', redirectUrl);
+    res.redirect(redirectUrl);
   }
 );
 

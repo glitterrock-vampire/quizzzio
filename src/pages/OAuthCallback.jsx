@@ -7,7 +7,7 @@ import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
 export default function OAuthCallback() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { oauthLogin } = useAuth();
   const [status, setStatus] = useState('loading'); // loading, success, error
   const [message, setMessage] = useState('');
 
@@ -35,8 +35,8 @@ export default function OAuthCallback() {
         // Store the token and log in the user
         localStorage.setItem('token', token);
         
-        // Update auth context
-        await login({ token });
+        // Update auth context using OAuth login
+        await oauthLogin(token);
         
         setStatus('success');
         setMessage(`Successfully signed in with ${provider}!`);
@@ -53,7 +53,7 @@ export default function OAuthCallback() {
     };
 
     handleOAuthCallback();
-  }, [searchParams, navigate, login]);
+  }, [searchParams, navigate, oauthLogin]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
