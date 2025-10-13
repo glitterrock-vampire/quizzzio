@@ -81,7 +81,10 @@ export function AuthProvider({ children }) {
     try {
       setLoading(true);
       setError(null);
+      console.log('🔐 Attempting registration for:', userData.email);
+
       const response = await authService.register(userData);
+      console.log('✅ Registration successful:', response);
 
       // Use the user data from the registration response directly
       if (response.user) {
@@ -90,7 +93,8 @@ export function AuthProvider({ children }) {
 
       return response;
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error('❌ Registration error:', error);
+      console.error('❌ Error details:', error.status, error.message, error.data);
       setError(error.message || 'Registration failed');
       throw error;
     } finally {

@@ -31,21 +31,27 @@ router.post(
     const { full_name, email, password } = req.body;
 
     try {
+      console.log('🔐 Registration attempt for:', email);
+
       // Check if user already exists
       const existingUser = await UserModel.findByEmail(email);
       if (existingUser) {
-        return res.status(400).json({ 
+        console.log('❌ User already exists:', email);
+        return res.status(400).json({
           success: false,
-          error: 'User already exists' 
+          error: 'User already exists'
         });
       }
-      
+
+      console.log('✅ Creating new user for:', email);
       // Create new user
-      const user = await UserModel.register({ 
-        email, 
-        password, 
-        full_name 
+      const user = await UserModel.register({
+        email,
+        password,
+        full_name
       });
+
+      console.log('✅ User created successfully:', user.id);
 
       // Generate JWT token
       const token = UserModel.generateToken(user);
@@ -71,10 +77,10 @@ router.post(
         }
       });
     } catch (error) {
-      console.error('Registration error:', error.message);
-      res.status(500).json({ 
+      console.error('❌ Registration error:', error.message);
+      res.status(500).json({
         success: false,
-        error: 'Server error during registration' 
+        error: 'Server error during registration'
       });
     }
   }

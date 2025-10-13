@@ -25,35 +25,38 @@ export function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const { full_name, email, password, confirmPassword } = formData;
-    
+
     // Basic validation
     if (!full_name || !email || !password || !confirmPassword) {
       setError('Please fill in all fields');
       return;
     }
-    
+
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
-    
+
     if (password.length < 6) {
       setError('Password must be at least 6 characters long');
       return;
     }
-    
+
     try {
       setIsSubmitting(true);
       setError('');
-      
+      console.log('📝 Attempting registration with:', { full_name, email });
+
       await register({ full_name, email, password });
-      
+      console.log('✅ Registration completed successfully');
+
       // Redirect to home or dashboard after successful registration
       navigate('/');
     } catch (err) {
-      console.error('Registration error:', err);
+      console.error('❌ Registration failed:', err);
+      console.error('❌ Error details:', err.status, err.message, err.data);
       setError(err.message || 'Failed to register');
     } finally {
       setIsSubmitting(false);
