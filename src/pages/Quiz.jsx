@@ -48,23 +48,6 @@ export default function QuizPage() {
       setStage("setup");
     }
   }, [searchParams]);
-  const [startTime, setStartTime] = useState(null);
-  const [showExplanation, setShowExplanation] = useState(false);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-
-  useEffect(() => {
-    const subject = searchParams.get("subject");
-    if (subject) {
-      // Pre-populate quiz config but still show setup screen for user to choose AI/DB questions
-      setQuizConfig({
-        subject,
-        questionCount: 10,
-        difficulty: "mixed",
-        mode: "existing" // Default to existing, but user can change in setup
-      });
-      setStage("setup");
-    }
-  }, [searchParams]);
 
   // Show loading spinner while auth is loading
   if (authLoading) {
@@ -77,12 +60,18 @@ export default function QuizPage() {
 
   // Redirect to login if not authenticated
   if (!user) {
-    return null; // Component will redirect in useEffect
+    navigate('/login');
+    return null;
   }
 
+  useEffect(() => {
+    if (stage === "playing" && currentQuestionIndex < questions.length) {
+      const currentQ = questions[currentQuestionIndex];
+      setTimeLeft(getTimerDuration(currentQ.difficulty));
+      setShowExplanation(false);
+      setSelectedAnswer(null);
+    }
   }, [stage, currentQuestionIndex, questions]);
-
-
 
   useEffect(() => {
     if (stage !== "playing" || showExplanation || timeLeft <= 0) return;
@@ -149,10 +138,10 @@ export default function QuizPage() {
 
   const handleAnswer = (answer) => {
     if (showExplanation) return; // Prevent multiple answers
-    
+
     setSelectedAnswer(answer);
     setShowExplanation(true);
-    
+
     const currentQuestion = questions[currentQuestionIndex];
     const isCorrect = answer === currentQuestion.correct_answer;
 
@@ -164,7 +153,7 @@ export default function QuizPage() {
     }
 
     setAnswers([...answers, { question: currentQuestion, answer, isCorrect }]);
-    
+
     // Auto-advance after showing explanation for 3 seconds
     setTimeout(() => {
       setShowExplanation(false);
