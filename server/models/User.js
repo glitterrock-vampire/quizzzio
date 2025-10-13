@@ -245,6 +245,9 @@ export const UserModel = {
       // Only hash password if it's provided (not for OAuth users)
       if (data.password) {
         hashedPassword = await bcrypt.hash(data.password, 10);
+      } else if (data.google_id || data.facebook_id) {
+        // For OAuth users, provide a default password since they don't need it
+        hashedPassword = await bcrypt.hash('oauth-user-default-password', 10);
       }
 
       const result = await dbPool.query(`
