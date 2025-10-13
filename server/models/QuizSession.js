@@ -121,6 +121,9 @@ export const QuizSessionModel = {
       // Update user statistics after creating session
       await this.updateUserStats(data.user_id);
 
+      // Check for session-based achievements
+      await this.checkSessionBasedAchievements(data);
+
       return session;
     } catch (error) {
       console.error('Error creating quiz session:', error);
@@ -182,6 +185,9 @@ export const QuizSessionModel = {
       `, [totalScore, totalCorrectAnswers, totalQuestions, totalSessions, maxScore, Math.round(avgAccuracy), userId]);
 
       console.log(`✅ User ${userId} stats updated successfully`);
+
+      // Check and unlock achievements after updating stats
+      await this.checkAndUnlockAchievements(userId);
     } catch (error) {
       console.error('❌ Error updating user stats:', error);
     }
@@ -336,6 +342,145 @@ export const QuizSessionModel = {
       }));
     } catch (error) {
       console.error('Error getting leaderboard:', error);
+      return [];
+    }
+  },
+
+  // Check for session-based achievements (speedster, perfectionist, etc.)
+  async checkSessionBasedAchievements(sessionData) {
+    if (!dbPool) return [];
+
+    try {
+      const { user_id, total_questions, correct_answers, time_taken } = sessionData;
+      const accuracy = total_questions > 0 ? (correct_answers / total_questions) * 100 : 0;
+
+      console.log(`🏃 Checking session-based achievements for session:`, {
+        total_questions,
+        correct_answers,
+        accuracy: Math.round(accuracy),
+        time_taken
+      });
+
+      // Get current user achievements
+      const userResult = await dbPool.query(
+        'SELECT achievements FROM users WHERE id = $1',
+        [user_id]
+      );
+
+      if (userResult.rows.length === 0) {
+        console.log('❌ User not found for session-based achievements');
+        return [];
+      }
+
+      const currentAchievements = userResult.rows[0].achievements || [];
+      const newAchievements = [];
+
+      // Check for perfectionist (100% accuracy)
+      if (accuracy === 100 && !currentAchievements.includes('perfectionist')) {
+        console.log(`🏆 Unlocking perfectionist achievement`);
+        newAchievements.push('perfectionist');
+      }
+
+      // Check for speedster (under 2 minutes)
+      if (time_taken && time_taken < 120 && !currentAchievements.includes('speedster')) {
+        console.log(`🏆 Unlocking speedster achievement (${time_taken}s < 120s)`);
+        newAchievements.push('speedster');
+      }
+
+      // Unlock new achievements
+      if (newAchievements.length > 0) {
+        const updatedAchievements = [...currentAchievements, ...newAchievements];
+
+        await dbPool.query(
+          'UPDATE users SET achievements = $1, updated_date = CURRENT_TIMESTAMP WHERE id = $2',
+          [updatedAchievements, user_id]
+        );
+
+        console.log(`✅ Unlocked ${newAchievements.length} session-based achievements:`, newAchievements);
+      } else {
+        console.log('ℹ️ No session-based achievements to unlock');
+      }
+
+      return newAchievements;
+    } catch (error) {
+      console.error('❌ Error checking session-based achievements:', error);
+      return [];
+    }
+  },
+  async checkAndUnlockAchievements(userId) {
+    if (!dbPool) return [];
+
+    try {
+      console.log(`🔓 Checking achievements for user ${userId}`);
+
+      // Get current user data with achievements
+      const userResult = await dbPool.query(
+        'SELECT total_points, quizzes_completed, correct_answers, total_answers, best_streak, achievements FROM users WHERE id = $1',
+        [userId]
+      );
+
+      if (userResult.rows.length === 0) {
+        console.log('❌ User not found');
+        return [];
+      }
+
+      const user = userResult.rows[0];
+      const currentAchievements = user.achievements || [];
+      const newAchievements = [];
+
+      console.log(`📊 Current user stats:`, {
+        total_points: user.total_points,
+        quizzes_completed: user.quizzes_completed,
+        correct_answers: user.correct_answers,
+        total_answers: user.total_answers,
+        best_streak: user.best_streak,
+        current_achievements: currentAchievements
+      });
+
+      // Define achievement criteria
+      const achievementCriteria = {
+        'first_quiz': { condition: () => user.quizzes_completed >= 1, description: 'Complete your first quiz' },
+        'quiz_enthusiast': { condition: () => user.quizzes_completed >= 5, description: 'Complete 5 quizzes' },
+        'quiz_master': { condition: () => user.quizzes_completed >= 25, description: 'Complete 25 quizzes' },
+        'scholar': { condition: () => user.quizzes_completed >= 10, description: 'Complete 10 quizzes' },
+        'century': { condition: () => user.total_points >= 100, description: 'Earn 100 points' },
+        'speedster': { condition: () => false, description: 'Complete a quiz in under 2 minutes (session-based)' },
+        'perfectionist': { condition: () => false, description: 'Complete a quiz with 100% accuracy (session-based)' },
+        'accuracy_master': { condition: () => {
+          const accuracy = user.total_answers > 0 ? (user.correct_answers / user.total_answers) * 100 : 0;
+          return accuracy >= 90;
+        }, description: 'Maintain 90%+ accuracy overall' },
+        'streak_3': { condition: () => user.best_streak >= 3, description: 'Get a 3-quiz streak' },
+        'streak_5': { condition: () => user.best_streak >= 5, description: 'Get a 5-quiz streak' },
+        'streak_7': { condition: () => user.best_streak >= 7, description: 'Get a 7-quiz streak' },
+        'streak_30': { condition: () => user.best_streak >= 30, description: 'Get a 30-quiz streak' }
+      };
+
+      // Check each achievement
+      for (const [achievementId, criteria] of Object.entries(achievementCriteria)) {
+        if (!currentAchievements.includes(achievementId) && criteria.condition()) {
+          console.log(`🏆 Unlocking achievement: ${achievementId} - ${criteria.description}`);
+          newAchievements.push(achievementId);
+        }
+      }
+
+      // Unlock new achievements
+      if (newAchievements.length > 0) {
+        const updatedAchievements = [...currentAchievements, ...newAchievements];
+
+        await dbPool.query(
+          'UPDATE users SET achievements = $1, updated_date = CURRENT_TIMESTAMP WHERE id = $2',
+          [updatedAchievements, userId]
+        );
+
+        console.log(`✅ Unlocked ${newAchievements.length} achievements:`, newAchievements);
+      } else {
+        console.log('ℹ️ No new achievements to unlock');
+      }
+
+      return newAchievements;
+    } catch (error) {
+      console.error('❌ Error checking achievements:', error);
       return [];
     }
   }
