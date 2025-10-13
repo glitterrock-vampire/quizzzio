@@ -13,13 +13,15 @@ const subjects = [
   { id: "French Caribbean", name: "French Caribbean", icon: "🇫🇷" }
 ];
 
-export default function QuizSetup({ onStart, loading }) {
-  const [config, setConfig] = useState({
-    subject: "Mathematics",
-    difficulty: "mixed",
-    questionCount: 10,
-    mode: "existing"
-  });
+export default function QuizSetup({ onStart, loading, initialConfig }) {
+  const [config, setConfig] = useState(
+    initialConfig || {
+      subject: "Mathematics",
+      difficulty: "mixed",
+      questionCount: 10,
+      mode: "existing"
+    }
+  );
 
   return (
     <motion.div

@@ -30,9 +30,14 @@ export default function QuizPage() {
   useEffect(() => {
     const subject = searchParams.get("subject");
     if (subject) {
-      const config = { subject, questionCount: 10, difficulty: "mixed", mode: "existing" };
-      setQuizConfig(config);
-      handleStartQuiz(config);
+      // Pre-populate quiz config but still show setup screen for user to choose AI/DB questions
+      setQuizConfig({
+        subject,
+        questionCount: 10,
+        difficulty: "mixed",
+        mode: "existing" // Default to existing, but user can change in setup
+      });
+      setStage("setup");
     }
   }, [searchParams]);
 
@@ -192,6 +197,7 @@ export default function QuizPage() {
         onStart={handleStartQuiz}
         loading={loading}
         error={error}
+        initialConfig={quizConfig}
       />
     );
   }
