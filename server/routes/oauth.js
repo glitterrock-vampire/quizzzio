@@ -15,7 +15,8 @@ router.get('/google', (req, res, next) => {
   });
   next();
 }, passport.authenticate('google', {
-  scope: ['profile', 'email']
+  scope: ['openid', 'profile', 'email'],
+  prompt: 'consent'
 }));
 
 router.get('/google/callback', 
