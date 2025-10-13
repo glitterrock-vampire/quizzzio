@@ -100,10 +100,13 @@ passport.deserializeUser(async (id, done) => {
 // Generate JWT token for OAuth users
 export const generateOAuthToken = (user) => {
   return jwt.sign(
-    { 
-      userId: user.id, 
-      email: user.email, 
-      role: user.role 
+    {
+      user: {
+        id: user.id,
+        email: user.email,
+        full_name: user.full_name,
+        role: user.role || 'user'
+      }
     },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
