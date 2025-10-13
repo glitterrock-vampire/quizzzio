@@ -12,7 +12,7 @@ export function SignupPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   
-  const { register } = useAuth();
+  const { register, error: authError } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -26,24 +26,40 @@ export function SignupPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (formData.password !== formData.confirmPassword) {
+    const { full_name, email, password, confirmPassword } = formData;
+    
+    // Basic validation
+    if (!full_name || !email || !password || !confirmPassword) {
+      setError('Please fill in all fields');
+      return;
+    }
+    
+    if (password !== confirmPassword) {
       setError('Passwords do not match');
+      return;
+    }
+    
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long');
       return;
     }
     
     try {
       setIsSubmitting(true);
       setError('');
-      
+      console.log('📝 Attempting registration with:', { full_name, email });
+
       await register({
-        full_name: formData.full_name,
-        email: formData.email,
-        password: formData.password
+        full_name,
+        email,
+        password
       });
-      
+      console.log('✅ Registration completed successfully');
+
       navigate('/');
     } catch (err) {
-      console.error('Signup error:', err);
+      console.error('❌ Registration failed:', err);
+      console.error('❌ Error details:', err.status, err.message, err.data);
       setError(err.message || 'Failed to create an account');
     } finally {
       setIsSubmitting(false);

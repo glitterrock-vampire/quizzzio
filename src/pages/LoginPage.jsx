@@ -49,7 +49,7 @@ export function LoginPage() {
           <p className="mt-2 text-center text-sm text-gray-600">
             Or{' '}
             <Link
-              to="/register"
+              to="/signup"
               className="font-medium text-purple-600 hover:text-purple-500"
             >
               create a new account
