@@ -12,7 +12,7 @@ import QuizResults from '../components/quiz/QuizResults';
 export default function QuizPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { user, refreshUser } = useAuth();
+  const { user, loading: authLoading, refreshUser } = useAuth();
   const [stage, setStage] = useState("setup");
   const [quizConfig, setQuizConfig] = useState(null);
   const [questions, setQuestions] = useState([]);
@@ -23,6 +23,31 @@ export default function QuizPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [timeLeft, setTimeLeft] = useState(30);
+  const [startTime, setStartTime] = useState(null);
+  const [showExplanation, setShowExplanation] = useState(false);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate('/login');
+      return;
+    }
+  }, [user, authLoading, navigate]);
+
+  useEffect(() => {
+    const subject = searchParams.get("subject");
+    if (subject) {
+      // Pre-populate quiz config but still show setup screen for user to choose AI/DB questions
+      setQuizConfig({
+        subject,
+        questionCount: 10,
+        difficulty: "mixed",
+        mode: "existing" // Default to existing, but user can change in setup
+      });
+      setStage("setup");
+    }
+  }, [searchParams]);
   const [startTime, setStartTime] = useState(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -41,13 +66,20 @@ export default function QuizPage() {
     }
   }, [searchParams]);
 
-  useEffect(() => {
-    if (stage === "playing" && currentQuestionIndex < questions.length) {
-      const currentQ = questions[currentQuestionIndex];
-      setTimeLeft(getTimerDuration(currentQ.difficulty));
-      setShowExplanation(false);
-      setSelectedAnswer(null);
-    }
+  // Show loading spinner while auth is loading
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600" />
+      </div>
+    );
+  }
+
+  // Redirect to login if not authenticated
+  if (!user) {
+    return null; // Component will redirect in useEffect
+  }
+
   }, [stage, currentQuestionIndex, questions]);
 
 

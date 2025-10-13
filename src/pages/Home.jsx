@@ -41,18 +41,27 @@ const achievements = [
   { id: "streak_30", name: "Unstoppable", icon: "🔥", description: "Get a 30-quiz streak" }
 ];
 
+import { useNavigate } from 'react-router-dom';
+
 export default function HomePage() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
   const [recentSessions, setRecentSessions] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingData, setLoadingData] = useState(true);
 
   useEffect(() => {
+    // Redirect to login if not authenticated
+    if (!loading && !user) {
+      navigate('/login');
+      return;
+    }
+
     loadData();
-  }, [user]);
+  }, [user, loading, navigate]);
 
   const loadData = async () => {
     if (!user) {
-      setLoading(false);
+      setLoadingData(false);
       return;
     }
 
@@ -62,8 +71,22 @@ export default function HomePage() {
     } catch (error) {
       console.error("Error loading data:", error);
     }
-    setLoading(false);
+    setLoadingData(false);
   };
+
+  // Show loading spinner while auth is loading
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600" />
+      </div>
+    );
+  }
+
+  // This component should only render if user is authenticated (redirect happens in useEffect)
+  if (!user) {
+    return null;
+  }
 
   const unlockedAchievements = user?.achievements || [];
 
