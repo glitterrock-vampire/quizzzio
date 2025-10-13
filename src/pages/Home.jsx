@@ -28,11 +28,17 @@ const subjects = [
 
 const achievements = [
   { id: "first_quiz", name: "Getting Started", icon: "🎯", description: "Complete your first quiz" },
-  { id: "streak_5", name: "On Fire", icon: "🔥", description: "Get 5 correct answers in a row" },
-  { id: "100_points", name: "Century", icon: "💯", description: "Earn 100 points" },
-  { id: "perfect_quiz", name: "Perfectionist", icon: "⭐", description: "Complete a quiz with 100% accuracy" },
+  { id: "quiz_enthusiast", name: "Quiz Enthusiast", icon: "🎖️", description: "Complete 5 quizzes" },
+  { id: "scholar", name: "Scholar", icon: "🎓", description: "Complete 10 quizzes" },
+  { id: "quiz_master", name: "Quiz Master", icon: "👑", description: "Complete 25 quizzes" },
+  { id: "century", name: "Century", icon: "💯", description: "Earn 100 points" },
+  { id: "perfectionist", name: "Perfectionist", icon: "⭐", description: "Complete a quiz with 100% accuracy" },
   { id: "speedster", name: "Speedster", icon: "⚡", description: "Complete a quiz in under 2 minutes" },
-  { id: "scholar", name: "Scholar", icon: "🎓", description: "Complete 10 quizzes" }
+  { id: "accuracy_master", name: "Accuracy Master", icon: "🎯", description: "Maintain 90%+ accuracy overall" },
+  { id: "streak_3", name: "Getting Hot", icon: "🔥", description: "Get a 3-quiz streak" },
+  { id: "streak_5", name: "On Fire", icon: "🔥", description: "Get a 5-quiz streak" },
+  { id: "streak_7", name: "Blazing", icon: "🔥", description: "Get a 7-quiz streak" },
+  { id: "streak_30", name: "Unstoppable", icon: "🔥", description: "Get a 30-quiz streak" }
 ];
 
 export default function HomePage() {
@@ -41,14 +47,6 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log('🏠 Home component user data changed:', {
-      total_points: user?.total_points,
-      quizzes_completed: user?.quizzes_completed,
-      correct_answers: user?.correct_answers,
-      total_answers: user?.total_answers,
-      accuracy: user?.accuracy,
-      best_streak: user?.best_streak
-    });
     loadData();
   }, [user]);
 
@@ -68,6 +66,13 @@ export default function HomePage() {
   };
 
   const unlockedAchievements = user?.achievements || [];
+
+  console.log('🏆 Dashboard achievements check:', {
+    user_achievements: unlockedAchievements,
+    available_achievements: achievements.map(a => a.id),
+    unlocked_count: unlockedAchievements.length,
+    total_available: achievements.length
+  });
 
   return (
     <div className="min-h-screen p-4 md:p-8">
