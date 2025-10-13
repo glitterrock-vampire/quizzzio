@@ -43,29 +43,32 @@ class AuthService {
   async getCurrentUser() {
     // Don't try to get user if we're on the login page
     if (window.location.pathname === '/login' || window.location.pathname === '/register') {
+      console.log('🚫 Skipping getCurrentUser - on login/register page');
       return null;
     }
 
     // Check if we have a token
     const token = this.getToken();
     if (!token) {
-      console.log('No token found in localStorage');
+      console.log('🚫 No token found in localStorage');
       return null;
     }
 
-    console.log('Found token, attempting to get current user');
+    console.log('🔍 Found token, attempting to get current user with token:', token.substring(0, 20) + '...');
     try {
+      console.log('📡 Making API call to /auth/user');
       const response = await api.get('/auth/user');
+      console.log('✅ API call successful, user data:', response.user);
       return response.user;
     } catch (error) {
       // If not authenticated, clear token and return null
       if (error.status === 401) {
-        console.log('Token invalid, clearing localStorage');
+        console.log('🚫 Token invalid (401), clearing localStorage');
         localStorage.removeItem('token');
         return null;
       }
       // For other errors, still return null but don't clear token
-      console.error('Error getting current user:', error);
+      console.error('❌ Error getting current user:', error);
       return null;
     }
   }

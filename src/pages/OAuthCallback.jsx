@@ -18,7 +18,10 @@ export default function OAuthCallback() {
         const provider = searchParams.get('provider');
         const error = searchParams.get('error');
 
+        console.log('🔐 OAuth Callback - URL params:', { token: token?.substring(0, 20) + '...', provider, error });
+
         if (error) {
+          console.error('❌ OAuth error from backend:', error);
           setStatus('error');
           setMessage('OAuth authentication failed. Please try again.');
           setTimeout(() => navigate('/login'), 3000);
@@ -26,26 +29,32 @@ export default function OAuthCallback() {
         }
 
         if (!token) {
+          console.error('❌ No token received from backend');
           setStatus('error');
           setMessage('No authentication token received.');
           setTimeout(() => navigate('/login'), 3000);
           return;
         }
 
+        console.log('✅ Token received, storing and logging in...');
         // Store the token and log in the user
         localStorage.setItem('token', token);
-        
+
         // Update auth context using OAuth login
-        await oauthLogin(token);
-        
+        const userData = await oauthLogin(token);
+        console.log('✅ OAuth login successful, user data:', userData);
+
         setStatus('success');
         setMessage(`Successfully signed in with ${provider}!`);
-        
+
         // Redirect to home page after a short delay
-        setTimeout(() => navigate('/'), 2000);
-        
+        setTimeout(() => {
+          console.log('🔄 Redirecting to home page...');
+          navigate('/');
+        }, 2000);
+
       } catch (error) {
-        console.error('OAuth callback error:', error);
+        console.error('❌ OAuth callback error:', error);
         setStatus('error');
         setMessage('An error occurred during authentication.');
         setTimeout(() => navigate('/login'), 3000);

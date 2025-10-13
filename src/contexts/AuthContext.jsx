@@ -81,20 +81,27 @@ export function AuthProvider({ children }) {
     try {
       setLoading(true);
       setError(null);
+      console.log('🔐 OAuth login attempt with token:', token?.substring(0, 20) + '...');
 
       // Store the token
       localStorage.setItem('token', token);
+      console.log('✅ Token stored in localStorage');
 
       // Get user data using the token
+      console.log('🔄 Getting current user data...');
       const userData = await authService.getCurrentUser();
+      console.log('✅ User data retrieved:', userData);
 
       if (userData) {
+        console.log('✅ Setting user in context:', userData.email);
         setUser({ ...userData });
+      } else {
+        console.warn('⚠️ No user data received from getCurrentUser');
       }
 
       return userData;
     } catch (error) {
-      console.error('OAuth login error:', error);
+      console.error('❌ OAuth login error:', error);
       setError(error.message || 'OAuth login failed');
       throw error;
     } finally {
