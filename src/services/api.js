@@ -44,7 +44,7 @@ async function request(endpoint, options = {}) {
         window.location.href = '/login';
       }
       
-      const error = new Error(data.message || 'An error occurred');
+      const error = new Error(data.error || data.message || 'An error occurred');
       error.status = response.status;
       error.data = data;
       throw error;
