@@ -41,20 +41,14 @@ function getTableName(subject) {
   return SUBJECT_TABLES[normalized] || 'quiz_questions';
 }
 
-// Initialize database table with retry logic
+// Initialize database table with robust error handling
 export const initializeQuizQuestionTable = async (retryCount = 0) => {
   const maxRetries = 3;
   const retryDelay = 1000; // 1 second
 
   if (!dbPool) {
-    if (retryCount < maxRetries) {
-      console.log(`⏳ Database not ready, retrying table initialization (${retryCount + 1}/${maxRetries})...`);
-      await new Promise(resolve => setTimeout(resolve, retryDelay));
-      return initializeQuizQuestionTable(retryCount + 1);
-    } else {
-      console.log('⚠️  No database connection for quiz questions after retries');
-      return;
-    }
+    console.log('⚠️  No database connection for quiz questions');
+    return;
   }
 
   try {
@@ -63,6 +57,23 @@ export const initializeQuizQuestionTable = async (retryCount = 0) => {
     // Create all subject-specific tables
     for (const [subject, tableName] of Object.entries(SUBJECT_TABLES)) {
       try {
+        // First check if table already exists
+        const checkResult = await dbPool.query(`
+          SELECT EXISTS (
+            SELECT FROM information_schema.tables
+            WHERE table_schema = 'public'
+            AND table_name = $1
+          );
+        `, [tableName]);
+
+        const tableExists = checkResult.rows[0].exists;
+
+        if (tableExists) {
+          console.log(`✅ ${tableName} table already exists`);
+          continue;
+        }
+
+        // Table doesn't exist, try to create it
         await dbPool.query(`
           CREATE TABLE IF NOT EXISTS ${tableName} (
             id SERIAL PRIMARY KEY,
@@ -77,24 +88,31 @@ export const initializeQuizQuestionTable = async (retryCount = 0) => {
             updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
           )
         `);
+        console.log(`✅ ${tableName} table created successfully`);
+
       } catch (tableError) {
-        // If table already exists, that's fine
-        if (!tableError.message.includes('already exists')) {
-          console.error(`❌ Error creating ${tableName} table:`, tableError.message);
-          throw tableError;
+        console.error(`❌ Error with ${tableName} table:`, tableError.message);
+
+        // If it's a permission/SSL error, log it but don't fail completely
+        if (tableError.message.includes('SSL/TLS') || tableError.message.includes('permission denied')) {
+          console.log(`⚠️  ${tableName} table creation blocked - will use in-memory fallback`);
+          continue;
         }
+
+        // For other errors, re-throw to trigger retry logic
+        throw tableError;
       }
     }
 
-    console.log('✅ All subject-specific question tables created');
+    console.log('✅ Quiz question tables initialization completed');
   } catch (error) {
-    if (retryCount < maxRetries && error.message.includes('SSL/TLS')) {
-      console.log(`🔄 SSL error during table creation, retrying (${retryCount + 1}/${maxRetries})...`);
+    if (retryCount < maxRetries && (error.message.includes('SSL/TLS') || error.message.includes('connection'))) {
+      console.log(`🔄 Connection error during table creation, retrying (${retryCount + 1}/${maxRetries})...`);
       await new Promise(resolve => setTimeout(resolve, retryDelay));
       return initializeQuizQuestionTable(retryCount + 1);
     }
     console.error('❌ Error initializing quiz question tables:', error.message);
-    console.error('❌ Full error:', error);
+    console.error('💡 Tables may not be created - application will use in-memory fallback');
   }
 };
 

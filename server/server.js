@@ -249,6 +249,7 @@ app.listen(PORT, async () => {
             console.log('✅ Quiz question tables initialized');
           } catch (error) {
             console.error('❌ Failed to initialize quiz question tables:', error.message);
+            console.log('💡 Application will use in-memory fallback for questions');
           }
 
           try {
@@ -302,6 +303,20 @@ app.listen(PORT, async () => {
         // Check if questions exist using the database pool
         if (dbPool) {
           try {
+            // Check if geography_questions table exists first
+            const tableCheck = await dbPool.query(`
+              SELECT EXISTS (
+                SELECT FROM information_schema.tables
+                WHERE table_schema = 'public'
+                AND table_name = 'geography_questions'
+              );
+            `);
+
+            if (!tableCheck.rows[0].exists) {
+              console.log('ℹ️ Geography questions table does not exist - skipping questions import');
+              return;
+            }
+
             const result = await dbPool.query('SELECT COUNT(*) as count FROM geography_questions');
             const questionCount = parseInt(result.rows[0].count);
 
@@ -373,48 +388,60 @@ app.listen(PORT, async () => {
 
               console.log('✅ Geography questions imported to production database');
 
-              // Also import some Mathematics questions
-              const mathQuestions = [
-                {
-                  subject: 'Mathematics',
-                  question: 'What is 2 + 2?',
-                  options: ['3', '4', '5', '6'],
-                  correct_answer: '4',
-                  difficulty: 'easy',
-                  explanation: 'Basic addition: 2 + 2 equals 4.',
-                  points: 10
-                },
-                {
-                  subject: 'Mathematics',
-                  question: 'What is the square root of 16?',
-                  options: ['2', '4', '6', '8'],
-                  correct_answer: '4',
-                  difficulty: 'easy',
-                  explanation: 'The square root of 16 is 4, since 4 × 4 = 16.',
-                  points: 10
-                }
-              ];
+              // Also import some Mathematics questions if mathematics_questions table exists
+              const mathTableCheck = await dbPool.query(`
+                SELECT EXISTS (
+                  SELECT FROM information_schema.tables
+                  WHERE table_schema = 'public'
+                  AND table_name = 'mathematics_questions'
+                );
+              `);
 
-              for (const q of mathQuestions) {
-                try {
-                  await dbPool.query(
-                    `INSERT INTO mathematics_questions
-                     (subject, question, options, correct_answer, difficulty, explanation, points)
-                     VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-                    [q.subject, q.question, q.options, q.correct_answer, q.difficulty, q.explanation, q.points]
-                  );
-                } catch (insertError) {
-                  console.error(`❌ Error inserting math question "${q.question}":`, insertError.message);
+              if (mathTableCheck.rows[0].exists) {
+                const mathQuestions = [
+                  {
+                    subject: 'Mathematics',
+                    question: 'What is 2 + 2?',
+                    options: ['3', '4', '5', '6'],
+                    correct_answer: '4',
+                    difficulty: 'easy',
+                    explanation: 'Basic addition: 2 + 2 equals 4.',
+                    points: 10
+                  },
+                  {
+                    subject: 'Mathematics',
+                    question: 'What is the square root of 16?',
+                    options: ['2', '4', '6', '8'],
+                    correct_answer: '4',
+                    difficulty: 'easy',
+                    explanation: 'The square root of 16 is 4, since 4 × 4 = 16.',
+                    points: 10
+                  }
+                ];
+
+                for (const q of mathQuestions) {
+                  try {
+                    await dbPool.query(
+                      `INSERT INTO mathematics_questions
+                       (subject, question, options, correct_answer, difficulty, explanation, points)
+                       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+                      [q.subject, q.question, q.options, q.correct_answer, q.difficulty, q.explanation, q.points]
+                    );
+                  } catch (insertError) {
+                    console.error(`❌ Error inserting math question "${q.question}":`, insertError.message);
+                  }
                 }
+
+                console.log('✅ Mathematics questions imported to production database');
+              } else {
+                console.log('ℹ️ Mathematics questions table does not exist - skipping math questions import');
               }
-
-              console.log('✅ Mathematics questions imported to production database');
             } else {
               console.log(`✅ Questions already exist in production database (${questionCount} questions)`);
             }
           } catch (queryError) {
             console.error('❌ Error querying questions table:', queryError.message);
-            console.log('ℹ️ Questions table may not exist yet - this is expected if table creation failed');
+            console.log('ℹ️ Questions table may not exist - this is expected if table creation failed');
           }
         } else {
           console.log('ℹ️ Database pool not available for questions import');
