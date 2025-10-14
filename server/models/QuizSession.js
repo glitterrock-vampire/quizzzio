@@ -107,6 +107,7 @@ export const QuizSessionModel = {
   // Create session
   async create(data) {
     if (!dbPool) {
+      throw new Error('Database not available');
     }
 
     try {
@@ -179,10 +180,9 @@ export const QuizSessionModel = {
           total_answers = $3,
           quizzes_completed = $4,
           best_streak = GREATEST(best_streak, $5),
-          accuracy = $6,
           updated_date = CURRENT_TIMESTAMP
-        WHERE id = $7
-      `, [totalScore, totalCorrectAnswers, totalQuestions, totalSessions, maxScore, Math.round(avgAccuracy), userId]);
+        WHERE id = $6
+      `, [totalScore, totalCorrectAnswers, totalQuestions, totalSessions, maxScore, userId]);
 
       console.log(`✅ User ${userId} stats updated successfully`);
 
