@@ -231,18 +231,34 @@ app.listen(PORT, async () => {
         try {
           console.log('🔧 Initializing database tables...');
 
-          // Initialize all tables with retry logic
+          // Initialize all tables with retry logic (don't fail if some tables can't be created)
           const { initializeUserTable } = await import('./models/User.js');
           const { initializeQuizQuestionTable } = await import('./models/QuizQuestion.js');
           const { initializeQuizSessionTable } = await import('./models/QuizSession.js');
 
-          await Promise.all([
-            initializeUserTable(),
-            initializeQuizQuestionTable(),
-            initializeQuizSessionTable()
-          ]);
+          // Try to initialize tables but don't fail if some can't be created
+          try {
+            await initializeUserTable();
+            console.log('✅ Users table initialized');
+          } catch (error) {
+            console.error('❌ Failed to initialize users table:', error.message);
+          }
 
-          console.log('✅ Database initialization completed successfully!');
+          try {
+            await initializeQuizQuestionTable();
+            console.log('✅ Quiz question tables initialized');
+          } catch (error) {
+            console.error('❌ Failed to initialize quiz question tables:', error.message);
+          }
+
+          try {
+            await initializeQuizSessionTable();
+            console.log('✅ Quiz session tables initialized');
+          } catch (error) {
+            console.error('❌ Failed to initialize quiz session tables:', error.message);
+          }
+
+          console.log('✅ Database initialization completed (some tables may have failed but server continues)');
         } catch (error) {
           console.error('❌ Error initializing database tables:', error.message);
           console.error('❌ Full error:', error);
@@ -281,119 +297,124 @@ app.listen(PORT, async () => {
         console.log('🔧 Checking questions in production...');
 
         // Wait a bit for tables to be fully ready
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, 3000));
 
         // Check if questions exist using the database pool
         if (dbPool) {
-          const result = await dbPool.query('SELECT COUNT(*) as count FROM geography_questions');
-          const questionCount = parseInt(result.rows[0].count);
+          try {
+            const result = await dbPool.query('SELECT COUNT(*) as count FROM geography_questions');
+            const questionCount = parseInt(result.rows[0].count);
 
-          if (questionCount === 0) {
-            console.log('🔧 No questions found, importing sample questions...');
+            if (questionCount === 0) {
+              console.log('🔧 No questions found, importing sample questions...');
 
-            // Import Geography questions directly
-            const geographyQuestions = [
-              {
-                subject: 'Geography',
-                question: 'What is the capital of France?',
-                options: ['London', 'Berlin', 'Paris', 'Rome'],
-                correct_answer: 'Paris',
-                difficulty: 'easy',
-                explanation: 'Paris, located on the Seine River, is the capital and most populous city of France.',
-                points: 10
-              },
-              {
-                subject: 'Geography',
-                question: 'Which is the largest ocean on Earth?',
-                options: ['Atlantic Ocean', 'Indian Ocean', 'Arctic Ocean', 'Pacific Ocean'],
-                correct_answer: 'Pacific Ocean',
-                difficulty: 'easy',
-                explanation: 'The Pacific Ocean is the largest and deepest of the world\'s ocean basins.',
-                points: 10
-              },
-              {
-                subject: 'Geography',
-                question: 'What is the longest river in the world?',
-                options: ['The Amazon River', 'The Nile River', 'The Yangtze River', 'The Mississippi River'],
-                correct_answer: 'The Nile River',
-                difficulty: 'easy',
-                explanation: 'The Nile River in Africa is historically considered the longest river in the world at about 6,650 km (4,130 miles).',
-                points: 10
-              },
-              {
-                subject: 'Geography',
-                question: 'Which desert is the largest in the world?',
-                options: ['The Gobi Desert', 'The Sahara Desert', 'The Arabian Desert', 'The Kalahari Desert'],
-                correct_answer: 'The Sahara Desert',
-                difficulty: 'easy',
-                explanation: 'The Sahara in Northern Africa is the world\'s largest hot desert.',
-                points: 10
-              },
-              {
-                subject: 'Geography',
-                question: 'Which continent is the smallest by land area?',
-                options: ['Europe', 'Australia', 'Antarctica', 'South America'],
-                correct_answer: 'Australia',
-                difficulty: 'easy',
-                explanation: 'Australia is the smallest continent, also considered a single country.',
-                points: 10
+              // Import Geography questions directly
+              const geographyQuestions = [
+                {
+                  subject: 'Geography',
+                  question: 'What is the capital of France?',
+                  options: ['London', 'Berlin', 'Paris', 'Rome'],
+                  correct_answer: 'Paris',
+                  difficulty: 'easy',
+                  explanation: 'Paris, located on the Seine River, is the capital and most populous city of France.',
+                  points: 10
+                },
+                {
+                  subject: 'Geography',
+                  question: 'Which is the largest ocean on Earth?',
+                  options: ['Atlantic Ocean', 'Indian Ocean', 'Arctic Ocean', 'Pacific Ocean'],
+                  correct_answer: 'Pacific Ocean',
+                  difficulty: 'easy',
+                  explanation: 'The Pacific Ocean is the largest and deepest of the world\'s ocean basins.',
+                  points: 10
+                },
+                {
+                  subject: 'Geography',
+                  question: 'What is the longest river in the world?',
+                  options: ['The Amazon River', 'The Nile River', 'The Yangtze River', 'The Mississippi River'],
+                  correct_answer: 'The Nile River',
+                  difficulty: 'easy',
+                  explanation: 'The Nile River in Africa is historically considered the longest river in the world at about 6,650 km (4,130 miles).',
+                  points: 10
+                },
+                {
+                  subject: 'Geography',
+                  question: 'Which desert is the largest in the world?',
+                  options: ['The Gobi Desert', 'The Sahara Desert', 'The Arabian Desert', 'The Kalahari Desert'],
+                  correct_answer: 'The Sahara Desert',
+                  difficulty: 'easy',
+                  explanation: 'The Sahara in Northern Africa is the world\'s largest hot desert.',
+                  points: 10
+                },
+                {
+                  subject: 'Geography',
+                  question: 'Which continent is the smallest by land area?',
+                  options: ['Europe', 'Australia', 'Antarctica', 'South America'],
+                  correct_answer: 'Australia',
+                  difficulty: 'easy',
+                  explanation: 'Australia is the smallest continent, also considered a single country.',
+                  points: 10
+                }
+              ];
+
+              // Import Geography questions
+              for (const q of geographyQuestions) {
+                try {
+                  await dbPool.query(
+                    `INSERT INTO geography_questions
+                     (subject, question, options, correct_answer, difficulty, explanation, points)
+                     VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+                    [q.subject, q.question, q.options, q.correct_answer, q.difficulty, q.explanation, q.points]
+                  );
+                } catch (insertError) {
+                  console.error(`❌ Error inserting question "${q.question}":`, insertError.message);
+                }
               }
-            ];
 
-            // Import Geography questions
-            for (const q of geographyQuestions) {
-              try {
-                await dbPool.query(
-                  `INSERT INTO geography_questions
-                   (subject, question, options, correct_answer, difficulty, explanation, points)
-                   VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-                  [q.subject, q.question, q.options, q.correct_answer, q.difficulty, q.explanation, q.points]
-                );
-              } catch (insertError) {
-                console.error(`❌ Error inserting question "${q.question}":`, insertError.message);
+              console.log('✅ Geography questions imported to production database');
+
+              // Also import some Mathematics questions
+              const mathQuestions = [
+                {
+                  subject: 'Mathematics',
+                  question: 'What is 2 + 2?',
+                  options: ['3', '4', '5', '6'],
+                  correct_answer: '4',
+                  difficulty: 'easy',
+                  explanation: 'Basic addition: 2 + 2 equals 4.',
+                  points: 10
+                },
+                {
+                  subject: 'Mathematics',
+                  question: 'What is the square root of 16?',
+                  options: ['2', '4', '6', '8'],
+                  correct_answer: '4',
+                  difficulty: 'easy',
+                  explanation: 'The square root of 16 is 4, since 4 × 4 = 16.',
+                  points: 10
+                }
+              ];
+
+              for (const q of mathQuestions) {
+                try {
+                  await dbPool.query(
+                    `INSERT INTO mathematics_questions
+                     (subject, question, options, correct_answer, difficulty, explanation, points)
+                     VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+                    [q.subject, q.question, q.options, q.correct_answer, q.difficulty, q.explanation, q.points]
+                  );
+                } catch (insertError) {
+                  console.error(`❌ Error inserting math question "${q.question}":`, insertError.message);
+                }
               }
+
+              console.log('✅ Mathematics questions imported to production database');
+            } else {
+              console.log(`✅ Questions already exist in production database (${questionCount} questions)`);
             }
-
-            console.log('✅ Geography questions imported to production database');
-
-            // Also import some Mathematics questions
-            const mathQuestions = [
-              {
-                subject: 'Mathematics',
-                question: 'What is 2 + 2?',
-                options: ['3', '4', '5', '6'],
-                correct_answer: '4',
-                difficulty: 'easy',
-                explanation: 'Basic addition: 2 + 2 equals 4.',
-                points: 10
-              },
-              {
-                subject: 'Mathematics',
-                question: 'What is the square root of 16?',
-                options: ['2', '4', '6', '8'],
-                correct_answer: '4',
-                difficulty: 'easy',
-                explanation: 'The square root of 16 is 4, since 4 × 4 = 16.',
-                points: 10
-              }
-            ];
-
-            for (const q of mathQuestions) {
-              try {
-                await dbPool.query(
-                  `INSERT INTO mathematics_questions
-                   (subject, question, options, correct_answer, difficulty, explanation, points)
-                   VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-                  [q.subject, q.question, q.options, q.correct_answer, q.difficulty, q.explanation, q.points]
-                );
-              } catch (insertError) {
-                console.error(`❌ Error inserting math question "${q.question}":`, insertError.message);
-              }
-            }
-
-            console.log('✅ Mathematics questions imported to production database');
-          } else {
-            console.log(`✅ Questions already exist in production database (${questionCount} questions)`);
+          } catch (queryError) {
+            console.error('❌ Error querying questions table:', queryError.message);
+            console.log('ℹ️ Questions table may not exist yet - this is expected if table creation failed');
           }
         } else {
           console.log('ℹ️ Database pool not available for questions import');
@@ -410,7 +431,9 @@ app.listen(PORT, async () => {
   } catch (error) {
     console.error('❌ Fatal error during server startup:', error);
     console.error('❌ Server failed to start properly');
-    process.exit(1);
+    console.error('💡 Note: Server will continue running for debugging purposes');
+    // Don't exit - let the server run even if initialization fails
+    // process.exit(1);
   }
 });
 
