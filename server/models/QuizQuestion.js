@@ -40,11 +40,20 @@ function getTableName(subject) {
   return SUBJECT_TABLES[normalized] || 'quiz_questions';
 }
 
-// Initialize database table
-export const initializeQuizQuestionTable = async () => {
+// Initialize database table with retry logic
+export const initializeQuizQuestionTable = async (retryCount = 0) => {
+  const maxRetries = 3;
+  const retryDelay = 1000; // 1 second
+
   if (!dbPool) {
-    console.log('⚠️  No database connection for quiz questions');
-    return;
+    if (retryCount < maxRetries) {
+      console.log(`⏳ Database not ready, retrying table initialization (${retryCount + 1}/${maxRetries})...`);
+      await new Promise(resolve => setTimeout(resolve, retryDelay));
+      return initializeQuizQuestionTable(retryCount + 1);
+    } else {
+      console.log('⚠️  No database connection for quiz questions after retries');
+      return;
+    }
   }
 
   try {
@@ -52,25 +61,39 @@ export const initializeQuizQuestionTable = async () => {
 
     // Create all subject-specific tables
     for (const [subject, tableName] of Object.entries(SUBJECT_TABLES)) {
-      await dbPool.query(`
-        CREATE TABLE IF NOT EXISTS ${tableName} (
-          id SERIAL PRIMARY KEY,
-          subject VARCHAR(100) NOT NULL,
-          question TEXT NOT NULL,
-          options JSONB NOT NULL,
-          correct_answer TEXT NOT NULL,
-          difficulty VARCHAR(20) DEFAULT 'medium',
-          explanation TEXT,
-          points INTEGER DEFAULT 10,
-          created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-          updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-      `);
+      try {
+        await dbPool.query(`
+          CREATE TABLE IF NOT EXISTS ${tableName} (
+            id SERIAL PRIMARY KEY,
+            subject VARCHAR(100) NOT NULL,
+            question TEXT NOT NULL,
+            options JSONB NOT NULL,
+            correct_answer TEXT NOT NULL,
+            difficulty VARCHAR(20) DEFAULT 'medium',
+            explanation TEXT,
+            points INTEGER DEFAULT 10,
+            created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          )
+        `);
+      } catch (tableError) {
+        // If table already exists, that's fine
+        if (!tableError.message.includes('already exists')) {
+          console.error(`❌ Error creating ${tableName} table:`, tableError.message);
+          throw tableError;
+        }
+      }
     }
 
     console.log('✅ All subject-specific question tables created');
   } catch (error) {
-    console.error('❌ Error initializing quiz question tables:', error);
+    if (retryCount < maxRetries && error.message.includes('SSL/TLS')) {
+      console.log(`🔄 SSL error during table creation, retrying (${retryCount + 1}/${maxRetries})...`);
+      await new Promise(resolve => setTimeout(resolve, retryDelay));
+      return initializeQuizQuestionTable(retryCount + 1);
+    }
+    console.error('❌ Error initializing quiz question tables:', error.message);
+    console.error('❌ Full error:', error);
   }
 };
 
@@ -589,5 +612,5 @@ export const QuizQuestionModel = {
   }
 };
 
-// Initialize table when module is imported
-initializeQuizQuestionTable();
+// Initialize table when module is imported (will be handled by server startup)
+// initializeQuizQuestionTable();

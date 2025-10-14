@@ -230,7 +230,19 @@ app.listen(PORT, async () => {
       if (process.env.NODE_ENV === 'production') {
         try {
           console.log('🔧 Initializing database tables...');
-          await initializeDatabase();
+
+          // Initialize all tables with retry logic
+          const { initializeUserTable } = await import('./models/User.js');
+          const { initializeQuizQuestionTable } = await import('./models/QuizQuestion.js');
+          const { initializeQuizSessionTable } = await import('./models/QuizSession.js');
+
+          await Promise.all([
+            initializeUserTable(),
+            initializeQuizQuestionTable(),
+            initializeQuizSessionTable()
+          ]);
+
+          console.log('✅ Database initialization completed successfully!');
         } catch (error) {
           console.error('❌ Error initializing database tables:', error.message);
           console.error('❌ Full error:', error);
@@ -267,6 +279,9 @@ app.listen(PORT, async () => {
     if (dbConnected && process.env.NODE_ENV === 'production') {
       try {
         console.log('🔧 Checking questions in production...');
+
+        // Wait a bit for tables to be fully ready
+        await new Promise(resolve => setTimeout(resolve, 2000));
 
         // Check if questions exist using the database pool
         if (dbPool) {
@@ -327,12 +342,16 @@ app.listen(PORT, async () => {
 
             // Import Geography questions
             for (const q of geographyQuestions) {
-              await dbPool.query(
-                `INSERT INTO geography_questions
-                 (subject, question, options, correct_answer, difficulty, explanation, points)
-                 VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-                [q.subject, q.question, q.options, q.correct_answer, q.difficulty, q.explanation, q.points]
-              );
+              try {
+                await dbPool.query(
+                  `INSERT INTO geography_questions
+                   (subject, question, options, correct_answer, difficulty, explanation, points)
+                   VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+                  [q.subject, q.question, q.options, q.correct_answer, q.difficulty, q.explanation, q.points]
+                );
+              } catch (insertError) {
+                console.error(`❌ Error inserting question "${q.question}":`, insertError.message);
+              }
             }
 
             console.log('✅ Geography questions imported to production database');
@@ -360,12 +379,16 @@ app.listen(PORT, async () => {
             ];
 
             for (const q of mathQuestions) {
-              await dbPool.query(
-                `INSERT INTO mathematics_questions
-                 (subject, question, options, correct_answer, difficulty, explanation, points)
-                 VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-                [q.subject, q.question, q.options, q.correct_answer, q.difficulty, q.explanation, q.points]
-              );
+              try {
+                await dbPool.query(
+                  `INSERT INTO mathematics_questions
+                   (subject, question, options, correct_answer, difficulty, explanation, points)
+                   VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+                  [q.subject, q.question, q.options, q.correct_answer, q.difficulty, q.explanation, q.points]
+                );
+              } catch (insertError) {
+                console.error(`❌ Error inserting math question "${q.question}":`, insertError.message);
+              }
             }
 
             console.log('✅ Mathematics questions imported to production database');
