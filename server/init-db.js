@@ -26,3 +26,5 @@ async function initializeDatabase() {
 
 // Run the initialization
 initializeDatabase();
+
+export { initializeDatabase };
