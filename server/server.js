@@ -16,6 +16,7 @@ import aiRouter from './routes/ai.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { generalLimiter, authLimiter, aiLimiter } from './middleware/rateLimit.js';
 import { testDatabaseConnection, dbPool } from './config/database.js';
+import { initializeDatabase } from './init-db.js';
 import passport from './config/oauth.js';
 
 dotenv.config({ path: '.env.local' });
@@ -221,6 +222,16 @@ app.listen(PORT, async () => {
   const dbConnected = await testDatabaseConnection();
   if (dbConnected) {
     console.log(`🗄️  Database: PostgreSQL (${process.env.DB_HOST || 'localhost'})`);
+
+    // Initialize database tables if in production
+    if (process.env.NODE_ENV === 'production') {
+      try {
+        console.log('🔧 Initializing database tables...');
+        await initializeDatabase();
+      } catch (error) {
+        console.error('❌ Error initializing database tables:', error.message);
+      }
+    }
   } else {
     console.log(`🗄️  Database: In-Memory (fallback mode)`);
   }

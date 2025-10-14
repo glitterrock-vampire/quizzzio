@@ -42,8 +42,36 @@ function getTableName(subject) {
 
 // Initialize database table
 export const initializeQuizQuestionTable = async () => {
-  // Tables are already created, no need to initialize here
-  console.log('✅ Subject-specific question tables are ready');
+  if (!dbPool) {
+    console.log('⚠️  No database connection for quiz questions');
+    return;
+  }
+
+  try {
+    console.log('🔧 Initializing quiz question tables...');
+
+    // Create all subject-specific tables
+    for (const [subject, tableName] of Object.entries(SUBJECT_TABLES)) {
+      await dbPool.query(`
+        CREATE TABLE IF NOT EXISTS ${tableName} (
+          id SERIAL PRIMARY KEY,
+          subject VARCHAR(100) NOT NULL,
+          question TEXT NOT NULL,
+          options JSONB NOT NULL,
+          correct_answer TEXT NOT NULL,
+          difficulty VARCHAR(20) DEFAULT 'medium',
+          explanation TEXT,
+          points INTEGER DEFAULT 10,
+          created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+    }
+
+    console.log('✅ All subject-specific question tables created');
+  } catch (error) {
+    console.error('❌ Error initializing quiz question tables:', error);
+  }
 };
 
 export const QuizQuestionModel = {
