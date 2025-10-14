@@ -260,8 +260,8 @@ app.listen(PORT, async () => {
         if (questionCount === 0) {
           console.log('🔧 No questions found, importing sample questions...');
 
-          // Import a few sample questions
-          const sampleQuestions = [
+          // Import Geography questions directly
+          const geographyQuestions = [
             {
               subject: 'Geography',
               question: 'What is the capital of France?',
@@ -279,10 +279,83 @@ app.listen(PORT, async () => {
               difficulty: 'easy',
               explanation: 'The Pacific Ocean is the largest and deepest of the world\'s ocean basins.',
               points: 10
+            },
+            {
+              subject: 'Geography',
+              question: 'What is the longest river in the world?',
+              options: ['The Amazon River', 'The Nile River', 'The Yangtze River', 'The Mississippi River'],
+              correct_answer: 'The Nile River',
+              difficulty: 'easy',
+              explanation: 'The Nile River in Africa is historically considered the longest river in the world at about 6,650 km (4,130 miles).',
+              points: 10
+            },
+            {
+              subject: 'Geography',
+              question: 'Which desert is the largest in the world?',
+              options: ['The Gobi Desert', 'The Sahara Desert', 'The Arabian Desert', 'The Kalahari Desert'],
+              correct_answer: 'The Sahara Desert',
+              difficulty: 'easy',
+              explanation: 'The Sahara in Northern Africa is the world\'s largest hot desert.',
+              points: 10
+            },
+            {
+              subject: 'Geography',
+              question: 'Which continent is the smallest by land area?',
+              options: ['Europe', 'Australia', 'Antarctica', 'South America'],
+              correct_answer: 'Australia',
+              difficulty: 'easy',
+              explanation: 'Australia is the smallest continent, also considered a single country.',
+              points: 10
+            },
+            {
+              subject: 'Geography',
+              question: 'What is the capital of Canada?',
+              options: ['Toronto', 'Vancouver', 'Ottawa', 'Montreal'],
+              correct_answer: 'Ottawa',
+              difficulty: 'medium',
+              explanation: 'Ottawa, located in the province of Ontario, is the federal capital of Canada.',
+              points: 20
+            },
+            {
+              subject: 'Geography',
+              question: 'Which mountain range separates Europe from Asia?',
+              options: ['The Alps', 'The Andes', 'The Urals', 'The Himalayas'],
+              correct_answer: 'The Urals',
+              difficulty: 'medium',
+              explanation: 'The Ural Mountains run from north to south through western Russia, forming a natural boundary between Europe and Asia.',
+              points: 20
+            },
+            {
+              subject: 'Geography',
+              question: 'Which country is both a continent and an island?',
+              options: ['New Zealand', 'Greenland', 'Australia', 'Madagascar'],
+              correct_answer: 'Australia',
+              difficulty: 'medium',
+              explanation: 'Australia is the only country that is also a continent and an island.',
+              points: 20
+            },
+            {
+              subject: 'Geography',
+              question: 'The \'Ring of Fire\' is known for frequent what?',
+              options: ['Hurricanes', 'Earthquakes and Volcanoes', 'Tornadoes', 'Tsunamis'],
+              correct_answer: 'Earthquakes and Volcanoes',
+              difficulty: 'medium',
+              explanation: 'The Ring of Fire is a major area in the basin of the Pacific Ocean where a large number of earthquakes and volcanic eruptions occur due to tectonic plate movements.',
+              points: 20
+            },
+            {
+              subject: 'Geography',
+              question: 'What is the world\'s most populous country?',
+              options: ['India', 'United States', 'China', 'Indonesia'],
+              correct_answer: 'India',
+              difficulty: 'medium',
+              explanation: 'As of 2023, India has surpassed China to become the world\'s most populous country.',
+              points: 20
             }
           ];
 
-          for (const q of sampleQuestions) {
+          // Import Geography questions
+          for (const q of geographyQuestions) {
             await dbPool.query(
               `INSERT INTO geography_questions
                (subject, question, options, correct_answer, difficulty, explanation, points)
@@ -291,7 +364,41 @@ app.listen(PORT, async () => {
             );
           }
 
-          console.log('✅ Sample questions imported to production database');
+          console.log('✅ Geography questions imported to production database');
+
+          // Also import some Mathematics questions
+          const mathQuestions = [
+            {
+              subject: 'Mathematics',
+              question: 'What is 2 + 2?',
+              options: ['3', '4', '5', '6'],
+              correct_answer: '4',
+              difficulty: 'easy',
+              explanation: 'Basic addition: 2 + 2 equals 4.',
+              points: 10
+            },
+            {
+              subject: 'Mathematics',
+              question: 'What is the square root of 16?',
+              options: ['2', '4', '6', '8'],
+              correct_answer: '4',
+              difficulty: 'easy',
+              explanation: 'The square root of 16 is 4, since 4 × 4 = 16.',
+              points: 10
+            }
+          ];
+
+          for (const q of mathQuestions) {
+            await dbPool.query(
+              `INSERT INTO mathematics_questions
+               (subject, question, options, correct_answer, difficulty, explanation, points)
+               VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+              [q.subject, q.question, q.options, q.correct_answer, q.difficulty, q.explanation, q.points]
+            );
+          }
+
+          console.log('✅ Mathematics questions imported to production database');
+
         } else {
           console.log(`✅ Questions already exist in production database (${questionCount} questions)`);
         }

@@ -187,10 +187,10 @@ export const UserModel = {
     try {
       const hashedPassword = await this.hashPassword(password);
       const result = await dbPool.query(
-        `INSERT INTO users (email, password, full_name, role, total_points, current_streak, best_streak, quizzes_completed, correct_answers, total_answers, achievements, accuracy)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-         RETURNING id, email, full_name, role, total_points, current_streak, best_streak, quizzes_completed, correct_answers, total_answers, achievements, accuracy, created_date`,
-        [email, hashedPassword, full_name, 'user', 0, 0, 0, 0, 0, 0, '{}', 0]
+        `INSERT INTO users (email, password, full_name, role, total_points, current_streak, best_streak, quizzes_completed, correct_answers, total_answers, achievements)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+         RETURNING id, email, full_name, role, total_points, current_streak, best_streak, quizzes_completed, correct_answers, total_answers, achievements, created_date`,
+        [email, hashedPassword, full_name, 'user', 0, 0, 0, 0, 0, 0, '{}']
       );
       return result.rows[0];
     } catch (error) {
