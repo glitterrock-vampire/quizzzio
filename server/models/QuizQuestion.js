@@ -6,14 +6,15 @@ let nextId = 1;
 
 // Mapping of subject to table name
 const SUBJECT_TABLES = {
-  'Caribbean History': 'caribbean_history_questions',
   'Geography': 'geography_questions',
-  'French Caribbean': 'french_caribbean_questions',
-  'Science': 'science_questions',
-  'History': 'history_questions',
-  'General Knowledge': 'general_knowledge_questions',
-  'Literature': 'literature_questions',
   'Mathematics': 'mathematics_questions'
+  // Temporarily removed other tables to focus on core functionality
+  // 'Caribbean History': 'caribbean_history_questions',
+  // 'French Caribbean': 'french_caribbean_questions',
+  // 'Science': 'science_questions',
+  // 'History': 'history_questions',
+  // 'General Knowledge': 'general_knowledge_questions',
+  // 'Literature': 'literature_questions'
 };
 
 // Normalize subject to match keys in SUBJECT_TABLES
