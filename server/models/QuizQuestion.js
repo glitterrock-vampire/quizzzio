@@ -1,4 +1,4 @@
-import { dbPool } from '../config.js';
+import { getPool } from '../config/database.js';
 
 // In-memory storage for development
 let inMemoryQuestions = [];
@@ -46,6 +46,7 @@ export const initializeQuizQuestionTable = async (retryCount = 0) => {
   const maxRetries = 3;
   const retryDelay = 1000; // 1 second
 
+  const dbPool = getPool();
   if (!dbPool) {
     console.log('⚠️  No database connection for quiz questions');
     return;
@@ -119,6 +120,7 @@ export const initializeQuizQuestionTable = async (retryCount = 0) => {
 export const QuizQuestionModel = {
   // Find all with filters
   async find(filters = {}, options = {}) {
+    const dbPool = getPool();
     if (dbPool) {
       // Database implementation
       try {
@@ -241,6 +243,7 @@ export const QuizQuestionModel = {
 
   // Find by ID
   async findById(id) {
+    const dbPool = getPool();
     if (dbPool) {
       // Database implementation
       try {
@@ -264,6 +267,7 @@ export const QuizQuestionModel = {
 
   // Check for duplicate question
   async checkDuplicate(question, subject) {
+    const dbPool = getPool();
     if (dbPool) {
       try {
         const tableName = getTableName(subject);
@@ -289,6 +293,7 @@ export const QuizQuestionModel = {
 
   // Create single question with duplicate check
   async create(data) {
+    const dbPool = getPool();
     if (dbPool) {
       // Database implementation
       try {
@@ -337,6 +342,7 @@ export const QuizQuestionModel = {
 
   // Bulk create with duplicate checking
   async bulkCreate(data) {
+    const dbPool = getPool();
     if (dbPool) {
       // Database implementation - using parameterized queries for safety
       try {
@@ -459,6 +465,7 @@ export const QuizQuestionModel = {
 
   // Update question
   async update(id, data) {
+    const dbPool = getPool();
     if (dbPool) {
       // Database implementation
       try {
@@ -548,6 +555,7 @@ export const QuizQuestionModel = {
 
   // Delete question
   async delete(id) {
+    const dbPool = getPool();
     if (dbPool) {
       // Database implementation
       try {
@@ -575,6 +583,7 @@ export const QuizQuestionModel = {
 
   // Get random questions
   async random(filters = {}, count = 10) {
+    const dbPool = getPool();
     if (dbPool) {
       // Database implementation
       try {
@@ -605,6 +614,7 @@ export const QuizQuestionModel = {
 
   // Get count
   async count(filters = {}) {
+    const dbPool = getPool();
     if (dbPool) {
       // Database implementation
       try {

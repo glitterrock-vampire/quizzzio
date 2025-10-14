@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import pkg from 'pg';
+import { getPool } from './config/database.js';
 
 const { Pool } = pkg;
 
@@ -37,22 +38,14 @@ export const config = {
   }
 };
 
-// PostgreSQL connection pool (only if using postgres and credentials are available)
+// PostgreSQL connection pool using the new database configuration
 let dbPool = null;
 
 if (config.database.type === 'postgres' && process.env.DB_HOST && process.env.DB_NAME && process.env.DB_USER && process.env.DB_PASSWORD) {
-  dbPool = new Pool({
-    host: config.database.host,
-    port: config.database.port,
-    database: config.database.name,
-    user: config.database.user,
-    password: config.database.password,
-    max: 20, // maximum number of connections
-    idleTimeoutMillis: 30000, // close idle connections after 30 seconds
-    connectionTimeoutMillis: 2000, // return an error after 2 seconds if connection could not be established
-  });
+  // Use the new database configuration
+  dbPool = getPool();
 
-  console.log('🗄️  Database configuration found, connecting to PostgreSQL');
+  console.log('🗄️  Database configuration found, using enhanced PostgreSQL connection');
 
   // Test the connection (only if dbPool exists)
   if (dbPool) {
