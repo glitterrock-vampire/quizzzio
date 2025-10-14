@@ -1,4 +1,3 @@
-// Import required modules
 import express from 'express';
 import cors from 'cors';
 import session from 'express-session';
@@ -322,6 +321,51 @@ app.listen(PORT, async () => {
                 difficulty: 'easy',
                 explanation: 'Australia is the smallest continent, also considered a single country.',
                 points: 10
+              },
+              {
+                subject: 'Geography',
+                question: 'What is the capital of Canada?',
+                options: ['Toronto', 'Vancouver', 'Ottawa', 'Montreal'],
+                correct_answer: 'Ottawa',
+                difficulty: 'medium',
+                explanation: 'Ottawa, located in the province of Ontario, is the federal capital of Canada.',
+                points: 20
+              },
+              {
+                subject: 'Geography',
+                question: 'Which mountain range separates Europe from Asia?',
+                options: ['The Alps', 'The Andes', 'The Urals', 'The Himalayas'],
+                correct_answer: 'The Urals',
+                difficulty: 'medium',
+                explanation: 'The Ural Mountains run from north to south through western Russia, forming a natural boundary between Europe and Asia.',
+                points: 20
+              },
+              {
+                subject: 'Geography',
+                question: 'Which country is both a continent and an island?',
+                options: ['New Zealand', 'Greenland', 'Australia', 'Madagascar'],
+                correct_answer: 'Australia',
+                difficulty: 'medium',
+                explanation: 'Australia is the only country that is also a continent and an island.',
+                points: 20
+              },
+              {
+                subject: 'Geography',
+                question: 'The \'Ring of Fire\' is known for frequent what?',
+                options: ['Hurricanes', 'Earthquakes and Volcanoes', 'Tornadoes', 'Tsunamis'],
+                correct_answer: 'Earthquakes and Volcanoes',
+                difficulty: 'medium',
+                explanation: 'The Ring of Fire is a major area in the basin of the Pacific Ocean where a large number of earthquakes and volcanic eruptions occur due to tectonic plate movements.',
+                points: 20
+              },
+              {
+                subject: 'Geography',
+                question: 'What is the world\'s most populous country?',
+                options: ['India', 'United States', 'China', 'Indonesia'],
+                correct_answer: 'India',
+                difficulty: 'medium',
+                explanation: 'As of 2023, India has surpassed China to become the world\'s most populous country.',
+                points: 20
               }
             ];
 
@@ -389,6 +433,5 @@ app.listen(PORT, async () => {
     console.error('❌ Server failed to start properly');
     process.exit(1);
   }
-});
 
 export default app;
