@@ -16,7 +16,7 @@ import oauthRouter from './routes/oauth.js';
 import aiRouter from './routes/ai.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { generalLimiter, authLimiter, aiLimiter } from './middleware/rateLimit.js';
-import { testDatabaseConnection, dbPool } from './config/database.js';
+import { testDatabaseConnection, pool } from './config/database.js';
 import { initializeDatabase } from './init-db.js';
 import passport from './config/oauth.js';
 
@@ -301,10 +301,10 @@ app.listen(PORT, async () => {
         await new Promise(resolve => setTimeout(resolve, 3000));
 
         // Check if questions exist using the database pool
-        if (dbPool) {
+        if (pool) {
           try {
             // Check if geography_questions table exists first
-            const tableCheck = await dbPool.query(`
+            const tableCheck = await pool.query(`
               SELECT EXISTS (
                 SELECT FROM information_schema.tables
                 WHERE table_schema = 'public'
@@ -317,7 +317,7 @@ app.listen(PORT, async () => {
               return;
             }
 
-            const result = await dbPool.query('SELECT COUNT(*) as count FROM geography_questions');
+            const result = await pool.query('SELECT COUNT(*) as count FROM geography_questions');
             const questionCount = parseInt(result.rows[0].count);
 
             if (questionCount === 0) {
@@ -375,7 +375,7 @@ app.listen(PORT, async () => {
               // Import Geography questions
               for (const q of geographyQuestions) {
                 try {
-                  await dbPool.query(
+                  await pool.query(
                     `INSERT INTO geography_questions
                      (subject, question, options, correct_answer, difficulty, explanation, points)
                      VALUES ($1, $2, $3, $4, $5, $6, $7)`,
@@ -389,7 +389,7 @@ app.listen(PORT, async () => {
               console.log('✅ Geography questions imported to production database');
 
               // Also import some Mathematics questions if mathematics_questions table exists
-              const mathTableCheck = await dbPool.query(`
+              const mathTableCheck = await pool.query(`
                 SELECT EXISTS (
                   SELECT FROM information_schema.tables
                   WHERE table_schema = 'public'
@@ -421,7 +421,7 @@ app.listen(PORT, async () => {
 
                 for (const q of mathQuestions) {
                   try {
-                    await dbPool.query(
+                    await pool.query(
                       `INSERT INTO mathematics_questions
                        (subject, question, options, correct_answer, difficulty, explanation, points)
                        VALUES ($1, $2, $3, $4, $5, $6, $7)`,

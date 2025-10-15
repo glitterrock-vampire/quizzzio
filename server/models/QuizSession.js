@@ -1,7 +1,8 @@
-import { dbPool } from '../config.js';
+import { getPool } from '../config/database.js';
 
 // Initialize database table
 export const initializeQuizSessionTable = async () => {
+  const dbPool = getPool();
   if (!dbPool) {
     console.log('⚠️  Using in-memory storage for quiz sessions');
     return;
@@ -34,6 +35,7 @@ export const initializeQuizSessionTable = async () => {
 export const QuizSessionModel = {
   // Find all sessions
   async findAll() {
+    const dbPool = getPool();
     if (!dbPool) {
       return [];
     }
@@ -53,6 +55,7 @@ export const QuizSessionModel = {
 
   // Find by ID
   async findById(id) {
+    const dbPool = getPool();
     if (!dbPool) {
       return null;
     }
@@ -68,6 +71,7 @@ export const QuizSessionModel = {
 
   // Find by user with pagination
   async findByUserWithPagination(userId, limit = 10, offset = 0) {
+    const dbPool = getPool();
     if (!dbPool) {
       return { rows: [], count: 0 };
     }
@@ -106,6 +110,7 @@ export const QuizSessionModel = {
 
   // Create session
   async create(data) {
+    const dbPool = getPool();
     if (!dbPool) {
       throw new Error('Database not available');
     }
@@ -134,6 +139,7 @@ export const QuizSessionModel = {
 
   // Update user statistics after creating a session
   async updateUserStats(userId) {
+    const dbPool = getPool();
     if (!dbPool) return;
 
     try {
@@ -192,7 +198,9 @@ export const QuizSessionModel = {
       console.error('❌ Error updating user stats:', error);
     }
   },
+
   async getUserStats(userId) {
+    const dbPool = getPool();
     if (!dbPool) {
       return {
         total_sessions: 0,
@@ -251,6 +259,7 @@ export const QuizSessionModel = {
 
   // Update leaderboard for a user
   async updateLeaderboard(userId) {
+    const dbPool = getPool();
     if (!dbPool) return;
 
     try {
@@ -282,6 +291,7 @@ export const QuizSessionModel = {
 
   // Get leaderboard
   async getLeaderboard(limit = 10) {
+    const dbPool = getPool();
     if (!dbPool) {
       return [];
     }
@@ -348,6 +358,7 @@ export const QuizSessionModel = {
 
   // Check for session-based achievements (speedster, perfectionist, etc.)
   async checkSessionBasedAchievements(sessionData) {
+    const dbPool = getPool();
     if (!dbPool) return [];
 
     try {
@@ -407,7 +418,9 @@ export const QuizSessionModel = {
       return [];
     }
   },
+
   async checkAndUnlockAchievements(userId) {
+    const dbPool = getPool();
     if (!dbPool) return [];
 
     try {

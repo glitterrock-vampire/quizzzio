@@ -1,8 +1,9 @@
-import { dbPool } from '../config.js';
+import { getPool } from '../config/database.js';
 
 export const ActivityLog = {
   // Log a new activity
   async logActivity(userId, type, data = {}) {
+    const dbPool = getPool();
     if (!dbPool) return null;
     
     try {
@@ -28,6 +29,7 @@ export const ActivityLog = {
     startDate,
     endDate
   } = {}) {
+    const dbPool = getPool();
     if (!dbPool) return { activities: [], total: 0 };
     
     try {
@@ -89,6 +91,7 @@ export const ActivityLog = {
 
 // Create activity_logs table
 export async function initializeActivityLogsTable() {
+  const dbPool = getPool();
   if (!dbPool) return;
   
   try {

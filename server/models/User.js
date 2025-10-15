@@ -1,4 +1,4 @@
-import { dbPool } from '../config/database.js';
+import { getPool } from '../config/database.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET, SALT_ROUNDS } from '../config/auth.js';
@@ -12,6 +12,8 @@ export const initializeUserTable = async () => {
   isInitialized = true;
 
   console.log('🔧 Initializing user system...');
+
+  const dbPool = getPool();
 
   // Check if database is available
   if (!dbPool) {
@@ -86,6 +88,7 @@ function createAchievement(id, title, timestamp) {
 export const UserModel = {
   // Find all users
   async findAll() {
+    const dbPool = getPool();
     if (!dbPool) {
       throw new Error('Database not available');
     }
@@ -101,6 +104,7 @@ export const UserModel = {
 
   // Find by ID
   async findById(id) {
+    const dbPool = getPool();
     if (!dbPool) {
       throw new Error('Database not available');
     }
@@ -121,6 +125,7 @@ export const UserModel = {
   async findByEmail(email) {
     console.log('🔍 Finding user by email:', email);
 
+    const dbPool = getPool();
     if (!dbPool) {
       throw new Error('Database not available');
     }
@@ -180,6 +185,7 @@ export const UserModel = {
 
   // Create user with hashed password
   async register({ email, password, full_name }) {
+    const dbPool = getPool();
     if (!dbPool) {
       throw new Error('Database not available');
     }
@@ -205,6 +211,7 @@ export const UserModel = {
 
   // Update user password
   async updatePassword(userId, newPassword) {
+    const dbPool = getPool();
     if (!dbPool) {
       throw new Error('Database not available');
     }
@@ -235,6 +242,7 @@ export const UserModel = {
 
   // Create user (supports both regular and OAuth users)
   async create(data) {
+    const dbPool = getPool();
     if (!dbPool) {
       throw new Error('Database not available');
     }
@@ -283,6 +291,7 @@ export const UserModel = {
 
   // Update user
   async update(id, data) {
+    const dbPool = getPool();
     if (!dbPool) {
       throw new Error('Database not available');
     }
@@ -361,6 +370,7 @@ export const UserModel = {
 
   // Delete user
   async delete(id) {
+    const dbPool = getPool();
     if (!dbPool) {
       return false;
     }
@@ -376,6 +386,7 @@ export const UserModel = {
 
   // Get top users by points
   async getTopUsers(limit = 10) {
+    const dbPool = getPool();
     if (!dbPool) {
       return [];
     }
@@ -398,6 +409,7 @@ export const UserModel = {
 
   // Update streak when user completes a quiz
   async updateStreak(userId) {
+    const dbPool = getPool();
     if (!dbPool) return;
 
     try {
@@ -461,6 +473,7 @@ export const UserModel = {
 
   // Check and award streak achievements
   async checkStreakAchievements(userId) {
+    const dbPool = getPool();
     if (!dbPool) return [];
 
     try {
@@ -505,6 +518,7 @@ export const UserModel = {
 
   // Check and award all possible achievements
   async checkAllAchievements(userId) {
+    const dbPool = getPool();
     if (!dbPool) return [];
 
     try {
