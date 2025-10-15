@@ -200,7 +200,12 @@ export const QuizQuestionModel = {
         const results = [];
         for (const { query, params } of queries) {
           const result = await dbPool.query(query, params);
-          results.push(...result.rows);
+          // Parse JSON options back to arrays for database results
+          const parsedRows = result.rows.map(row => ({
+            ...row,
+            options: typeof row.options === 'string' ? JSON.parse(row.options) : row.options
+          }));
+          results.push(...parsedRows);
         }
 
         return results;
@@ -250,7 +255,11 @@ export const QuizQuestionModel = {
         for (const tableName of Object.values(SUBJECT_TABLES)) {
           const result = await dbPool.query(`SELECT * FROM ${tableName} WHERE id = $1`, [id]);
           if (result.rows.length > 0) {
-            return result.rows[0];
+            const row = result.rows[0];
+            return {
+              ...row,
+              options: typeof row.options === 'string' ? JSON.parse(row.options) : row.options
+            };
           }
         }
         return null;
@@ -307,9 +316,13 @@ export const QuizQuestionModel = {
           INSERT INTO ${tableName} (subject, question, options, correct_answer, difficulty, explanation, points, created_date, updated_date)
           VALUES ($1, $2, $3, $4, $5, $6, $7, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
           RETURNING *
-        `, [data.subject, data.question, data.options, data.correct_answer, data.difficulty, data.explanation, data.points]);
+        `, [data.subject, data.question, JSON.stringify(data.options), data.correct_answer, data.difficulty, data.explanation, data.points]);
 
-        return result.rows[0];
+        const row = result.rows[0];
+        return {
+          ...row,
+          options: typeof row.options === 'string' ? JSON.parse(row.options) : row.options
+        };
       } catch (error) {
         console.error('Error creating quiz question:', error);
         throw error;
@@ -382,14 +395,18 @@ export const QuizQuestionModel = {
               `, [
                 question.subject,
                 question.question,
-                question.options,
+                JSON.stringify(question.options), // ✅ Convert array to JSON string
                 question.correct_answer,
                 question.difficulty,
                 question.explanation || '',
                 question.points || 10
               ]);
 
-              results.push(result.rows[0]);
+              const row = result.rows[0];
+              results.push({
+                ...row,
+                options: typeof row.options === 'string' ? JSON.parse(row.options) : row.options
+              });
             } catch (error) {
               console.error(`Error inserting question: ${question.question.substring(0, 50)}...`, error);
               skipped.push(question);
@@ -490,7 +507,7 @@ export const QuizQuestionModel = {
 
             if (data.options !== undefined) {
               fields.push(`options = $${paramCount}`);
-              values.push(data.options);
+              values.push(JSON.stringify(data.options));
               paramCount++;
             }
 
@@ -528,7 +545,11 @@ export const QuizQuestionModel = {
             `, values);
 
             if (result.rows.length === 0) return null;
-            return result.rows[0];
+            const row = result.rows[0];
+            return {
+              ...row,
+              options: typeof row.options === 'string' ? JSON.parse(row.options) : row.options
+            };
           }
         }
         return null;

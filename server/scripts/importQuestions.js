@@ -114,7 +114,7 @@ async function importQuestions() {
           [
             subject,
             q.question,
-            q.options,
+            JSON.stringify(q.options), // ✅ Convert array to JSON string
             q.correct_answer,
             (q.difficulty || 'easy').toLowerCase(),
             q.explanation || null,

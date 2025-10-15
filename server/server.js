@@ -358,7 +358,7 @@ app.listen(PORT, async () => {
                         [
                           subject,
                           question.question,
-                          question.options,
+                          JSON.stringify(question.options), // ✅ Convert array to JSON string
                           question.correct_answer,
                           question.difficulty,
                           question.explanation,
