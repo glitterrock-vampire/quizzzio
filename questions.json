@@ -2,7 +2,12 @@
   {
     "subject": "science",
     "question": "What is the center of an atom called?",
-    "options": ["Electron", "Nucleus", "Proton", "Neutron"],
+    "options": [
+      "Electron",
+      "Nucleus",
+      "Proton",
+      "Neutron"
+    ],
     "correct_answer": "Nucleus",
     "difficulty": "easy",
     "explanation": "The nucleus is the central core of an atom containing protons and neutrons.",
@@ -11,7 +16,12 @@
   {
     "subject": "science",
     "question": "What planet is known as the Red Planet?",
-    "options": ["Venus", "Jupiter", "Mars", "Saturn"],
+    "options": [
+      "Venus",
+      "Jupiter",
+      "Mars",
+      "Saturn"
+    ],
     "correct_answer": "Mars",
     "difficulty": "easy",
     "explanation": "Mars appears red due to iron oxide on its surface.",
@@ -20,7 +30,12 @@
   {
     "subject": "history",
     "question": "Who was Jamaica's first Prime Minister after independence in 1962?",
-    "options": ["Norman Manley", "Alexander Bustamante", "Edward Seaga", "Michael Manley"],
+    "options": [
+      "Norman Manley",
+      "Alexander Bustamante",
+      "Edward Seaga",
+      "Michael Manley"
+    ],
     "correct_answer": "Alexander Bustamante",
     "difficulty": "easy",
     "explanation": "Sir Alexander Bustamante became Jamaica's first Prime Minister in 1962.",
@@ -29,7 +44,12 @@
   {
     "subject": "history",
     "question": "In what year did the Morant Bay Rebellion occur?",
-    "options": ["1831", "1865", "1888", "1901"],
+    "options": [
+      "1831",
+      "1865",
+      "1888",
+      "1901"
+    ],
     "correct_answer": "1865",
     "difficulty": "medium",
     "explanation": "The Morant Bay Rebellion, led by Paul Bogle, occurred in 1865.",
@@ -38,7 +58,12 @@
   {
     "subject": "geography",
     "question": "What is the capital of Jamaica?",
-    "options": ["Montego Bay", "Portmore", "Kingston", "Ocho Rios"],
+    "options": [
+      "Montego Bay",
+      "Portmore",
+      "Kingston",
+      "Ocho Rios"
+    ],
     "correct_answer": "Kingston",
     "difficulty": "easy",
     "explanation": "Kingston is Jamaica's capital and largest city, located on the southeastern coast.",
@@ -47,16 +72,26 @@
   {
     "subject": "geography",
     "question": "Which Caribbean island is known as the 'Land of 365 Beaches'?",
-    "options": ["Barbados", "Antigua", "Saint Lucia", "Grenada"],
+    "options": [
+      "Barbados",
+      "Antigua",
+      "Saint Lucia",
+      "Grenada"
+    ],
     "correct_answer": "Antigua",
     "difficulty": "medium",
-    "explanation": "Antigua is famous for its many white-sand beaches—one for every day of the year.",
+    "explanation": "Antigua is famous for its many white-sand beaches\u2014one for every day of the year.",
     "points": 20
   },
   {
     "subject": "literature",
     "question": "Who wrote the poem 'A Far Cry from Africa'?",
-    "options": ["Derek Walcott", "Claude McKay", "Louise Bennett", "Kamau Brathwaite"],
+    "options": [
+      "Derek Walcott",
+      "Claude McKay",
+      "Louise Bennett",
+      "Kamau Brathwaite"
+    ],
     "correct_answer": "Derek Walcott",
     "difficulty": "medium",
     "explanation": "Derek Walcott, from Saint Lucia, is the Nobel Laureate who wrote 'A Far Cry from Africa'.",
@@ -65,7 +100,12 @@
   {
     "subject": "literature",
     "question": "Which Jamaican writer created 'Anancy Stories'?",
-    "options": ["Claude McKay", "Roger Mais", "Louise Bennett", "Lorna Goodison"],
+    "options": [
+      "Claude McKay",
+      "Roger Mais",
+      "Louise Bennett",
+      "Lorna Goodison"
+    ],
     "correct_answer": "Louise Bennett",
     "difficulty": "easy",
     "explanation": "Miss Lou popularized Anancy tales and Jamaican folklore through her storytelling.",
@@ -73,17 +113,13 @@
   },
   {
     "subject": "general_knowledge",
-    "question": "What are Jamaica's national colours?",
-    "options": ["Red", "white and blue", "Green", "black and gold", "Black", "yellow and red", "Blue", "gold and white"],
-    "correct_answer": "Green, black and gold",
-    "difficulty": "easy",
-    "explanation": "The Jamaican flag features green for hope, black for strength, and gold for sunlight.",
-    "points": 10
-  },
-  {
-    "subject": "general_knowledge",
     "question": "Who won the 100m gold medal for Jamaica at the 2008 Olympics?",
-    "options": ["Asafa Powell", "Usain Bolt", "Yohan Blake", "Nesta Carter"],
+    "options": [
+      "Asafa Powell",
+      "Usain Bolt",
+      "Yohan Blake",
+      "Nesta Carter"
+    ],
     "correct_answer": "Usain Bolt",
     "difficulty": "easy",
     "explanation": "Usain Bolt set a world record while winning the 100m in Beijing 2008.",
@@ -92,16 +128,26 @@
   {
     "subject": "mathematics",
     "question": "What is 15% of 200?",
-    "options": ["20", "25", "30", "35"],
+    "options": [
+      "20",
+      "25",
+      "30",
+      "35"
+    ],
     "correct_answer": "30",
     "difficulty": "easy",
-    "explanation": "15% of 200 = 0.15 × 200 = 30.",
+    "explanation": "15% of 200 = 0.15 \u00d7 200 = 30.",
     "points": 10
   },
   {
     "subject": "mathematics",
     "question": "Simplify: (2x + 3x) - (x + 4)",
-    "options": ["4x - 4", "5x - 4", "3x - 4", "2x - 4"],
+    "options": [
+      "4x - 4",
+      "5x - 4",
+      "3x - 4",
+      "2x - 4"
+    ],
     "correct_answer": "4x - 4",
     "difficulty": "medium",
     "explanation": "(2x + 3x) - (x + 4) = 5x - x - 4 = 4x - 4.",
@@ -110,7 +156,12 @@
   {
     "subject": "science",
     "question": "What is the center of an atom called?",
-    "options": ["Electron", "Nucleus", "Proton", "Neutron"],
+    "options": [
+      "Electron",
+      "Nucleus",
+      "Proton",
+      "Neutron"
+    ],
     "correct_answer": "Nucleus",
     "difficulty": "easy",
     "explanation": "The nucleus is the central core of an atom containing protons and neutrons.",
@@ -119,7 +170,12 @@
   {
     "subject": "science",
     "question": "What planet is known as the Red Planet?",
-    "options": ["Venus", "Jupiter", "Mars", "Saturn"],
+    "options": [
+      "Venus",
+      "Jupiter",
+      "Mars",
+      "Saturn"
+    ],
     "correct_answer": "Mars",
     "difficulty": "easy",
     "explanation": "Mars appears red due to iron oxide on its surface.",
@@ -128,7 +184,12 @@
   {
     "subject": "history",
     "question": "Who was Jamaica's first Prime Minister after independence in 1962?",
-    "options": ["Norman Manley", "Alexander Bustamante", "Edward Seaga", "Michael Manley"],
+    "options": [
+      "Norman Manley",
+      "Alexander Bustamante",
+      "Edward Seaga",
+      "Michael Manley"
+    ],
     "correct_answer": "Alexander Bustamante",
     "difficulty": "easy",
     "explanation": "Sir Alexander Bustamante became Jamaica's first Prime Minister in 1962.",
@@ -137,7 +198,12 @@
   {
     "subject": "history",
     "question": "In what year did the Morant Bay Rebellion occur?",
-    "options": ["1831", "1865", "1888", "1901"],
+    "options": [
+      "1831",
+      "1865",
+      "1888",
+      "1901"
+    ],
     "correct_answer": "1865",
     "difficulty": "medium",
     "explanation": "The Morant Bay Rebellion, led by Paul Bogle, occurred in 1865.",
@@ -146,7 +212,12 @@
   {
     "subject": "geography",
     "question": "What is the capital of Jamaica?",
-    "options": ["Montego Bay", "Portmore", "Kingston", "Ocho Rios"],
+    "options": [
+      "Montego Bay",
+      "Portmore",
+      "Kingston",
+      "Ocho Rios"
+    ],
     "correct_answer": "Kingston",
     "difficulty": "easy",
     "explanation": "Kingston is Jamaica's capital and largest city, located on the southeastern coast.",
@@ -155,16 +226,26 @@
   {
     "subject": "geography",
     "question": "Which Caribbean island is known as the 'Land of 365 Beaches'?",
-    "options": ["Barbados", "Antigua", "Saint Lucia", "Grenada"],
+    "options": [
+      "Barbados",
+      "Antigua",
+      "Saint Lucia",
+      "Grenada"
+    ],
     "correct_answer": "Antigua",
     "difficulty": "medium",
-    "explanation": "Antigua is famous for its many white-sand beaches—one for every day of the year.",
+    "explanation": "Antigua is famous for its many white-sand beaches\u2014one for every day of the year.",
     "points": 20
   },
   {
     "subject": "literature",
     "question": "Who wrote the poem 'A Far Cry from Africa'?",
-    "options": ["Derek Walcott", "Claude McKay", "Louise Bennett", "Kamau Brathwaite"],
+    "options": [
+      "Derek Walcott",
+      "Claude McKay",
+      "Louise Bennett",
+      "Kamau Brathwaite"
+    ],
     "correct_answer": "Derek Walcott",
     "difficulty": "medium",
     "explanation": "Derek Walcott, from Saint Lucia, is the Nobel Laureate who wrote 'A Far Cry from Africa'.",
@@ -173,7 +254,12 @@
   {
     "subject": "literature",
     "question": "Which Jamaican writer created 'Anancy Stories'?",
-    "options": ["Claude McKay", "Roger Mais", "Louise Bennett", "Lorna Goodison"],
+    "options": [
+      "Claude McKay",
+      "Roger Mais",
+      "Louise Bennett",
+      "Lorna Goodison"
+    ],
     "correct_answer": "Louise Bennett",
     "difficulty": "easy",
     "explanation": "Miss Lou popularized Anancy tales and Jamaican folklore through her storytelling.",
@@ -181,17 +267,13 @@
   },
   {
     "subject": "general_knowledge",
-    "question": "What are Jamaica’s national colours?",
-    "options": ["Red", "white and blue", "Green", "black and gold", "Black", "yellow and red", "Blue", "gold and white"],
-    "correct_answer": "Green, black and gold",
-    "difficulty": "easy",
-    "explanation": "The Jamaican flag features green for hope, black for strength, and gold for sunlight.",
-    "points": 10
-  },
-  {
-    "subject": "general_knowledge",
     "question": "Who won the 100m gold medal for Jamaica at the 2008 Olympics?",
-    "options": ["Asafa Powell", "Usain Bolt", "Yohan Blake", "Nesta Carter"],
+    "options": [
+      "Asafa Powell",
+      "Usain Bolt",
+      "Yohan Blake",
+      "Nesta Carter"
+    ],
     "correct_answer": "Usain Bolt",
     "difficulty": "easy",
     "explanation": "Usain Bolt set a world record while winning the 100m in Beijing 2008.",
@@ -200,16 +282,26 @@
   {
     "subject": "mathematics",
     "question": "What is 15% of 200?",
-    "options": ["20", "25", "30", "35"],
+    "options": [
+      "20",
+      "25",
+      "30",
+      "35"
+    ],
     "correct_answer": "30",
     "difficulty": "easy",
-    "explanation": "15% of 200 = 0.15 × 200 = 30.",
+    "explanation": "15% of 200 = 0.15 \u00d7 200 = 30.",
     "points": 10
   },
   {
     "subject": "mathematics",
     "question": "Simplify: (2x + 3x) - (x + 4)",
-    "options": ["4x - 4", "5x - 4", "3x - 4", "2x - 4"],
+    "options": [
+      "4x - 4",
+      "5x - 4",
+      "3x - 4",
+      "2x - 4"
+    ],
     "correct_answer": "4x - 4",
     "difficulty": "medium",
     "explanation": "(2x + 3x) - (x + 4) = 5x - x - 4 = 4x - 4.",
@@ -218,7 +310,12 @@
   {
     "subject": "Mathematics",
     "question": "What is 15 - 7?",
-    "options": ["6", "7", "8", "9"],
+    "options": [
+      "6",
+      "7",
+      "8",
+      "9"
+    ],
     "correct_answer": "8",
     "difficulty": "easy",
     "explanation": "Basic subtraction.",
@@ -226,8 +323,13 @@
   },
   {
     "subject": "Mathematics",
-    "question": "What is 8 × 9?",
-    "options": ["72", "81", "64", "76"],
+    "question": "What is 8 \u00d7 9?",
+    "options": [
+      "72",
+      "81",
+      "64",
+      "76"
+    ],
     "correct_answer": "72",
     "difficulty": "easy",
     "explanation": "Multiplication fact from the times tables.",
@@ -235,17 +337,27 @@
   },
   {
     "subject": "Mathematics",
-    "question": "What is 48 ÷ 6?",
-    "options": ["7", "8", "6", "9"],
+    "question": "What is 48 \u00f7 6?",
+    "options": [
+      "7",
+      "8",
+      "6",
+      "9"
+    ],
     "correct_answer": "8",
     "difficulty": "easy",
-    "explanation": "Division is the inverse of multiplication; 6 × 8 = 48.",
+    "explanation": "Division is the inverse of multiplication; 6 \u00d7 8 = 48.",
     "points": 10
   },
   {
     "subject": "Mathematics",
-    "question": "What is the value of π (Pi) approximately?",
-    "options": ["3.14", "2.71", "1.62", "3.41"],
+    "question": "What is the value of \u03c0 (Pi) approximately?",
+    "options": [
+      "3.14",
+      "2.71",
+      "1.62",
+      "3.41"
+    ],
     "correct_answer": "3.14",
     "difficulty": "easy",
     "explanation": "Pi is the ratio of a circle's circumference to its diameter, commonly approximated as 3.14.",
@@ -254,7 +366,12 @@
   {
     "subject": "Mathematics",
     "question": "What is 1/2 + 1/4?",
-    "options": ["3/4", "1/3", "2/6", "1/8"],
+    "options": [
+      "3/4",
+      "1/3",
+      "2/6",
+      "1/8"
+    ],
     "correct_answer": "3/4",
     "difficulty": "easy",
     "explanation": "Convert 1/2 to 2/4, then add to 1/4 to get 3/4.",
@@ -263,7 +380,12 @@
   {
     "subject": "Mathematics",
     "question": "Solve for x: 2x + 5 = 13",
-    "options": ["x = 3", "x = 4", "x = 5", "x = 6"],
+    "options": [
+      "x = 3",
+      "x = 4",
+      "x = 5",
+      "x = 6"
+    ],
     "correct_answer": "x = 4",
     "difficulty": "medium",
     "explanation": "Subtract 5 from both sides (2x = 8), then divide by 2 (x = 4).",
@@ -272,34 +394,54 @@
   {
     "subject": "Mathematics",
     "question": "What is the area of a rectangle with length 8 cm and width 5 cm?",
-    "options": ["13 cm²", "40 cm²", "26 cm²", "35 cm²"],
-    "correct_answer": "40 cm²",
+    "options": [
+      "13 cm\u00b2",
+      "40 cm\u00b2",
+      "26 cm\u00b2",
+      "35 cm\u00b2"
+    ],
+    "correct_answer": "40 cm\u00b2",
     "difficulty": "medium",
-    "explanation": "Area of a rectangle is length × width. 8 × 5 = 40.",
+    "explanation": "Area of a rectangle is length \u00d7 width. 8 \u00d7 5 = 40.",
     "points": 20
   },
   {
     "subject": "Mathematics",
     "question": "What is the square root of 144?",
-    "options": ["11", "12", "13", "14"],
+    "options": [
+      "11",
+      "12",
+      "13",
+      "14"
+    ],
     "correct_answer": "12",
     "difficulty": "medium",
-    "explanation": "12 multiplied by itself (12 × 12) equals 144.",
+    "explanation": "12 multiplied by itself (12 \u00d7 12) equals 144.",
     "points": 20
   },
   {
     "subject": "Mathematics",
-    "question": "A triangle has angles of 50° and 60°. What is the measure of the third angle?",
-    "options": ["60°", "70°", "80°", "90°"],
-    "correct_answer": "70°",
+    "question": "A triangle has angles of 50\u00b0 and 60\u00b0. What is the measure of the third angle?",
+    "options": [
+      "60\u00b0",
+      "70\u00b0",
+      "80\u00b0",
+      "90\u00b0"
+    ],
+    "correct_answer": "70\u00b0",
     "difficulty": "medium",
-    "explanation": "The sum of angles in a triangle is 180°. 180 - (50 + 60) = 70.",
+    "explanation": "The sum of angles in a triangle is 180\u00b0. 180 - (50 + 60) = 70.",
     "points": 20
   },
   {
     "subject": "Mathematics",
     "question": "What is the next number in the sequence: 2, 4, 8, 16, ...?",
-    "options": ["24", "32", "30", "28"],
+    "options": [
+      "24",
+      "32",
+      "30",
+      "28"
+    ],
     "correct_answer": "32",
     "difficulty": "medium",
     "explanation": "This is a geometric sequence where each number is multiplied by 2.",
@@ -307,53 +449,69 @@
   },
   {
     "subject": "Mathematics",
-    "question": "What is the derivative of the function f(x) = 3x³ + 2x² - 5x + 1?",
-    "options": ["9x² + 4x - 5", "6x² + 4x - 5", "3x² + 2x - 5", "9x² + 2x - 5"],
-    "correct_answer": "9x² + 4x - 5",
+    "question": "What is the derivative of the function f(x) = 3x\u00b3 + 2x\u00b2 - 5x + 1?",
+    "options": [
+      "9x\u00b2 + 4x - 5",
+      "6x\u00b2 + 4x - 5",
+      "3x\u00b2 + 2x - 5",
+      "9x\u00b2 + 2x - 5"
+    ],
+    "correct_answer": "9x\u00b2 + 4x - 5",
     "difficulty": "difficult",
-    "explanation": "Apply the power rule: d/dx(xⁿ) = n*xⁿ⁻¹. So, 3*3x² + 2*2x¹ - 5.",
+    "explanation": "Apply the power rule: d/dx(x\u207f) = n*x\u207f\u207b\u00b9. So, 3*3x\u00b2 + 2*2x\u00b9 - 5.",
     "points": 30
   },
   {
     "subject": "Mathematics",
     "question": "If a right triangle has legs of length 6 and 8, what is the length of the hypotenuse?",
-    "options": ["10", "12", "14", "9"],
+    "options": [
+      "10",
+      "12",
+      "14",
+      "9"
+    ],
     "correct_answer": "10",
     "difficulty": "difficult",
-    "explanation": "Using the Pythagorean theorem: a² + b² = c². 6² + 8² = 36 + 64 = 100. √100 = 10.",
+    "explanation": "Using the Pythagorean theorem: a\u00b2 + b\u00b2 = c\u00b2. 6\u00b2 + 8\u00b2 = 36 + 64 = 100. \u221a100 = 10.",
     "points": 30
   },
   {
     "subject": "Mathematics",
-    "question": "What is the value of the integral ∫(2x dx) from 0 to 3?",
-    "options": ["6", "9", "12", "3"],
+    "question": "What is the value of the integral \u222b(2x dx) from 0 to 3?",
+    "options": [
+      "6",
+      "9",
+      "12",
+      "3"
+    ],
     "correct_answer": "9",
     "difficulty": "difficult",
-    "explanation": "The antiderivative of 2x is x². Evaluate from 0 to 3: (3)² - (0)² = 9.",
+    "explanation": "The antiderivative of 2x is x\u00b2. Evaluate from 0 to 3: (3)\u00b2 - (0)\u00b2 = 9.",
     "points": 30
   },
   {
     "subject": "Mathematics",
     "question": "What is the probability of rolling a sum of 7 with two fair six-sided dice?",
-    "options": ["1/6", "1/12", "1/3", "1/9"],
+    "options": [
+      "1/6",
+      "1/12",
+      "1/3",
+      "1/9"
+    ],
     "correct_answer": "1/6",
     "difficulty": "difficult",
     "explanation": "There are 6 combinations that sum to 7: (1,6), (2,5), (3,4), (4,3), (5,2), (6,1). There are 36 total possible outcomes. 6/36 = 1/6.",
     "points": 30
   },
   {
-    "subject": "Mathematics",
-    "question": "Solve the quadratic equation: x² - 5x + 6 = 0",
-    "options": ["x = 2", "3", "x = 1", "6", "x = -2", "-3", "x = -1", "-6"],
-    "correct_answer": "x = 2, 3",
-    "difficulty": "difficult",
-    "explanation": "Factor the equation: (x - 2)(x - 3) = 0. Therefore, x = 2 or x = 3.",
-    "points": 30
-  },
-  {
     "subject": "Science",
     "question": "What is the chemical symbol for gold?",
-    "options": ["Go", "Gd", "Au", "Ag"],
+    "options": [
+      "Go",
+      "Gd",
+      "Au",
+      "Ag"
+    ],
     "correct_answer": "Au",
     "difficulty": "easy",
     "explanation": "The symbol Au comes from the Latin word for gold, 'aurum'.",
@@ -362,7 +520,12 @@
   {
     "subject": "Science",
     "question": "Which planet is known as the Red Planet?",
-    "options": ["Jupiter", "Mars", "Venus", "Saturn"],
+    "options": [
+      "Jupiter",
+      "Mars",
+      "Venus",
+      "Saturn"
+    ],
     "correct_answer": "Mars",
     "difficulty": "easy",
     "explanation": "Mars appears red due to iron oxide (rust) on its surface.",
@@ -371,7 +534,12 @@
   {
     "subject": "Science",
     "question": "What is H2O commonly known as?",
-    "options": ["Hydrogen Peroxide", "Salt", "Water", "Oxygen Gas"],
+    "options": [
+      "Hydrogen Peroxide",
+      "Salt",
+      "Water",
+      "Oxygen Gas"
+    ],
     "correct_answer": "Water",
     "difficulty": "easy",
     "explanation": "H2O is the chemical formula for water, two hydrogen atoms bonded to one oxygen atom.",
@@ -380,7 +548,12 @@
   {
     "subject": "Science",
     "question": "What force pulls objects towards the center of the Earth?",
-    "options": ["Magnetism", "Gravity", "Friction", "Tension"],
+    "options": [
+      "Magnetism",
+      "Gravity",
+      "Friction",
+      "Tension"
+    ],
     "correct_answer": "Gravity",
     "difficulty": "easy",
     "explanation": "Gravity is the fundamental force of attraction between all masses.",
@@ -389,7 +562,12 @@
   {
     "subject": "Science",
     "question": "How many bones are in the adult human body?",
-    "options": ["206", "200", "210", "196"],
+    "options": [
+      "206",
+      "200",
+      "210",
+      "196"
+    ],
     "correct_answer": "206",
     "difficulty": "easy",
     "explanation": "An adult human skeleton is typically made up of 206 bones.",
@@ -398,7 +576,12 @@
   {
     "subject": "Science",
     "question": "What is the powerhouse of the cell?",
-    "options": ["Nucleus", "Ribosome", "Mitochondria", "Golgi Apparatus"],
+    "options": [
+      "Nucleus",
+      "Ribosome",
+      "Mitochondria",
+      "Golgi Apparatus"
+    ],
     "correct_answer": "Mitochondria",
     "difficulty": "medium",
     "explanation": "Mitochondria generate most of the cell's supply of adenosine triphosphate (ATP), used as a source of chemical energy.",
@@ -406,8 +589,13 @@
   },
   {
     "subject": "Science",
-    "question": "What is the pH of pure water at 25°C?",
-    "options": ["5", "7", "8", "0"],
+    "question": "What is the pH of pure water at 25\u00b0C?",
+    "options": [
+      "5",
+      "7",
+      "8",
+      "0"
+    ],
     "correct_answer": "7",
     "difficulty": "medium",
     "explanation": "A pH of 7 is considered neutral, which is the value for pure water.",
@@ -416,7 +604,12 @@
   {
     "subject": "Science",
     "question": "Which gas do plants absorb from the atmosphere during photosynthesis?",
-    "options": ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen"],
+    "options": [
+      "Oxygen",
+      "Nitrogen",
+      "Carbon Dioxide",
+      "Hydrogen"
+    ],
     "correct_answer": "Carbon Dioxide",
     "difficulty": "medium",
     "explanation": "Plants take in CO2 and water, and using light energy, convert them to glucose and oxygen.",
@@ -425,7 +618,12 @@
   {
     "subject": "Science",
     "question": "What is the hardest natural substance on Earth?",
-    "options": ["Gold", "Iron", "Diamond", "Quartz"],
+    "options": [
+      "Gold",
+      "Iron",
+      "Diamond",
+      "Quartz"
+    ],
     "correct_answer": "Diamond",
     "difficulty": "medium",
     "explanation": "Diamond, a form of carbon, has a tetrahedral crystal structure that makes it the hardest known natural material.",
@@ -433,17 +631,13 @@
   },
   {
     "subject": "Science",
-    "question": "What is the speed of light in a vacuum?",
-    "options": ["300", "000 km/s", "150", "000 km/s", "500", "000 km/s", "1", "000", "000 km/s"],
-    "correct_answer": "300,000 km/s",
-    "difficulty": "medium",
-    "explanation": "The speed of light in a vacuum is a fundamental physical constant, approximately 299,792 km/s, often rounded to 300,000 km/s.",
-    "points": 20
-  },
-  {
-    "subject": "Science",
     "question": "What does DNA stand for?",
-    "options": ["Deoxyribonucleic Acid", "Dinucleic Acid", "Deribonucleic Acid", "Deoxyribonuclear Acid"],
+    "options": [
+      "Deoxyribonucleic Acid",
+      "Dinucleic Acid",
+      "Deribonucleic Acid",
+      "Deoxyribonuclear Acid"
+    ],
     "correct_answer": "Deoxyribonucleic Acid",
     "difficulty": "difficult",
     "explanation": "DNA is the molecule that carries genetic information in all living organisms.",
@@ -452,7 +646,12 @@
   {
     "subject": "Science",
     "question": "Which subatomic particle has a negative charge?",
-    "options": ["Proton", "Neutron", "Electron", "Neutrino"],
+    "options": [
+      "Proton",
+      "Neutron",
+      "Electron",
+      "Neutrino"
+    ],
     "correct_answer": "Electron",
     "difficulty": "difficult",
     "explanation": "Electrons orbit the nucleus and carry a negative charge. Protons are positive, and neutrons are neutral.",
@@ -461,7 +660,12 @@
   {
     "subject": "Science",
     "question": "What is Newton's First Law of Motion?",
-    "options": ["F=ma", "For every action", "there is an equal and opposite reaction.", "An object at rest stays at rest...", "Energy cannot be created or destroyed."],
+    "options": [
+      "F=ma",
+      "For every action, there is an equal and opposite reaction.",
+      "An object at rest stays at rest...",
+      "Energy cannot be created or destroyed."
+    ],
     "correct_answer": "An object at rest stays at rest...",
     "difficulty": "difficult",
     "explanation": "Newton's First Law, the Law of Inertia, states that an object will not change its motion unless a net force acts upon it.",
@@ -470,7 +674,12 @@
   {
     "subject": "Science",
     "question": "Which element has the atomic number 1?",
-    "options": ["Helium", "Oxygen", "Hydrogen", "Carbon"],
+    "options": [
+      "Helium",
+      "Oxygen",
+      "Hydrogen",
+      "Carbon"
+    ],
     "correct_answer": "Hydrogen",
     "difficulty": "difficult",
     "explanation": "Hydrogen is the first element on the periodic table, with one proton.",
@@ -479,7 +688,12 @@
   {
     "subject": "Science",
     "question": "What is the process by which a liquid turns into a gas?",
-    "options": ["Condensation", "Sublimation", "Evaporation", "Freezing"],
+    "options": [
+      "Condensation",
+      "Sublimation",
+      "Evaporation",
+      "Freezing"
+    ],
     "correct_answer": "Evaporation",
     "difficulty": "difficult",
     "explanation": "Evaporation is the surface phenomenon where particles escape from a liquid to become a gas.",
@@ -488,7 +702,12 @@
   {
     "subject": "History",
     "question": "In which year did World War II end?",
-    "options": ["1944", "1945", "1946", "1950"],
+    "options": [
+      "1944",
+      "1945",
+      "1946",
+      "1950"
+    ],
     "correct_answer": "1945",
     "difficulty": "easy",
     "explanation": "World War II ended in September 1945 after the surrender of Japan.",
@@ -497,7 +716,12 @@
   {
     "subject": "History",
     "question": "Who was the first President of the United States?",
-    "options": ["Thomas Jefferson", "Abraham Lincoln", "George Washington", "John Adams"],
+    "options": [
+      "Thomas Jefferson",
+      "Abraham Lincoln",
+      "George Washington",
+      "John Adams"
+    ],
     "correct_answer": "George Washington",
     "difficulty": "easy",
     "explanation": "George Washington was unanimously elected as the first president and served from 1789 to 1797.",
@@ -506,7 +730,12 @@
   {
     "subject": "History",
     "question": "Which ancient civilization built the pyramids of Giza?",
-    "options": ["The Romans", "The Greeks", "The Aztecs", "The Ancient Egyptians"],
+    "options": [
+      "The Romans",
+      "The Greeks",
+      "The Aztecs",
+      "The Ancient Egyptians"
+    ],
     "correct_answer": "The Ancient Egyptians",
     "difficulty": "easy",
     "explanation": "The Great Pyramids were built as tombs for pharaohs during the Old and Middle Kingdoms of Ancient Egypt.",
@@ -515,7 +744,12 @@
   {
     "subject": "History",
     "question": "Who painted the Mona Lisa?",
-    "options": ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Michelangelo"],
+    "options": [
+      "Vincent van Gogh",
+      "Pablo Picasso",
+      "Leonardo da Vinci",
+      "Michelangelo"
+    ],
     "correct_answer": "Leonardo da Vinci",
     "difficulty": "easy",
     "explanation": "Leonardo da Vinci painted the Mona Lisa in the early 16th century during the Renaissance.",
@@ -524,7 +758,12 @@
   {
     "subject": "History",
     "question": "The Magna Carta was signed in which country?",
-    "options": ["France", "Italy", "England", "Spain"],
+    "options": [
+      "France",
+      "Italy",
+      "England",
+      "Spain"
+    ],
     "correct_answer": "England",
     "difficulty": "easy",
     "explanation": "The Magna Carta was agreed to by King John of England in 1215, establishing the principle that everyone, including the king, was subject to the law.",
@@ -533,7 +772,12 @@
   {
     "subject": "History",
     "question": "Who was the famous queen of ancient Egypt who allied with Julius Caesar and Mark Antony?",
-    "options": ["Nefertiti", "Hatshepsut", "Cleopatra", "Ankhesenamun"],
+    "options": [
+      "Nefertiti",
+      "Hatshepsut",
+      "Cleopatra",
+      "Ankhesenamun"
+    ],
     "correct_answer": "Cleopatra",
     "difficulty": "medium",
     "explanation": "Cleopatra VII was the last active ruler of the Ptolemaic Kingdom of Egypt, known for her relationships with Roman leaders Julius Caesar and Mark Antony.",
@@ -542,7 +786,12 @@
   {
     "subject": "History",
     "question": "During which war was the Battle of Gettysburg fought?",
-    "options": ["World War I", "The American Civil War", "The Revolutionary War", "The War of 1812"],
+    "options": [
+      "World War I",
+      "The American Civil War",
+      "The Revolutionary War",
+      "The War of 1812"
+    ],
     "correct_answer": "The American Civil War",
     "difficulty": "medium",
     "explanation": "The Battle of Gettysburg (1863) was a major turning point in the American Civil War, marking the defeat of General Lee's invasion of the North.",
@@ -551,7 +800,12 @@
   {
     "subject": "History",
     "question": "The Industrial Revolution began in which country?",
-    "options": ["United States", "France", "Germany", "Great Britain"],
+    "options": [
+      "United States",
+      "France",
+      "Germany",
+      "Great Britain"
+    ],
     "correct_answer": "Great Britain",
     "difficulty": "medium",
     "explanation": "The Industrial Revolution started in Britain in the late 18th century with the development of steam power and new machinery for the textile industry.",
@@ -560,7 +814,12 @@
   {
     "subject": "History",
     "question": "Who invented the printing press?",
-    "options": ["Alexander Graham Bell", "Johannes Gutenberg", "Thomas Edison", "Leonardo da Vinci"],
+    "options": [
+      "Alexander Graham Bell",
+      "Johannes Gutenberg",
+      "Thomas Edison",
+      "Leonardo da Vinci"
+    ],
     "correct_answer": "Johannes Gutenberg",
     "difficulty": "medium",
     "explanation": "Johannes Gutenberg introduced the mechanical movable-type printing press to Europe in the 15th century, revolutionizing the spread of information.",
@@ -569,7 +828,12 @@
   {
     "subject": "History",
     "question": "Which empire was ruled by Genghis Khan?",
-    "options": ["The Ottoman Empire", "The Roman Empire", "The Mongol Empire", "The Persian Empire"],
+    "options": [
+      "The Ottoman Empire",
+      "The Roman Empire",
+      "The Mongol Empire",
+      "The Persian Empire"
+    ],
     "correct_answer": "The Mongol Empire",
     "difficulty": "medium",
     "explanation": "Genghis Khan founded and led the Mongol Empire, which became the largest contiguous land empire in history after his death.",
@@ -578,7 +842,12 @@
   {
     "subject": "History",
     "question": "The 'Schlieffen Plan' was associated with the outbreak of which war?",
-    "options": ["World War I", "World War II", "The Franco-Prussian War", "The Crimean War"],
+    "options": [
+      "World War I",
+      "World War II",
+      "The Franco-Prussian War",
+      "The Crimean War"
+    ],
     "correct_answer": "World War I",
     "difficulty": "difficult",
     "explanation": "The Schlieffen Plan was the German Army's strategic plan for a victory against France and Russia at the start of World War I.",
@@ -587,7 +856,12 @@
   {
     "subject": "History",
     "question": "Who was the Byzantine emperor who commissioned the codification of Roman law known as the Corpus Juris Civilis?",
-    "options": ["Constantine I", "Justinian I", "Theodosius I", "Heraclius"],
+    "options": [
+      "Constantine I",
+      "Justinian I",
+      "Theodosius I",
+      "Heraclius"
+    ],
     "correct_answer": "Justinian I",
     "difficulty": "difficult",
     "explanation": "Emperor Justinian I oversaw the creation of the Corpus Juris Civilis (Body of Civil Law), which became the foundation of civil law in many modern countries.",
@@ -596,7 +870,12 @@
   {
     "subject": "History",
     "question": "The Treaty of Versailles formally ended which conflict?",
-    "options": ["World War I", "World War II", "The Napoleonic Wars", "The Thirty Years' War"],
+    "options": [
+      "World War I",
+      "World War II",
+      "The Napoleonic Wars",
+      "The Thirty Years' War"
+    ],
     "correct_answer": "World War I",
     "difficulty": "difficult",
     "explanation": "The Treaty of Versailles was signed in 1919, officially ending the state of war between Germany and the Allied Powers.",
@@ -605,16 +884,26 @@
   {
     "subject": "History",
     "question": "Which Chinese philosopher is known for his teachings on ethics and relationships, compiled in the Analects?",
-    "options": ["Laozi", "Confucius", "Sun Tzu", "Mencius"],
+    "options": [
+      "Laozi",
+      "Confucius",
+      "Sun Tzu",
+      "Mencius"
+    ],
     "correct_answer": "Confucius",
     "difficulty": "difficult",
-    "explanation": "Confucius (551–479 BCE) was a philosopher whose teachings, known as Confucianism, emphasized personal and governmental morality, correctness of social relationships, and justice.",
+    "explanation": "Confucius (551\u2013479 BCE) was a philosopher whose teachings, known as Confucianism, emphasized personal and governmental morality, correctness of social relationships, and justice.",
     "points": 30
   },
   {
     "subject": "History",
     "question": "The 'Day of Infamy' speech was given by which U.S. President following the attack on Pearl Harbor?",
-    "options": ["Franklin D. Roosevelt", "Harry S. Truman", "Theodore Roosevelt", "Dwight D. Eisenhower"],
+    "options": [
+      "Franklin D. Roosevelt",
+      "Harry S. Truman",
+      "Theodore Roosevelt",
+      "Dwight D. Eisenhower"
+    ],
     "correct_answer": "Franklin D. Roosevelt",
     "difficulty": "difficult",
     "explanation": "President Franklin D. Roosevelt addressed Congress on December 8, 1941, calling the previous day 'a date which will live in infamy.'",
@@ -623,7 +912,12 @@
   {
     "subject": "Geography",
     "question": "What is the capital of France?",
-    "options": ["London", "Berlin", "Paris", "Rome"],
+    "options": [
+      "London",
+      "Berlin",
+      "Paris",
+      "Rome"
+    ],
     "correct_answer": "Paris",
     "difficulty": "easy",
     "explanation": "Paris, located on the Seine River, is the capital and most populous city of France.",
@@ -632,7 +926,12 @@
   {
     "subject": "Geography",
     "question": "Which is the largest ocean on Earth?",
-    "options": ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+    "options": [
+      "Atlantic Ocean",
+      "Indian Ocean",
+      "Arctic Ocean",
+      "Pacific Ocean"
+    ],
     "correct_answer": "Pacific Ocean",
     "difficulty": "easy",
     "explanation": "The Pacific Ocean is the largest and deepest of the world's ocean basins.",
@@ -641,7 +940,12 @@
   {
     "subject": "Geography",
     "question": "What is the longest river in the world?",
-    "options": ["The Amazon River", "The Nile River", "The Yangtze River", "The Mississippi River"],
+    "options": [
+      "The Amazon River",
+      "The Nile River",
+      "The Yangtze River",
+      "The Mississippi River"
+    ],
     "correct_answer": "The Nile River",
     "difficulty": "easy",
     "explanation": "The Nile River in Africa is historically considered the longest river in the world at about 6,650 km (4,130 miles).",
@@ -650,7 +954,12 @@
   {
     "subject": "Geography",
     "question": "Which desert is the largest in the world?",
-    "options": ["The Gobi Desert", "The Sahara Desert", "The Arabian Desert", "The Kalahari Desert"],
+    "options": [
+      "The Gobi Desert",
+      "The Sahara Desert",
+      "The Arabian Desert",
+      "The Kalahari Desert"
+    ],
     "correct_answer": "The Sahara Desert",
     "difficulty": "easy",
     "explanation": "The Sahara in Northern Africa is the world's largest hot desert.",
@@ -659,7 +968,12 @@
   {
     "subject": "Geography",
     "question": "Which continent is the smallest by land area?",
-    "options": ["Europe", "Australia", "Antarctica", "South America"],
+    "options": [
+      "Europe",
+      "Australia",
+      "Antarctica",
+      "South America"
+    ],
     "correct_answer": "Australia",
     "difficulty": "easy",
     "explanation": "Australia is the smallest continent, also considered a single country.",
@@ -668,7 +982,12 @@
   {
     "subject": "Geography",
     "question": "What is the capital of Canada?",
-    "options": ["Toronto", "Vancouver", "Ottawa", "Montreal"],
+    "options": [
+      "Toronto",
+      "Vancouver",
+      "Ottawa",
+      "Montreal"
+    ],
     "correct_answer": "Ottawa",
     "difficulty": "medium",
     "explanation": "Ottawa, located in the province of Ontario, is the federal capital of Canada.",
@@ -677,7 +996,12 @@
   {
     "subject": "Geography",
     "question": "Which mountain range separates Europe from Asia?",
-    "options": ["The Alps", "The Andes", "The Urals", "The Himalayas"],
+    "options": [
+      "The Alps",
+      "The Andes",
+      "The Urals",
+      "The Himalayas"
+    ],
     "correct_answer": "The Urals",
     "difficulty": "medium",
     "explanation": "The Ural Mountains run from north to south through western Russia, forming a natural boundary between Europe and Asia.",
@@ -686,7 +1010,12 @@
   {
     "subject": "Geography",
     "question": "Which country is both a continent and an island?",
-    "options": ["New Zealand", "Greenland", "Australia", "Madagascar"],
+    "options": [
+      "New Zealand",
+      "Greenland",
+      "Australia",
+      "Madagascar"
+    ],
     "correct_answer": "Australia",
     "difficulty": "medium",
     "explanation": "Australia is the only country that is also a continent and an island.",
@@ -695,7 +1024,12 @@
   {
     "subject": "Geography",
     "question": "The 'Ring of Fire' is known for frequent what?",
-    "options": ["Hurricanes", "Earthquakes and Volcanoes", "Tornadoes", "Tsunamis"],
+    "options": [
+      "Hurricanes",
+      "Earthquakes and Volcanoes",
+      "Tornadoes",
+      "Tsunamis"
+    ],
     "correct_answer": "Earthquakes and Volcanoes",
     "difficulty": "medium",
     "explanation": "The Ring of Fire is a major area in the basin of the Pacific Ocean where a large number of earthquakes and volcanic eruptions occur due to tectonic plate movements.",
@@ -704,7 +1038,12 @@
   {
     "subject": "Geography",
     "question": "What is the world's most populous country?",
-    "options": ["India", "United States", "China", "Indonesia"],
+    "options": [
+      "India",
+      "United States",
+      "China",
+      "Indonesia"
+    ],
     "correct_answer": "India",
     "difficulty": "medium",
     "explanation": "As of 2023, India has surpassed China to become the world's most populous country.",
@@ -713,7 +1052,12 @@
   {
     "subject": "Geography",
     "question": "What is the capital of Bhutan?",
-    "options": ["Kathmandu", "Thimphu", "Dhaka", "Male"],
+    "options": [
+      "Kathmandu",
+      "Thimphu",
+      "Dhaka",
+      "Male"
+    ],
     "correct_answer": "Thimphu",
     "difficulty": "difficult",
     "explanation": "Thimphu is the capital and largest city of the Kingdom of Bhutan.",
@@ -722,7 +1066,12 @@
   {
     "subject": "Geography",
     "question": "The Strait of Gibraltar connects the Atlantic Ocean to which sea?",
-    "options": ["The Red Sea", "The Mediterranean Sea", "The Black Sea", "The North Sea"],
+    "options": [
+      "The Red Sea",
+      "The Mediterranean Sea",
+      "The Black Sea",
+      "The North Sea"
+    ],
     "correct_answer": "The Mediterranean Sea",
     "difficulty": "difficult",
     "explanation": "The Strait of Gibraltar is a narrow strait that connects the Atlantic Ocean to the Mediterranean Sea and separates Europe from Africa.",
@@ -731,7 +1080,12 @@
   {
     "subject": "Geography",
     "question": "Which African country is completely surrounded by the territory of South Africa?",
-    "options": ["Lesotho", "Eswatini", "Botswana", "Namibia"],
+    "options": [
+      "Lesotho",
+      "Eswatini",
+      "Botswana",
+      "Namibia"
+    ],
     "correct_answer": "Lesotho",
     "difficulty": "difficult",
     "explanation": "The Kingdom of Lesotho is an enclaved country entirely surrounded by South Africa.",
@@ -740,7 +1094,12 @@
   {
     "subject": "Geography",
     "question": "Lake Baikal, the world's deepest freshwater lake, is located in which country?",
-    "options": ["Canada", "United States", "Russia", "Mongolia"],
+    "options": [
+      "Canada",
+      "United States",
+      "Russia",
+      "Mongolia"
+    ],
     "correct_answer": "Russia",
     "difficulty": "difficult",
     "explanation": "Lake Baikal in Siberia, Russia, is the world's deepest and oldest freshwater lake, holding about 20% of the world's unfrozen freshwater.",
@@ -749,7 +1108,12 @@
   {
     "subject": "Geography",
     "question": "What is the name of the southernmost point of South America?",
-    "options": ["Cape Horn", "Cape of Good Hope", "Cape Cod", "Cape Verde"],
+    "options": [
+      "Cape Horn",
+      "Cape of Good Hope",
+      "Cape Cod",
+      "Cape Verde"
+    ],
     "correct_answer": "Cape Horn",
     "difficulty": "difficult",
     "explanation": "Cape Horn is the southernmost headland of the Tierra del Fuego archipelago and is known for its dangerous waters.",
@@ -758,7 +1122,12 @@
   {
     "subject": "Literature",
     "question": "Who wrote 'Romeo and Juliet'?",
-    "options": ["Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"],
+    "options": [
+      "Charles Dickens",
+      "William Shakespeare",
+      "Jane Austen",
+      "Mark Twain"
+    ],
     "correct_answer": "William Shakespeare",
     "difficulty": "easy",
     "explanation": "William Shakespeare, the English playwright, wrote this famous tragedy in the late 16th century.",
@@ -767,7 +1136,12 @@
   {
     "subject": "Literature",
     "question": "In 'Harry Potter', what is the last name of the main character?",
-    "options": ["Granger", "Weasley", "Potter", "Dumbledore"],
+    "options": [
+      "Granger",
+      "Weasley",
+      "Potter",
+      "Dumbledore"
+    ],
     "correct_answer": "Potter",
     "difficulty": "easy",
     "explanation": "The series follows the adventures of the young wizard Harry Potter.",
@@ -776,7 +1150,12 @@
   {
     "subject": "Literature",
     "question": "How many lines does a sonnet have?",
-    "options": ["12", "14", "16", "18"],
+    "options": [
+      "12",
+      "14",
+      "16",
+      "18"
+    ],
     "correct_answer": "14",
     "difficulty": "easy",
     "explanation": "A sonnet is a 14-line poem with a specific rhyme scheme.",
@@ -785,7 +1164,12 @@
   {
     "subject": "Literature",
     "question": "Who is the author of the 'Sherlock Holmes' stories?",
-    "options": ["Agatha Christie", "Arthur Conan Doyle", "Edgar Allan Poe", "J.K. Rowling"],
+    "options": [
+      "Agatha Christie",
+      "Arthur Conan Doyle",
+      "Edgar Allan Poe",
+      "J.K. Rowling"
+    ],
     "correct_answer": "Arthur Conan Doyle",
     "difficulty": "easy",
     "explanation": "Sir Arthur Conan Doyle, a Scottish writer, created the character of the detective Sherlock Holmes.",
@@ -794,7 +1178,12 @@
   {
     "subject": "Literature",
     "question": "What is the name of the hobbit who is the main character in 'The Lord of the Rings'?",
-    "options": ["Samwise Gamgee", "Frodo Baggins", "Bilbo Baggins", "Peregrin Took"],
+    "options": [
+      "Samwise Gamgee",
+      "Frodo Baggins",
+      "Bilbo Baggins",
+      "Peregrin Took"
+    ],
     "correct_answer": "Frodo Baggins",
     "difficulty": "easy",
     "explanation": "Frodo Baggins is the Ring-bearer tasked with destroying the One Ring.",
@@ -803,7 +1192,12 @@
   {
     "subject": "Literature",
     "question": "In George Orwell's 'Animal Farm', what type of animal is Old Major?",
-    "options": ["A Donkey", "A Horse", "A Pig", "A Dog"],
+    "options": [
+      "A Donkey",
+      "A Horse",
+      "A Pig",
+      "A Dog"
+    ],
     "correct_answer": "A Pig",
     "difficulty": "medium",
     "explanation": "Old Major is a prize-winning boar whose speech about a animal rebellion inspires the other animals.",
@@ -812,7 +1206,12 @@
   {
     "subject": "Literature",
     "question": "Who wrote the Gothic novel 'Frankenstein'?",
-    "options": ["Mary Shelley", "Bram Stoker", "Edgar Allan Poe", "Percy Bysshe Shelley"],
+    "options": [
+      "Mary Shelley",
+      "Bram Stoker",
+      "Edgar Allan Poe",
+      "Percy Bysshe Shelley"
+    ],
     "correct_answer": "Mary Shelley",
     "difficulty": "medium",
     "explanation": "Mary Shelley wrote 'Frankenstein; or, The Modern Prometheus' when she was 18 years old.",
@@ -821,7 +1220,12 @@
   {
     "subject": "Literature",
     "question": "What is the name of the fictional land where the majority of 'The Chronicles of Narnia' takes place?",
-    "options": ["Middle-earth", "Hogwarts", "Narnia", "Wonderland"],
+    "options": [
+      "Middle-earth",
+      "Hogwarts",
+      "Narnia",
+      "Wonderland"
+    ],
     "correct_answer": "Narnia",
     "difficulty": "medium",
     "explanation": "The series by C.S. Lewis is set primarily in the magical world of Narnia.",
@@ -830,7 +1234,12 @@
   {
     "subject": "Literature",
     "question": "In which novel would you find the characters Scout, Jem, and Atticus Finch?",
-    "options": ["The Catcher in the Rye", "To Kill a Mockingbird", "The Great Gatsby", "Little Women"],
+    "options": [
+      "The Catcher in the Rye",
+      "To Kill a Mockingbird",
+      "The Great Gatsby",
+      "Little Women"
+    ],
     "correct_answer": "To Kill a Mockingbird",
     "difficulty": "medium",
     "explanation": "Harper Lee's 'To Kill a Mockingbird' is narrated by Scout Finch and features her brother Jem and father Atticus.",
@@ -839,7 +1248,12 @@
   {
     "subject": "Literature",
     "question": "Which epic poem begins with the line, 'Arms, and the man I sing'?",
-    "options": ["The Iliad", "The Odyssey", "The Aeneid", "Paradise Lost"],
+    "options": [
+      "The Iliad",
+      "The Odyssey",
+      "The Aeneid",
+      "Paradise Lost"
+    ],
     "correct_answer": "The Aeneid",
     "difficulty": "medium",
     "explanation": "Virgil's 'Aeneid', an epic poem about the founding of Rome by Aeneas, begins with this line.",
@@ -848,7 +1262,12 @@
   {
     "subject": "Literature",
     "question": "Who wrote the Russian novel 'War and Peace'?",
-    "options": ["Fyodor Dostoevsky", "Leo Tolstoy", "Anton Chekhov", "Ivan Turgenev"],
+    "options": [
+      "Fyodor Dostoevsky",
+      "Leo Tolstoy",
+      "Anton Chekhov",
+      "Ivan Turgenev"
+    ],
     "correct_answer": "Leo Tolstoy",
     "difficulty": "difficult",
     "explanation": "Leo Tolstoy's 'War and Peace' is a monumental work often considered a pinnacle of realist fiction.",
@@ -857,7 +1276,12 @@
   {
     "subject": "Literature",
     "question": "In Dante's 'Divine Comedy', what is the name of his guide through Hell and Purgatory?",
-    "options": ["Beatrice", "Virgil", "Homer", "Plato"],
+    "options": [
+      "Beatrice",
+      "Virgil",
+      "Homer",
+      "Plato"
+    ],
     "correct_answer": "Virgil",
     "difficulty": "difficult",
     "explanation": "The Roman poet Virgil guides Dante through Inferno and Purgatorio. Beatrice, representing divine love, guides him in Paradiso.",
@@ -866,7 +1290,12 @@
   {
     "subject": "Literature",
     "question": "Which Shakespearean play features the character Iago as the villain?",
-    "options": ["Hamlet", "Macbeth", "King Lear", "Othello"],
+    "options": [
+      "Hamlet",
+      "Macbeth",
+      "King Lear",
+      "Othello"
+    ],
     "correct_answer": "Othello",
     "difficulty": "difficult",
     "explanation": "In 'Othello', Iago manipulates the title character into believing his wife, Desdemona, has been unfaithful.",
@@ -875,7 +1304,12 @@
   {
     "subject": "Literature",
     "question": "What is the name of the protagonist in Homer's 'Odyssey'?",
-    "options": ["Achilles", "Odysseus", "Agamemnon", "Hercules"],
+    "options": [
+      "Achilles",
+      "Odysseus",
+      "Agamemnon",
+      "Hercules"
+    ],
     "correct_answer": "Odysseus",
     "difficulty": "difficult",
     "explanation": "The epic follows the Greek hero Odysseus on his long journey home to Ithaca after the fall of Troy.",
@@ -884,7 +1318,12 @@
   {
     "subject": "Literature",
     "question": "Who wrote the poem 'The Waste Land'?",
-    "options": ["W.B. Yeats", "T.S. Eliot", "Ezra Pound", "W.H. Auden"],
+    "options": [
+      "W.B. Yeats",
+      "T.S. Eliot",
+      "Ezra Pound",
+      "W.H. Auden"
+    ],
     "correct_answer": "T.S. Eliot",
     "difficulty": "difficult",
     "explanation": "T.S. Eliot's 'The Waste Land' (1922) is a landmark poem of modernism.",
@@ -893,7 +1332,12 @@
   {
     "subject": "General Knowledge",
     "question": "In what year did the Titanic sink?",
-    "options": ["1910", "1912", "1915", "1920"],
+    "options": [
+      "1910",
+      "1912",
+      "1915",
+      "1920"
+    ],
     "correct_answer": "1912",
     "difficulty": "easy",
     "explanation": "The RMS Titanic sank on its maiden voyage after hitting an iceberg on April 15, 1912.",
@@ -902,7 +1346,12 @@
   {
     "subject": "General Knowledge",
     "question": "How many players are on a standard soccer team on the field at one time?",
-    "options": ["9", "10", "11", "12"],
+    "options": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
     "correct_answer": "11",
     "difficulty": "easy",
     "explanation": "A standard soccer (football) match is played between two teams of 11 players each.",
@@ -911,7 +1360,12 @@
   {
     "subject": "General Knowledge",
     "question": "What is the name of the fairy in Peter Pan?",
-    "options": ["Tinker Bell", "Tinkly Wink", "Fairy Mary", "Pixie Dust"],
+    "options": [
+      "Tinker Bell",
+      "Tinkly Wink",
+      "Fairy Mary",
+      "Pixie Dust"
+    ],
     "correct_answer": "Tinker Bell",
     "difficulty": "easy",
     "explanation": "Tinker Bell is Peter Pan's fiery and loyal fairy companion.",
@@ -920,7 +1374,12 @@
   {
     "subject": "General Knowledge",
     "question": "Which animal is known as the 'King of the Jungle'?",
-    "options": ["Tiger", "Elephant", "Lion", "Gorilla"],
+    "options": [
+      "Tiger",
+      "Elephant",
+      "Lion",
+      "Gorilla"
+    ],
     "correct_answer": "Lion",
     "difficulty": "easy",
     "explanation": "The lion is traditionally called the 'King of the Jungle' due to its imposing appearance and role as an apex predator.",
@@ -929,7 +1388,12 @@
   {
     "subject": "General Knowledge",
     "question": "What is the main ingredient in guacamole?",
-    "options": ["Tomato", "Pepper", "Avocado", "Onion"],
+    "options": [
+      "Tomato",
+      "Pepper",
+      "Avocado",
+      "Onion"
+    ],
     "correct_answer": "Avocado",
     "difficulty": "easy",
     "explanation": "Guacamole is a dip primarily made from mashed avocados.",
@@ -938,16 +1402,26 @@
   {
     "subject": "General Knowledge",
     "question": "What is the currency of Japan?",
-    "options": ["Won", "Yuan", "Yen", "Ringgit"],
+    "options": [
+      "Won",
+      "Yuan",
+      "Yen",
+      "Ringgit"
+    ],
     "correct_answer": "Yen",
     "difficulty": "medium",
-    "explanation": "The Japanese Yen (¥) is the official currency of Japan.",
+    "explanation": "The Japanese Yen (\u00a5) is the official currency of Japan.",
     "points": 20
   },
   {
     "subject": "General Knowledge",
     "question": "In which city is the famous opera house, La Scala, located?",
-    "options": ["Paris", "Vienna", "Milan", "Rome"],
+    "options": [
+      "Paris",
+      "Vienna",
+      "Milan",
+      "Rome"
+    ],
     "correct_answer": "Milan",
     "difficulty": "medium",
     "explanation": "Teatro alla Scala, one of the world's most famous opera houses, is in Milan, Italy.",
@@ -956,7 +1430,12 @@
   {
     "subject": "General Knowledge",
     "question": "What does the acronym 'NASA' stand for?",
-    "options": ["National Aeronautics and Space Administration", "North American Space Association", "National Astronomical Science Assembly", "New Air and Space Agency"],
+    "options": [
+      "National Aeronautics and Space Administration",
+      "North American Space Association",
+      "National Astronomical Science Assembly",
+      "New Air and Space Agency"
+    ],
     "correct_answer": "National Aeronautics and Space Administration",
     "difficulty": "medium",
     "explanation": "NASA is the United States government agency responsible for the civilian space program, aeronautics, and aerospace research.",
@@ -965,7 +1444,12 @@
   {
     "subject": "General Knowledge",
     "question": "Which element is said to keep bones strong?",
-    "options": ["Iron", "Calcium", "Potassium", "Sodium"],
+    "options": [
+      "Iron",
+      "Calcium",
+      "Potassium",
+      "Sodium"
+    ],
     "correct_answer": "Calcium",
     "difficulty": "medium",
     "explanation": "Calcium is a mineral essential for the development and maintenance of strong bones and teeth.",
@@ -974,7 +1458,12 @@
   {
     "subject": "General Knowledge",
     "question": "What is the name of the scale used to measure the spiciness of peppers?",
-    "options": ["Richter Scale", "Scoville Scale", "Beaufort Scale", "Mohs Scale"],
+    "options": [
+      "Richter Scale",
+      "Scoville Scale",
+      "Beaufort Scale",
+      "Mohs Scale"
+    ],
     "correct_answer": "Scoville Scale",
     "difficulty": "medium",
     "explanation": "The Scoville Scale measures the pungency (spiciness) of chili peppers, recorded in Scoville Heat Units (SHU).",
@@ -983,7 +1472,12 @@
   {
     "subject": "General Knowledge",
     "question": "In chess, which piece can only move diagonally?",
-    "options": ["Rook", "Knight", "Bishop", "Queen"],
+    "options": [
+      "Rook",
+      "Knight",
+      "Bishop",
+      "Queen"
+    ],
     "correct_answer": "Bishop",
     "difficulty": "difficult",
     "explanation": "The bishop moves any number of squares diagonally.",
@@ -992,7 +1486,12 @@
   {
     "subject": "General Knowledge",
     "question": "What is the term for a word that reads the same backwards as forwards?",
-    "options": ["Acronym", "Palindrome", "Anagram", "Homonym"],
+    "options": [
+      "Acronym",
+      "Palindrome",
+      "Anagram",
+      "Homonym"
+    ],
     "correct_answer": "Palindrome",
     "difficulty": "difficult",
     "explanation": "Examples of palindromes include 'radar', 'level', and 'madam'.",
@@ -1001,7 +1500,12 @@
   {
     "subject": "General Knowledge",
     "question": "Who composed the classical music piece 'The Four Seasons'?",
-    "options": ["Wolfgang Amadeus Mozart", "Ludwig van Beethoven", "Johann Sebastian Bach", "Antonio Vivaldi"],
+    "options": [
+      "Wolfgang Amadeus Mozart",
+      "Ludwig van Beethoven",
+      "Johann Sebastian Bach",
+      "Antonio Vivaldi"
+    ],
     "correct_answer": "Antonio Vivaldi",
     "difficulty": "difficult",
     "explanation": "Antonio Vivaldi, an Italian Baroque composer, wrote this famous set of four violin concertos.",
@@ -1010,7 +1514,12 @@
   {
     "subject": "General Knowledge",
     "question": "What is the name of the highest possible checkmate in a standard game of chess?",
-    "options": ["Fool's Mate", "Scholar's Mate", "Smothered Mate", "King's Mate"],
+    "options": [
+      "Fool's Mate",
+      "Scholar's Mate",
+      "Smothered Mate",
+      "King's Mate"
+    ],
     "correct_answer": "Fool's Mate",
     "difficulty": "difficult",
     "explanation": "Fool's Mate is the checkmate delivered after the fewest possible moves (two moves by White).",
@@ -1019,7 +1528,12 @@
   {
     "subject": "General Knowledge",
     "question": "Which company is known for its 'Think Different' advertising campaign?",
-    "options": ["Microsoft", "IBM", "Apple", "Sony"],
+    "options": [
+      "Microsoft",
+      "IBM",
+      "Apple",
+      "Sony"
+    ],
     "correct_answer": "Apple",
     "difficulty": "difficult",
     "explanation": "Apple's 'Think Different' campaign, launched in 1997, celebrated creative and influential historical figures.",
@@ -1028,7 +1542,12 @@
   {
     "subject": "Mathematics",
     "question": "What is 3/4 as a decimal?",
-    "options": ["0.25", "0.5", "0.75", "1.25"],
+    "options": [
+      "0.25",
+      "0.5",
+      "0.75",
+      "1.25"
+    ],
     "correct_answer": "0.75",
     "difficulty": "easy",
     "explanation": "3 divided by 4 equals 0.75.",
@@ -1037,43 +1556,68 @@
   {
     "subject": "Mathematics",
     "question": "What is the perimeter of a square with side length 5 cm?",
-    "options": ["10 cm", "15 cm", "20 cm", "25 cm"],
+    "options": [
+      "10 cm",
+      "15 cm",
+      "20 cm",
+      "25 cm"
+    ],
     "correct_answer": "20 cm",
     "difficulty": "easy",
-    "explanation": "Perimeter of a square is 4 × side length. 4 × 5 = 20 cm.",
+    "explanation": "Perimeter of a square is 4 \u00d7 side length. 4 \u00d7 5 = 20 cm.",
     "points": 10
   },
   {
     "subject": "Mathematics",
-    "question": "Solve: 15 ÷ 3 + 2 × 4",
-    "options": ["13", "15", "17", "19"],
+    "question": "Solve: 15 \u00f7 3 + 2 \u00d7 4",
+    "options": [
+      "13",
+      "15",
+      "17",
+      "19"
+    ],
     "correct_answer": "13",
     "difficulty": "medium",
-    "explanation": "Follow order of operations (PEMDAS): 15 ÷ 3 = 5, 2 × 4 = 8, then 5 + 8 = 13.",
+    "explanation": "Follow order of operations (PEMDAS): 15 \u00f7 3 = 5, 2 \u00d7 4 = 8, then 5 + 8 = 13.",
     "points": 20
   },
   {
     "subject": "Mathematics",
     "question": "What is the volume of a cube with edge length 3 units?",
-    "options": ["9 cubic units", "18 cubic units", "27 cubic units", "36 cubic units"],
+    "options": [
+      "9 cubic units",
+      "18 cubic units",
+      "27 cubic units",
+      "36 cubic units"
+    ],
     "correct_answer": "27 cubic units",
     "difficulty": "medium",
-    "explanation": "Volume of a cube is edge³. 3 × 3 × 3 = 27.",
+    "explanation": "Volume of a cube is edge\u00b3. 3 \u00d7 3 \u00d7 3 = 27.",
     "points": 20
   },
   {
     "subject": "Mathematics",
     "question": "Find the slope of the line passing through points (1,2) and (3,8).",
-    "options": ["2", "3", "4", "5"],
+    "options": [
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
     "correct_answer": "3",
     "difficulty": "difficult",
-    "explanation": "Slope = (y₂ - y₁)/(x₂ - x₁) = (8-2)/(3-1) = 6/2 = 3.",
+    "explanation": "Slope = (y\u2082 - y\u2081)/(x\u2082 - x\u2081) = (8-2)/(3-1) = 6/2 = 3.",
     "points": 30
   },
   {
     "subject": "Science",
     "question": "Which planet is known for its prominent rings?",
-    "options": ["Jupiter", "Saturn", "Uranus", "Neptune"],
+    "options": [
+      "Jupiter",
+      "Saturn",
+      "Uranus",
+      "Neptune"
+    ],
     "correct_answer": "Saturn",
     "difficulty": "easy",
     "explanation": "Saturn has the most extensive and visible ring system in our solar system.",
@@ -1082,7 +1626,12 @@
   {
     "subject": "Science",
     "question": "What is the main gas found in Earth's atmosphere?",
-    "options": ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
+    "options": [
+      "Oxygen",
+      "Carbon Dioxide",
+      "Nitrogen",
+      "Hydrogen"
+    ],
     "correct_answer": "Nitrogen",
     "difficulty": "easy",
     "explanation": "Nitrogen makes up about 78% of Earth's atmosphere.",
@@ -1091,7 +1640,12 @@
   {
     "subject": "Science",
     "question": "What type of rock is formed from cooled magma or lava?",
-    "options": ["Sedimentary", "Metamorphic", "Igneous", "Organic"],
+    "options": [
+      "Sedimentary",
+      "Metamorphic",
+      "Igneous",
+      "Organic"
+    ],
     "correct_answer": "Igneous",
     "difficulty": "medium",
     "explanation": "Igneous rocks form from the cooling and solidification of magma or lava.",
@@ -1100,7 +1654,12 @@
   {
     "subject": "Science",
     "question": "Which part of the brain is responsible for balance and coordination?",
-    "options": ["Cerebrum", "Cerebellum", "Brainstem", "Thalamus"],
+    "options": [
+      "Cerebrum",
+      "Cerebellum",
+      "Brainstem",
+      "Thalamus"
+    ],
     "correct_answer": "Cerebellum",
     "difficulty": "medium",
     "explanation": "The cerebellum coordinates voluntary movements and maintains posture and balance.",
@@ -1109,7 +1668,12 @@
   {
     "subject": "Science",
     "question": "What is the atomic number of carbon?",
-    "options": ["4", "6", "8", "12"],
+    "options": [
+      "4",
+      "6",
+      "8",
+      "12"
+    ],
     "correct_answer": "6",
     "difficulty": "difficult",
     "explanation": "Carbon has 6 protons, therefore its atomic number is 6.",
@@ -1118,7 +1682,12 @@
   {
     "subject": "History",
     "question": "Who was the Egyptian queen known for her relationships with Roman leaders?",
-    "options": ["Nefertiti", "Hatshepsut", "Cleopatra", "Sobekneferu"],
+    "options": [
+      "Nefertiti",
+      "Hatshepsut",
+      "Cleopatra",
+      "Sobekneferu"
+    ],
     "correct_answer": "Cleopatra",
     "difficulty": "easy",
     "explanation": "Cleopatra VII had relationships with Julius Caesar and Mark Antony.",
@@ -1127,7 +1696,12 @@
   {
     "subject": "History",
     "question": "In which year did the American Revolution begin?",
-    "options": ["1775", "1776", "1781", "1789"],
+    "options": [
+      "1775",
+      "1776",
+      "1781",
+      "1789"
+    ],
     "correct_answer": "1775",
     "difficulty": "medium",
     "explanation": "The American Revolutionary War began with the Battles of Lexington and Concord in April 1775.",
@@ -1136,7 +1710,12 @@
   {
     "subject": "History",
     "question": "Which ancient wonder was located in Alexandria, Egypt?",
-    "options": ["Hanging Gardens", "Great Pyramid", "Lighthouse", "Colossus"],
+    "options": [
+      "Hanging Gardens",
+      "Great Pyramid",
+      "Lighthouse",
+      "Colossus"
+    ],
     "correct_answer": "Lighthouse",
     "difficulty": "medium",
     "explanation": "The Lighthouse of Alexandria was one of the Seven Wonders of the Ancient World.",
@@ -1145,7 +1724,12 @@
   {
     "subject": "History",
     "question": "Who was the first Roman Emperor?",
-    "options": ["Julius Caesar", "Augustus", "Tiberius", "Caligula"],
+    "options": [
+      "Julius Caesar",
+      "Augustus",
+      "Tiberius",
+      "Caligula"
+    ],
     "correct_answer": "Augustus",
     "difficulty": "difficult",
     "explanation": "Augustus (formerly Octavian) became the first Roman Emperor in 27 BC.",
@@ -1154,7 +1738,12 @@
   {
     "subject": "History",
     "question": "The Hundred Years' War was primarily between which two countries?",
-    "options": ["England and France", "Spain and Portugal", "Germany and Italy", "Russia and Poland"],
+    "options": [
+      "England and France",
+      "Spain and Portugal",
+      "Germany and Italy",
+      "Russia and Poland"
+    ],
     "correct_answer": "England and France",
     "difficulty": "difficult",
     "explanation": "The Hundred Years' War (1337-1453) was a series of conflicts between England and France.",
@@ -1163,7 +1752,12 @@
   {
     "subject": "Geography",
     "question": "What is the capital of Australia?",
-    "options": ["Sydney", "Melbourne", "Canberra", "Perth"],
+    "options": [
+      "Sydney",
+      "Melbourne",
+      "Canberra",
+      "Perth"
+    ],
     "correct_answer": "Canberra",
     "difficulty": "easy",
     "explanation": "Canberra was specifically built to be the capital of Australia.",
@@ -1172,7 +1766,12 @@
   {
     "subject": "Geography",
     "question": "Which country has the most natural lakes?",
-    "options": ["United States", "Russia", "Canada", "China"],
+    "options": [
+      "United States",
+      "Russia",
+      "Canada",
+      "China"
+    ],
     "correct_answer": "Canada",
     "difficulty": "medium",
     "explanation": "Canada has over 2 million lakes, covering about 7.6% of its land area.",
@@ -1181,7 +1780,12 @@
   {
     "subject": "Geography",
     "question": "What is the world's second-largest continent by area?",
-    "options": ["Asia", "Africa", "North America", "South America"],
+    "options": [
+      "Asia",
+      "Africa",
+      "North America",
+      "South America"
+    ],
     "correct_answer": "Africa",
     "difficulty": "medium",
     "explanation": "Africa is the second-largest continent after Asia.",
@@ -1190,7 +1794,12 @@
   {
     "subject": "Geography",
     "question": "Which river runs through Baghdad?",
-    "options": ["Nile", "Tigris", "Euphrates", "Jordan"],
+    "options": [
+      "Nile",
+      "Tigris",
+      "Euphrates",
+      "Jordan"
+    ],
     "correct_answer": "Tigris",
     "difficulty": "difficult",
     "explanation": "The Tigris River flows through Baghdad, the capital of Iraq.",
@@ -1199,7 +1808,12 @@
   {
     "subject": "Geography",
     "question": "What is the smallest US state by area?",
-    "options": ["Delaware", "Connecticut", "Rhode Island", "Hawaii"],
+    "options": [
+      "Delaware",
+      "Connecticut",
+      "Rhode Island",
+      "Hawaii"
+    ],
     "correct_answer": "Rhode Island",
     "difficulty": "difficult",
     "explanation": "Rhode Island covers only 1,214 square miles.",
@@ -1208,7 +1822,12 @@
   {
     "subject": "Literature",
     "question": "Who wrote 'Pride and Prejudice'?",
-    "options": ["Charlotte Brontë", "Jane Austen", "Emily Brontë", "George Eliot"],
+    "options": [
+      "Charlotte Bront\u00eb",
+      "Jane Austen",
+      "Emily Bront\u00eb",
+      "George Eliot"
+    ],
     "correct_answer": "Jane Austen",
     "difficulty": "easy",
     "explanation": "Jane Austen published this classic novel in 1813.",
@@ -1217,7 +1836,12 @@
   {
     "subject": "Literature",
     "question": "In 'Moby Dick', what is the name of the ship?",
-    "options": ["Pequod", "Nautilus", "Hispaniola", "Beagle"],
+    "options": [
+      "Pequod",
+      "Nautilus",
+      "Hispaniola",
+      "Beagle"
+    ],
     "correct_answer": "Pequod",
     "difficulty": "medium",
     "explanation": "Captain Ahab's whaling ship in Herman Melville's novel is called the Pequod.",
@@ -1226,7 +1850,12 @@
   {
     "subject": "Literature",
     "question": "Which author created the character Huckleberry Finn?",
-    "options": ["Mark Twain", "Charles Dickens", "Jack London", "Robert Louis Stevenson"],
+    "options": [
+      "Mark Twain",
+      "Charles Dickens",
+      "Jack London",
+      "Robert Louis Stevenson"
+    ],
     "correct_answer": "Mark Twain",
     "difficulty": "medium",
     "explanation": "Mark Twain (Samuel Clemens) wrote 'The Adventures of Huckleberry Finn'.",
@@ -1235,7 +1864,12 @@
   {
     "subject": "Literature",
     "question": "What is the name of the fantasy world in J.R.R. Tolkien's legendarium?",
-    "options": ["Narnia", "Middle-earth", "Westeros", "Earthsea"],
+    "options": [
+      "Narnia",
+      "Middle-earth",
+      "Westeros",
+      "Earthsea"
+    ],
     "correct_answer": "Middle-earth",
     "difficulty": "difficult",
     "explanation": "Middle-earth is the primary setting for Tolkien's works including The Lord of the Rings.",
@@ -1244,7 +1878,12 @@
   {
     "subject": "Literature",
     "question": "Who wrote the epic poem 'Paradise Lost'?",
-    "options": ["John Milton", "Geoffrey Chaucer", "John Donne", "Edmund Spenser"],
+    "options": [
+      "John Milton",
+      "Geoffrey Chaucer",
+      "John Donne",
+      "Edmund Spenser"
+    ],
     "correct_answer": "John Milton",
     "difficulty": "difficult",
     "explanation": "John Milton wrote this epic poem about the fall of man, published in 1667.",
@@ -1253,7 +1892,12 @@
   {
     "subject": "General Knowledge",
     "question": "What is the largest mammal in the world?",
-    "options": ["African Elephant", "Blue Whale", "Giraffe", "Polar Bear"],
+    "options": [
+      "African Elephant",
+      "Blue Whale",
+      "Giraffe",
+      "Polar Bear"
+    ],
     "correct_answer": "Blue Whale",
     "difficulty": "easy",
     "explanation": "The blue whale is the largest animal ever known to have existed.",
@@ -1262,7 +1906,12 @@
   {
     "subject": "General Knowledge",
     "question": "How many continents are there?",
-    "options": ["5", "6", "7", "8"],
+    "options": [
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
     "correct_answer": "7",
     "difficulty": "easy",
     "explanation": "The seven continents are: Asia, Africa, North America, South America, Antarctica, Europe, and Australia.",
@@ -1271,16 +1920,26 @@
   {
     "subject": "General Knowledge",
     "question": "What is the capital of Brazil?",
-    "options": ["Rio de Janeiro", "São Paulo", "Brasília", "Salvador"],
-    "correct_answer": "Brasília",
+    "options": [
+      "Rio de Janeiro",
+      "S\u00e3o Paulo",
+      "Bras\u00edlia",
+      "Salvador"
+    ],
+    "correct_answer": "Bras\u00edlia",
     "difficulty": "medium",
-    "explanation": "Brasília became Brazil's capital in 1960, replacing Rio de Janeiro.",
+    "explanation": "Bras\u00edlia became Brazil's capital in 1960, replacing Rio de Janeiro.",
     "points": 20
   },
   {
     "subject": "General Knowledge",
     "question": "Which artist painted 'The Starry Night'?",
-    "options": ["Pablo Picasso", "Vincent van Gogh", "Claude Monet", "Salvador Dalí"],
+    "options": [
+      "Pablo Picasso",
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Salvador Dal\u00ed"
+    ],
     "correct_answer": "Vincent van Gogh",
     "difficulty": "medium",
     "explanation": "Van Gogh painted this iconic work in 1889 while in an asylum.",
@@ -1289,7 +1948,12 @@
   {
     "subject": "General Knowledge",
     "question": "What is the chemical symbol for silver?",
-    "options": ["Si", "Ag", "Au", "Sr"],
+    "options": [
+      "Si",
+      "Ag",
+      "Au",
+      "Sr"
+    ],
     "correct_answer": "Ag",
     "difficulty": "difficult",
     "explanation": "Ag comes from the Latin word for silver, 'argentum'.",
@@ -1298,25 +1962,40 @@
   {
     "subject": "Mathematics",
     "question": "What is 25% of 200?",
-    "options": ["25", "50", "75", "100"],
+    "options": [
+      "25",
+      "50",
+      "75",
+      "100"
+    ],
     "correct_answer": "50",
     "difficulty": "easy",
-    "explanation": "25% means one-quarter. 200 ÷ 4 = 50.",
+    "explanation": "25% means one-quarter. 200 \u00f7 4 = 50.",
     "points": 10
   },
   {
     "subject": "Mathematics",
-    "question": "What is the value of 5² + 3³?",
-    "options": ["28", "32", "52", "34"],
+    "question": "What is the value of 5\u00b2 + 3\u00b3?",
+    "options": [
+      "28",
+      "32",
+      "52",
+      "34"
+    ],
     "correct_answer": "52",
     "difficulty": "medium",
-    "explanation": "5² = 25, 3³ = 27. 25 + 27 = 52.",
+    "explanation": "5\u00b2 = 25, 3\u00b3 = 27. 25 + 27 = 52.",
     "points": 20
   },
   {
     "subject": "Mathematics",
     "question": "Solve for x: 3(x - 4) = 15",
-    "options": ["x = 7", "x = 8", "x = 9", "x = 10"],
+    "options": [
+      "x = 7",
+      "x = 8",
+      "x = 9",
+      "x = 10"
+    ],
     "correct_answer": "x = 9",
     "difficulty": "medium",
     "explanation": "Divide both sides by 3: x - 4 = 5, then add 4: x = 9.",
@@ -1324,17 +2003,27 @@
   },
   {
     "subject": "Mathematics",
-    "question": "What is the circumference of a circle with radius 7 cm? (Use π = 22/7)",
-    "options": ["22 cm", "44 cm", "66 cm", "88 cm"],
+    "question": "What is the circumference of a circle with radius 7 cm? (Use \u03c0 = 22/7)",
+    "options": [
+      "22 cm",
+      "44 cm",
+      "66 cm",
+      "88 cm"
+    ],
     "correct_answer": "44 cm",
     "difficulty": "difficult",
-    "explanation": "Circumference = 2πr = 2 × (22/7) × 7 = 44 cm.",
+    "explanation": "Circumference = 2\u03c0r = 2 \u00d7 (22/7) \u00d7 7 = 44 cm.",
     "points": 30
   },
   {
     "subject": "Science",
     "question": "What is the closest star to Earth?",
-    "options": ["Proxima Centauri", "Sirius", "Alpha Centauri", "The Sun"],
+    "options": [
+      "Proxima Centauri",
+      "Sirius",
+      "Alpha Centauri",
+      "The Sun"
+    ],
     "correct_answer": "The Sun",
     "difficulty": "easy",
     "explanation": "The Sun is our closest star, about 93 million miles away.",
@@ -1343,7 +2032,12 @@
   {
     "subject": "Science",
     "question": "Which gas do humans breathe out?",
-    "options": ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
+    "options": [
+      "Oxygen",
+      "Carbon Dioxide",
+      "Nitrogen",
+      "Hydrogen"
+    ],
     "correct_answer": "Carbon Dioxide",
     "difficulty": "easy",
     "explanation": "Humans exhale carbon dioxide as a waste product of cellular respiration.",
@@ -1352,7 +2046,12 @@
   {
     "subject": "Science",
     "question": "What is the study of fossils called?",
-    "options": ["Geology", "Paleontology", "Archaeology", "Anthropology"],
+    "options": [
+      "Geology",
+      "Paleontology",
+      "Archaeology",
+      "Anthropology"
+    ],
     "correct_answer": "Paleontology",
     "difficulty": "medium",
     "explanation": "Paleontology is the scientific study of ancient life through fossils.",
@@ -1361,16 +2060,26 @@
   {
     "subject": "Science",
     "question": "Which element is liquid at room temperature?",
-    "options": ["Bromine", "Mercury", "Gallium", "All of these"],
+    "options": [
+      "Bromine",
+      "Mercury",
+      "Gallium",
+      "All of these"
+    ],
     "correct_answer": "All of these",
     "difficulty": "difficult",
-    "explanation": "Bromine and mercury are liquid at room temperature; gallium melts at about 30°C.",
+    "explanation": "Bromine and mercury are liquid at room temperature; gallium melts at about 30\u00b0C.",
     "points": 30
   },
   {
     "subject": "History",
     "question": "Who was the first woman to win a Nobel Prize?",
-    "options": ["Marie Curie", "Rosalind Franklin", "Dorothy Hodgkin", "Maria Goeppert-Mayer"],
+    "options": [
+      "Marie Curie",
+      "Rosalind Franklin",
+      "Dorothy Hodgkin",
+      "Maria Goeppert-Mayer"
+    ],
     "correct_answer": "Marie Curie",
     "difficulty": "medium",
     "explanation": "Marie Curie won the Nobel Prize in Physics in 1903.",
@@ -1379,7 +2088,12 @@
   {
     "subject": "History",
     "question": "Which civilization built Machu Picchu?",
-    "options": ["Aztec", "Maya", "Inca", "Olmec"],
+    "options": [
+      "Aztec",
+      "Maya",
+      "Inca",
+      "Olmec"
+    ],
     "correct_answer": "Inca",
     "difficulty": "medium",
     "explanation": "The Inca built Machu Picchu in the 15th century in Peru.",
@@ -1388,7 +2102,12 @@
   {
     "subject": "Geography",
     "question": "What is the longest river in Asia?",
-    "options": ["Yangtze", "Yellow River", "Mekong", "Ganges"],
+    "options": [
+      "Yangtze",
+      "Yellow River",
+      "Mekong",
+      "Ganges"
+    ],
     "correct_answer": "Yangtze",
     "difficulty": "medium",
     "explanation": "The Yangtze River in China is about 6,300 km long.",
@@ -1397,7 +2116,12 @@
   {
     "subject": "Geography",
     "question": "Which country has the most time zones?",
-    "options": ["United States", "Russia", "China", "France"],
+    "options": [
+      "United States",
+      "Russia",
+      "China",
+      "France"
+    ],
     "correct_answer": "France",
     "difficulty": "difficult",
     "explanation": "Due to its overseas territories, France spans 12 time zones.",
@@ -1406,7 +2130,12 @@
   {
     "subject": "Literature",
     "question": "Who wrote '1984'?",
-    "options": ["Aldous Huxley", "George Orwell", "Ray Bradbury", "H.G. Wells"],
+    "options": [
+      "Aldous Huxley",
+      "George Orwell",
+      "Ray Bradbury",
+      "H.G. Wells"
+    ],
     "correct_answer": "George Orwell",
     "difficulty": "easy",
     "explanation": "George Orwell published this dystopian novel in 1949.",
@@ -1415,7 +2144,12 @@
   {
     "subject": "Literature",
     "question": "What is the name of the wizard in The Lord of the Rings?",
-    "options": ["Gandalf", "Saruman", "Radagast", "Merlin"],
+    "options": [
+      "Gandalf",
+      "Saruman",
+      "Radagast",
+      "Merlin"
+    ],
     "correct_answer": "Gandalf",
     "difficulty": "easy",
     "explanation": "Gandalf the Grey (later Gandalf the White) is the main wizard in the story.",
@@ -1424,7 +2158,12 @@
   {
     "subject": "General Knowledge",
     "question": "What is the hardest natural substance?",
-    "options": ["Gold", "Iron", "Diamond", "Platinum"],
+    "options": [
+      "Gold",
+      "Iron",
+      "Diamond",
+      "Platinum"
+    ],
     "correct_answer": "Diamond",
     "difficulty": "easy",
     "explanation": "Diamond is the hardest known natural material on the Mohs scale.",
@@ -1433,7 +2172,12 @@
   {
     "subject": "General Knowledge",
     "question": "How many strings does a standard violin have?",
-    "options": ["3", "4", "5", "6"],
+    "options": [
+      "3",
+      "4",
+      "5",
+      "6"
+    ],
     "correct_answer": "4",
     "difficulty": "medium",
     "explanation": "A standard violin has four strings tuned to G, D, A, and E.",
@@ -1442,7 +2186,12 @@
   {
     "subject": "General Knowledge",
     "question": "What is the capital of New Zealand?",
-    "options": ["Auckland", "Christchurch", "Wellington", "Queenstown"],
+    "options": [
+      "Auckland",
+      "Christchurch",
+      "Wellington",
+      "Queenstown"
+    ],
     "correct_answer": "Wellington",
     "difficulty": "difficult",
     "explanation": "Wellington is the capital, while Auckland is the largest city.",
@@ -1451,7 +2200,12 @@
   {
     "subject": "Caribbean History",
     "question": "Which indigenous people were the original inhabitants of most Caribbean islands?",
-    "options": ["The Maya", "The Aztec", "The Taino and Kalinago", "The Inca"],
+    "options": [
+      "The Maya",
+      "The Aztec",
+      "The Taino and Kalinago",
+      "The Inca"
+    ],
     "correct_answer": "The Taino and Kalinago",
     "difficulty": "easy",
     "explanation": "The Taino (Arawaks) and Kalinago (Caribs) were the main indigenous groups in the Caribbean before European contact.",
@@ -1460,7 +2214,12 @@
   {
     "subject": "Caribbean History",
     "question": "Which European power first established sugar plantations in the Caribbean?",
-    "options": ["The Spanish", "The Portuguese", "The British", "The Dutch"],
+    "options": [
+      "The Spanish",
+      "The Portuguese",
+      "The British",
+      "The Dutch"
+    ],
     "correct_answer": "The Spanish",
     "difficulty": "medium",
     "explanation": "The Spanish first introduced sugar cane to the Caribbean in the early 16th century.",
@@ -1469,7 +2228,12 @@
   {
     "subject": "Caribbean History",
     "question": "The Haitian Revolution began in which year?",
-    "options": ["1776", "1791", "1804", "1815"],
+    "options": [
+      "1776",
+      "1791",
+      "1804",
+      "1815"
+    ],
     "correct_answer": "1791",
     "difficulty": "medium",
     "explanation": "The Haitian Revolution, the only successful slave revolt in the Americas, began with a massive uprising in August 1791.",
@@ -1478,7 +2242,12 @@
   {
     "subject": "Caribbean History",
     "question": "Who was the leader of the Haitian Revolution?",
-    "options": ["Toussaint Louverture", "Simón Bolívar", "Marcus Garvey", "Fidel Castro"],
+    "options": [
+      "Toussaint Louverture",
+      "Sim\u00f3n Bol\u00edvar",
+      "Marcus Garvey",
+      "Fidel Castro"
+    ],
     "correct_answer": "Toussaint Louverture",
     "difficulty": "easy",
     "explanation": "Toussaint Louverture was the foremost leader of the Haitian Revolution, though he died before Haiti's final independence.",
@@ -1487,7 +2256,12 @@
   {
     "subject": "Caribbean History",
     "question": "Which treaty ended the Spanish-American War and transferred several Caribbean territories to the United States?",
-    "options": ["Treaty of Paris 1898", "Treaty of Versailles", "Treaty of Tordesillas", "Adams-Onís Treaty"],
+    "options": [
+      "Treaty of Paris 1898",
+      "Treaty of Versailles",
+      "Treaty of Tordesillas",
+      "Adams-On\u00eds Treaty"
+    ],
     "correct_answer": "Treaty of Paris 1898",
     "difficulty": "difficult",
     "explanation": "The Treaty of Paris (1898) ended the Spanish-American War and gave the US control over Puerto Rico, Guam, and the Philippines.",
@@ -1496,7 +2270,12 @@
   {
     "subject": "French Caribbean",
     "question": "Which two Caribbean countries have French as an official language?",
-    "options": ["Haiti and Martinique", "Haiti and Guadeloupe", "Haiti and Saint Lucia", "Haiti and Dominica"],
+    "options": [
+      "Haiti and Martinique",
+      "Haiti and Guadeloupe",
+      "Haiti and Saint Lucia",
+      "Haiti and Dominica"
+    ],
     "correct_answer": "Haiti and Martinique",
     "difficulty": "easy",
     "explanation": "Haiti is an independent French-speaking nation, while Martinique is an overseas department of France.",
@@ -1505,7 +2284,12 @@
   {
     "subject": "French Caribbean",
     "question": "What is the status of Martinique and Guadeloupe within the French political system?",
-    "options": ["Independent nations", "Overseas departments and regions", "British colonies", "US territories"],
+    "options": [
+      "Independent nations",
+      "Overseas departments and regions",
+      "British colonies",
+      "US territories"
+    ],
     "correct_answer": "Overseas departments and regions",
     "difficulty": "medium",
     "explanation": "Martinique and Guadeloupe are overseas departments and regions of France, making them integral parts of the French Republic.",
@@ -1513,17 +2297,27 @@
   },
   {
     "subject": "French Caribbean",
-    "question": "Which French Caribbean island is known for its active volcano, Mount Pelée?",
-    "options": ["Guadeloupe", "Martinique", "Saint Martin", "Saint Barthélemy"],
+    "question": "Which French Caribbean island is known for its active volcano, Mount Pel\u00e9e?",
+    "options": [
+      "Guadeloupe",
+      "Martinique",
+      "Saint Martin",
+      "Saint Barth\u00e9lemy"
+    ],
     "correct_answer": "Martinique",
     "difficulty": "medium",
-    "explanation": "Mount Pelée in Martinique erupted in 1902, destroying the city of Saint-Pierre and killing approximately 30,000 people.",
+    "explanation": "Mount Pel\u00e9e in Martinique erupted in 1902, destroying the city of Saint-Pierre and killing approximately 30,000 people.",
     "points": 20
   },
   {
     "subject": "French Caribbean",
     "question": "What was the name of the legal code that governed slavery in the French Caribbean colonies?",
-    "options": ["Code Noir", "Napoleonic Code", "Civil Code", "Royal Decree"],
+    "options": [
+      "Code Noir",
+      "Napoleonic Code",
+      "Civil Code",
+      "Royal Decree"
+    ],
     "correct_answer": "Code Noir",
     "difficulty": "difficult",
     "explanation": "The Code Noir (Black Code) was established by Louis XIV in 1685 to regulate slavery in the French colonies.",
@@ -1532,16 +2326,26 @@
   {
     "subject": "French Caribbean",
     "question": "Which French Caribbean writer won the Nobel Prize in Literature in 2008?",
-    "options": ["Aimé Césaire", "Patrick Chamoiseau", "Maryse Condé", "Jean-Marie Gustave Le Clézio"],
-    "correct_answer": "Jean-Marie Gustave Le Clézio",
+    "options": [
+      "Aim\u00e9 C\u00e9saire",
+      "Patrick Chamoiseau",
+      "Maryse Cond\u00e9",
+      "Jean-Marie Gustave Le Cl\u00e9zio"
+    ],
+    "correct_answer": "Jean-Marie Gustave Le Cl\u00e9zio",
     "difficulty": "difficult",
-    "explanation": "J.M.G. Le Clézio, born in Nice but with Mauritian heritage and strong Caribbean connections, won the Nobel Prize in Literature in 2008.",
+    "explanation": "J.M.G. Le Cl\u00e9zio, born in Nice but with Mauritian heritage and strong Caribbean connections, won the Nobel Prize in Literature in 2008.",
     "points": 30
   },
   {
     "subject": "Caribbean History",
     "question": "The Middle Passage refers to:",
-    "options": ["The journey of indentured laborers from India", "The transatlantic slave trade route", "The route of Spanish galleons", "The passage between Caribbean islands"],
+    "options": [
+      "The journey of indentured laborers from India",
+      "The transatlantic slave trade route",
+      "The route of Spanish galleons",
+      "The passage between Caribbean islands"
+    ],
     "correct_answer": "The transatlantic slave trade route",
     "difficulty": "medium",
     "explanation": "The Middle Passage was the stage of the triangular trade in which millions of Africans were transported to the Americas as part of the Atlantic slave trade.",
@@ -1550,7 +2354,12 @@
   {
     "subject": "Caribbean History",
     "question": "Which Caribbean country was the first to gain independence from European colonial rule?",
-    "options": ["Jamaica", "Haiti", "Trinidad and Tobago", "Barbados"],
+    "options": [
+      "Jamaica",
+      "Haiti",
+      "Trinidad and Tobago",
+      "Barbados"
+    ],
     "correct_answer": "Haiti",
     "difficulty": "easy",
     "explanation": "Haiti declared independence from France in 1804, becoming the first independent nation in Latin America and the Caribbean.",
@@ -1559,7 +2368,12 @@
   {
     "subject": "Caribbean History",
     "question": "The Maroons were:",
-    "options": ["European plantation owners", "Escaped slaves who formed independent communities", "Indigenous leaders", "Spanish conquistadors"],
+    "options": [
+      "European plantation owners",
+      "Escaped slaves who formed independent communities",
+      "Indigenous leaders",
+      "Spanish conquistadors"
+    ],
     "correct_answer": "Escaped slaves who formed independent communities",
     "difficulty": "medium",
     "explanation": "Maroons were Africans who escaped slavery in the Americas and formed independent settlements.",
@@ -1568,7 +2382,12 @@
   {
     "subject": "Caribbean History",
     "question": "Which Caribbean leader implemented the 'Better Must Come' policy in the 1970s?",
-    "options": ["Eric Williams", "Michael Manley", "Fidel Castro", "Grantley Adams"],
+    "options": [
+      "Eric Williams",
+      "Michael Manley",
+      "Fidel Castro",
+      "Grantley Adams"
+    ],
     "correct_answer": "Michael Manley",
     "difficulty": "difficult",
     "explanation": "Michael Manley, Prime Minister of Jamaica, implemented democratic socialist policies under the slogan 'Better Must Come'.",
@@ -1577,7 +2396,12 @@
   {
     "subject": "Caribbean History",
     "question": "The Caribbean Community (CARICOM) was established in which year?",
-    "options": ["1958", "1962", "1973", "1983"],
+    "options": [
+      "1958",
+      "1962",
+      "1973",
+      "1983"
+    ],
     "correct_answer": "1973",
     "difficulty": "difficult",
     "explanation": "CARICOM was established by the Treaty of Chaguaramas in 1973 to promote economic integration and cooperation among Caribbean nations.",
@@ -1586,7 +2410,12 @@
   {
     "subject": "French Caribbean",
     "question": "Which French Caribbean island is shared with the Netherlands?",
-    "options": ["Martinique", "Guadeloupe", "Saint Martin", "Marie-Galante"],
+    "options": [
+      "Martinique",
+      "Guadeloupe",
+      "Saint Martin",
+      "Marie-Galante"
+    ],
     "correct_answer": "Saint Martin",
     "difficulty": "medium",
     "explanation": "Saint Martin is divided between France (Saint-Martin) and the Netherlands (Sint Maarten).",
@@ -1595,16 +2424,26 @@
   {
     "subject": "French Caribbean",
     "question": "What is the name of the international literary prize awarded in the French Caribbean?",
-    "options": ["Prix Goncourt", "Prix Renaudot", "Prix des Caraïbes", "Prix Médicis"],
-    "correct_answer": "Prix des Caraïbes",
+    "options": [
+      "Prix Goncourt",
+      "Prix Renaudot",
+      "Prix des Cara\u00efbes",
+      "Prix M\u00e9dicis"
+    ],
+    "correct_answer": "Prix des Cara\u00efbes",
     "difficulty": "difficult",
-    "explanation": "The Prix des Caraïbes is an important literary prize awarded for works from or about the Caribbean.",
+    "explanation": "The Prix des Cara\u00efbes is an important literary prize awarded for works from or about the Caribbean.",
     "points": 30
   },
   {
     "subject": "French Caribbean",
     "question": "Which French Caribbean island is known for its carnival featuring 'red devils'?",
-    "options": ["Guadeloupe", "Martinique", "Saint Barthélemy", "Les Saintes"],
+    "options": [
+      "Guadeloupe",
+      "Martinique",
+      "Saint Barth\u00e9lemy",
+      "Les Saintes"
+    ],
     "correct_answer": "Martinique",
     "difficulty": "medium",
     "explanation": "Martinique's carnival features 'diab rouj' (red devils) as part of its traditional celebrations.",
@@ -1612,17 +2451,27 @@
   },
   {
     "subject": "French Caribbean",
-    "question": "The concept of 'Négritude' was developed by which Martinican poet?",
-    "options": ["Frantz Fanon", "Aimé Césaire", "Édouard Glissant", "Léon-Gontran Damas"],
-    "correct_answer": "Aimé Césaire",
+    "question": "The concept of 'N\u00e9gritude' was developed by which Martinican poet?",
+    "options": [
+      "Frantz Fanon",
+      "Aim\u00e9 C\u00e9saire",
+      "\u00c9douard Glissant",
+      "L\u00e9on-Gontran Damas"
+    ],
+    "correct_answer": "Aim\u00e9 C\u00e9saire",
     "difficulty": "difficult",
-    "explanation": "Aimé Césaire, along with Léopold Sédar Senghor and Léon-Gontran Damas, developed the concept of Négritude, affirming African cultural values.",
+    "explanation": "Aim\u00e9 C\u00e9saire, along with L\u00e9opold S\u00e9dar Senghor and L\u00e9on-Gontran Damas, developed the concept of N\u00e9gritude, affirming African cultural values.",
     "points": 30
   },
   {
     "subject": "French Caribbean",
     "question": "Which French Caribbean territory uses the Euro as its currency?",
-    "options": ["All French Caribbean territories", "Only Haiti", "Only Martinique", "Martinique and Guadeloupe"],
+    "options": [
+      "All French Caribbean territories",
+      "Only Haiti",
+      "Only Martinique",
+      "Martinique and Guadeloupe"
+    ],
     "correct_answer": "All French Caribbean territories",
     "difficulty": "easy",
     "explanation": "As overseas departments of France, Martinique, Guadeloupe, and other French territories in the Caribbean use the Euro.",
@@ -1631,7 +2480,12 @@
   {
     "subject": "Caribbean History",
     "question": "The 'West Indies Federation' existed during which period?",
-    "options": ["1945-1950", "1958-1962", "1965-1970", "1970-1975"],
+    "options": [
+      "1945-1950",
+      "1958-1962",
+      "1965-1970",
+      "1970-1975"
+    ],
     "correct_answer": "1958-1962",
     "difficulty": "difficult",
     "explanation": "The West Indies Federation was a short-lived political union that existed from 1958 to 1962 among several Caribbean islands.",
@@ -1640,7 +2494,12 @@
   {
     "subject": "Caribbean History",
     "question": "Which Caribbean island was the first British colony to achieve independence after World War II?",
-    "options": ["Jamaica", "Trinidad and Tobago", "Barbados", "Guyana"],
+    "options": [
+      "Jamaica",
+      "Trinidad and Tobago",
+      "Barbados",
+      "Guyana"
+    ],
     "correct_answer": "Jamaica",
     "difficulty": "medium",
     "explanation": "Jamaica gained independence from Britain in 1962, the first of the British West Indies to do so in the post-war period.",
@@ -1649,7 +2508,12 @@
   {
     "subject": "Caribbean History",
     "question": "The 'Encomienda' system was used by which colonial power in the Caribbean?",
-    "options": ["British", "French", "Spanish", "Dutch"],
+    "options": [
+      "British",
+      "French",
+      "Spanish",
+      "Dutch"
+    ],
     "correct_answer": "Spanish",
     "difficulty": "medium",
     "explanation": "The Encomienda system was a Spanish labor system that rewarded conquerors with the labor of particular groups of conquered people.",
@@ -1658,7 +2522,12 @@
   {
     "subject": "Caribbean History",
     "question": "Which Caribbean country experienced the 'Cuban Revolution' led by Fidel Castro?",
-    "options": ["Jamaica", "Dominican Republic", "Cuba", "Puerto Rico"],
+    "options": [
+      "Jamaica",
+      "Dominican Republic",
+      "Cuba",
+      "Puerto Rico"
+    ],
     "correct_answer": "Cuba",
     "difficulty": "easy",
     "explanation": "The Cuban Revolution (1953-1959) resulted in Fidel Castro coming to power and establishing a communist government.",
@@ -1667,7 +2536,12 @@
   {
     "subject": "Caribbean History",
     "question": "The 'Bussa Rebellion' occurred in which Caribbean island?",
-    "options": ["Jamaica", "Barbados", "Saint-Domingue", "Trinidad"],
+    "options": [
+      "Jamaica",
+      "Barbados",
+      "Saint-Domingue",
+      "Trinidad"
+    ],
     "correct_answer": "Barbados",
     "difficulty": "difficult",
     "explanation": "The Bussa Rebellion was a major slave uprising in Barbados in 1816, led by an African-born slave named Bussa.",
@@ -1676,7 +2550,12 @@
   {
     "subject": "French Caribbean",
     "question": "What is 'Creole' in the context of the French Caribbean?",
-    "options": ["A type of food", "A language derived from French", "A dance style", "A religious ceremony"],
+    "options": [
+      "A type of food",
+      "A language derived from French",
+      "A dance style",
+      "A religious ceremony"
+    ],
     "correct_answer": "A language derived from French",
     "difficulty": "easy",
     "explanation": "Creole languages in the French Caribbean developed from the contact between French and African languages during the colonial period.",
@@ -1685,7 +2564,12 @@
   {
     "subject": "French Caribbean",
     "question": "Which French Caribbean island is known for its production of high-quality rum, particularly Rhum Agricole?",
-    "options": ["Martinique", "Guadeloupe", "Both Martinique and Guadeloupe", "Saint Martin"],
+    "options": [
+      "Martinique",
+      "Guadeloupe",
+      "Both Martinique and Guadeloupe",
+      "Saint Martin"
+    ],
     "correct_answer": "Both Martinique and Guadeloupe",
     "difficulty": "medium",
     "explanation": "Both Martinique and Guadeloupe are renowned for their Rhum Agricole, made directly from sugar cane juice rather than molasses.",
@@ -1693,17 +2577,27 @@
   },
   {
     "subject": "French Caribbean",
-    "question": "The 'Battle of Vertières' was a decisive conflict in which revolution?",
-    "options": ["Cuban Revolution", "Haitian Revolution", "Jamaican Maroon War", "Dominican War of Independence"],
+    "question": "The 'Battle of Verti\u00e8res' was a decisive conflict in which revolution?",
+    "options": [
+      "Cuban Revolution",
+      "Haitian Revolution",
+      "Jamaican Maroon War",
+      "Dominican War of Independence"
+    ],
     "correct_answer": "Haitian Revolution",
     "difficulty": "difficult",
-    "explanation": "The Battle of Vertières in 1803 was the last major battle of the Haitian Revolution, leading to French withdrawal.",
+    "explanation": "The Battle of Verti\u00e8res in 1803 was the last major battle of the Haitian Revolution, leading to French withdrawal.",
     "points": 30
   },
   {
     "subject": "French Caribbean",
     "question": "Which French Caribbean intellectual wrote 'Black Skin, White Masks'?",
-    "options": ["Aimé Césaire", "Frantz Fanon", "Édouard Glissant", "Maryse Condé"],
+    "options": [
+      "Aim\u00e9 C\u00e9saire",
+      "Frantz Fanon",
+      "\u00c9douard Glissant",
+      "Maryse Cond\u00e9"
+    ],
     "correct_answer": "Frantz Fanon",
     "difficulty": "difficult",
     "explanation": "Frantz Fanon, from Martinique, wrote this influential work on the psychology of colonialism and racism.",
@@ -1712,7 +2606,12 @@
   {
     "subject": "French Caribbean",
     "question": "What is the name of the traditional music and dance style from Guadeloupe and Martinique?",
-    "options": ["Zouk", "Reggae", "Salsa", "Calypso"],
+    "options": [
+      "Zouk",
+      "Reggae",
+      "Salsa",
+      "Calypso"
+    ],
     "correct_answer": "Zouk",
     "difficulty": "medium",
     "explanation": "Zouk is a musical style originating from the French Caribbean in the early 1980s, characterized by its fast tempo.",
@@ -1721,7 +2620,12 @@
   {
     "subject": "Caribbean History",
     "question": "The 'Morant Bay Rebellion' occurred in which British colony?",
-    "options": ["Jamaica", "Barbados", "Trinidad", "Guyana"],
+    "options": [
+      "Jamaica",
+      "Barbados",
+      "Trinidad",
+      "Guyana"
+    ],
     "correct_answer": "Jamaica",
     "difficulty": "difficult",
     "explanation": "The Morant Bay Rebellion in Jamaica (1865) was a protest against injustice and poverty that led to significant political changes.",
@@ -1730,7 +2634,12 @@
   {
     "subject": "Caribbean History",
     "question": "Which Caribbean country was formerly known as British Honduras?",
-    "options": ["Belize", "Guyana", "Barbados", "The Bahamas"],
+    "options": [
+      "Belize",
+      "Guyana",
+      "Barbados",
+      "The Bahamas"
+    ],
     "correct_answer": "Belize",
     "difficulty": "medium",
     "explanation": "Belize, located in Central America but culturally Caribbean, was known as British Honduras until 1973.",
@@ -1738,17 +2647,27 @@
   },
   {
     "subject": "Caribbean History",
-    "question": "The 'Cédula de Población' was a Spanish decree that encouraged settlement of which Caribbean island?",
-    "options": ["Trinidad", "Cuba", "Puerto Rico", "Jamaica"],
+    "question": "The 'C\u00e9dula de Poblaci\u00f3n' was a Spanish decree that encouraged settlement of which Caribbean island?",
+    "options": [
+      "Trinidad",
+      "Cuba",
+      "Puerto Rico",
+      "Jamaica"
+    ],
     "correct_answer": "Trinidad",
     "difficulty": "difficult",
-    "explanation": "The Cédula de Población (1783) encouraged Catholic immigration to Trinidad, significantly increasing its population.",
+    "explanation": "The C\u00e9dula de Poblaci\u00f3n (1783) encouraged Catholic immigration to Trinidad, significantly increasing its population.",
     "points": 30
   },
   {
     "subject": "Caribbean History",
     "question": "Which Caribbean leader founded the People's National Party in Jamaica?",
-    "options": ["Alexander Bustamante", "Norman Manley", "Michael Manley", "Edward Seaga"],
+    "options": [
+      "Alexander Bustamante",
+      "Norman Manley",
+      "Michael Manley",
+      "Edward Seaga"
+    ],
     "correct_answer": "Norman Manley",
     "difficulty": "medium",
     "explanation": "Norman Manley founded the People's National Party in 1938 and was a key figure in Jamaica's move toward independence.",
@@ -1757,7 +2676,12 @@
   {
     "subject": "Caribbean History",
     "question": "The 'Caribbean Free Trade Association' (CARIFTA) preceded which organization?",
-    "options": ["CARICOM", "OECS", "ACS", "WTO"],
+    "options": [
+      "CARICOM",
+      "OECS",
+      "ACS",
+      "WTO"
+    ],
     "correct_answer": "CARICOM",
     "difficulty": "difficult",
     "explanation": "CARIFTA (1965-1973) was replaced by CARICOM, which provided a broader framework for regional integration.",
@@ -1766,7 +2690,12 @@
   {
     "subject": "French Caribbean",
     "question": "Which French Caribbean island is actually an archipelago consisting of several islands?",
-    "options": ["Martinique", "Guadeloupe", "Saint Barthélemy", "All of the above"],
+    "options": [
+      "Martinique",
+      "Guadeloupe",
+      "Saint Barth\u00e9lemy",
+      "All of the above"
+    ],
     "correct_answer": "Guadeloupe",
     "difficulty": "medium",
     "explanation": "Guadeloupe is an archipelago consisting of the main islands of Basse-Terre and Grande-Terre, plus several smaller islands.",
@@ -1775,7 +2704,12 @@
   {
     "subject": "French Caribbean",
     "question": "What is 'Quimbois' in the French Caribbean context?",
-    "options": ["A type of folk medicine and spiritual practice", "A musical instrument", "A traditional dish", "A dance style"],
+    "options": [
+      "A type of folk medicine and spiritual practice",
+      "A musical instrument",
+      "A traditional dish",
+      "A dance style"
+    ],
     "correct_answer": "A type of folk medicine and spiritual practice",
     "difficulty": "difficult",
     "explanation": "Quimbois is a traditional folk medicine and spiritual practice in the French Caribbean, similar to Vodou or Obeah.",
@@ -1784,7 +2718,12 @@
   {
     "subject": "French Caribbean",
     "question": "Which French Caribbean territory is known for its salt production?",
-    "options": ["Marie-Galante", "Les Saintes", "Saint Martin", "La Désirade"],
+    "options": [
+      "Marie-Galante",
+      "Les Saintes",
+      "Saint Martin",
+      "La D\u00e9sirade"
+    ],
     "correct_answer": "Saint Martin",
     "difficulty": "medium",
     "explanation": "Saint Martin has historically been known for its salt production, particularly in the saline ponds on the French side.",
@@ -1793,7 +2732,12 @@
   {
     "subject": "French Caribbean",
     "question": "The 'Leyendas' program was associated with immigration to which Caribbean territory?",
-    "options": ["French Guiana", "Martinique", "Guadeloupe", "Haiti"],
+    "options": [
+      "French Guiana",
+      "Martinique",
+      "Guadeloupe",
+      "Haiti"
+    ],
     "correct_answer": "French Guiana",
     "difficulty": "difficult",
     "explanation": "The 'Leyendas' program in the 19th century encouraged Chinese and other Asian laborers to immigrate to French Guiana.",
@@ -1802,16 +2746,26 @@
   {
     "subject": "French Caribbean",
     "question": "Which French Caribbean writer wrote 'I, Tituba, Black Witch of Salem'?",
-    "options": ["Maryse Condé", "Simone Schwarz-Bart", "Gisèle Pineau", "Myriam Chancy"],
-    "correct_answer": "Maryse Condé",
+    "options": [
+      "Maryse Cond\u00e9",
+      "Simone Schwarz-Bart",
+      "Gis\u00e8le Pineau",
+      "Myriam Chancy"
+    ],
+    "correct_answer": "Maryse Cond\u00e9",
     "difficulty": "difficult",
-    "explanation": "Maryse Condé from Guadeloupe wrote this novel reimagining the story of Tituba, the enslaved woman accused in the Salem witch trials.",
+    "explanation": "Maryse Cond\u00e9 from Guadeloupe wrote this novel reimagining the story of Tituba, the enslaved woman accused in the Salem witch trials.",
     "points": 30
   },
   {
     "subject": "Caribbean History",
     "question": "The 'Dread Act' was controversial legislation in which Caribbean country?",
-    "options": ["Jamaica", "Trinidad and Tobago", "Barbados", "Guyana"],
+    "options": [
+      "Jamaica",
+      "Trinidad and Tobago",
+      "Barbados",
+      "Guyana"
+    ],
     "correct_answer": "Jamaica",
     "difficulty": "difficult",
     "explanation": "The Dread Act (1974) in Jamaica allowed police to arrest people with dreadlocks on suspicion of marijuana possession.",
@@ -1820,7 +2774,12 @@
   {
     "subject": "Caribbean History",
     "question": "Which Caribbean territory changed hands between European powers the most times?",
-    "options": ["Saint Lucia", "Tobago", "Dominica", "All of the above changed hands frequently"],
+    "options": [
+      "Saint Lucia",
+      "Tobago",
+      "Dominica",
+      "All of the above changed hands frequently"
+    ],
     "correct_answer": "All of the above changed hands frequently",
     "difficulty": "medium",
     "explanation": "Several Caribbean islands, including Saint Lucia (14 times), Tobago (33 times), and Dominica, changed hands between European powers multiple times.",
@@ -1829,7 +2788,12 @@
   {
     "subject": "Caribbean History",
     "question": "The 'Merikins' were African American refugees who settled in which Caribbean country after the War of 1812?",
-    "options": ["Trinidad", "Jamaica", "The Bahamas", "Barbados"],
+    "options": [
+      "Trinidad",
+      "Jamaica",
+      "The Bahamas",
+      "Barbados"
+    ],
     "correct_answer": "Trinidad",
     "difficulty": "difficult",
     "explanation": "The Merikins were African American soldiers who fought for Britain in the War of 1812 and were granted land in Trinidad.",
@@ -1838,7 +2802,12 @@
   {
     "subject": "Caribbean History",
     "question": "Which Caribbean country was the last British colony in the region to gain independence?",
-    "options": ["Saint Kitts and Nevis", "Barbados", "The Bahamas", "Belize"],
+    "options": [
+      "Saint Kitts and Nevis",
+      "Barbados",
+      "The Bahamas",
+      "Belize"
+    ],
     "correct_answer": "Saint Kitts and Nevis",
     "difficulty": "difficult",
     "explanation": "Saint Kitts and Nevis gained independence in 1983, the last of the current CARICOM members to do so.",
@@ -1847,7 +2816,12 @@
   {
     "subject": "Caribbean History",
     "question": "The 'West India Regiment' was:",
-    "options": ["A British military unit of enslaved Africans", "A French colonial army", "A Spanish conquistador group", "A Dutch trading company"],
+    "options": [
+      "A British military unit of enslaved Africans",
+      "A French colonial army",
+      "A Spanish conquistador group",
+      "A Dutch trading company"
+    ],
     "correct_answer": "A British military unit of enslaved Africans",
     "difficulty": "medium",
     "explanation": "The West India Regiment was a British Army unit recruited from enslaved Africans and free blacks in the Caribbean.",
@@ -1856,7 +2830,12 @@
   {
     "subject": "French Caribbean",
     "question": "Which French Caribbean territory is located in South America rather than the Caribbean Sea?",
-    "options": ["Martinique", "Guadeloupe", "French Guiana", "Saint Barthélemy"],
+    "options": [
+      "Martinique",
+      "Guadeloupe",
+      "French Guiana",
+      "Saint Barth\u00e9lemy"
+    ],
     "correct_answer": "French Guiana",
     "difficulty": "easy",
     "explanation": "French Guiana is an overseas department of France located on the northeastern coast of South America.",
@@ -1864,17 +2843,27 @@
   },
   {
     "subject": "French Caribbean",
-    "question": "The 'Béké' are:",
-    "options": ["Descendants of French colonists in the Caribbean", "African spiritual leaders", "Indigenous people", "East Indian laborers"],
+    "question": "The 'B\u00e9k\u00e9' are:",
+    "options": [
+      "Descendants of French colonists in the Caribbean",
+      "African spiritual leaders",
+      "Indigenous people",
+      "East Indian laborers"
+    ],
     "correct_answer": "Descendants of French colonists in the Caribbean",
     "difficulty": "medium",
-    "explanation": "Béké refers to the descendants of early French settlers in the French Caribbean, who typically belong to the white elite.",
+    "explanation": "B\u00e9k\u00e9 refers to the descendants of early French settlers in the French Caribbean, who typically belong to the white elite.",
     "points": 20
   },
   {
     "subject": "French Caribbean",
     "question": "Which French Caribbean island is known for its 'Tour de la Martinique' cycling race?",
-    "options": ["Martinique", "Guadeloupe", "Both have similar races", "Neither has such a race"],
+    "options": [
+      "Martinique",
+      "Guadeloupe",
+      "Both have similar races",
+      "Neither has such a race"
+    ],
     "correct_answer": "Martinique",
     "difficulty": "medium",
     "explanation": "The Tour de la Martinique is an annual professional cycling race held in Martinique.",
@@ -1883,7 +2872,12 @@
   {
     "subject": "French Caribbean",
     "question": "The 'Affaire de la Chaloupe' was a significant slave revolt in which French colony?",
-    "options": ["Saint-Domingue", "Martinique", "Guadeloupe", "French Guiana"],
+    "options": [
+      "Saint-Domingue",
+      "Martinique",
+      "Guadeloupe",
+      "French Guiana"
+    ],
     "correct_answer": "Martinique",
     "difficulty": "difficult",
     "explanation": "The Affaire de la Chaloupe (1822) was a planned slave revolt in Martinique that was discovered and brutally suppressed.",
@@ -1892,7 +2886,12 @@
   {
     "subject": "French Caribbean",
     "question": "Which French Caribbean territory hosts the European Space Agency's launch site?",
-    "options": ["French Guiana", "Guadeloupe", "Martinique", "Saint Martin"],
+    "options": [
+      "French Guiana",
+      "Guadeloupe",
+      "Martinique",
+      "Saint Martin"
+    ],
     "correct_answer": "French Guiana",
     "difficulty": "medium",
     "explanation": "The Guiana Space Centre in French Guiana is the European Space Agency's primary launch site.",
