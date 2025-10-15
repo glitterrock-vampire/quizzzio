@@ -303,141 +303,82 @@ app.listen(PORT, async () => {
         // Check if questions exist using the database pool
         if (pool) {
           try {
-            // Check if geography_questions table exists first
-            const tableCheck = await pool.query(`
-              SELECT EXISTS (
-                SELECT FROM information_schema.tables
-                WHERE table_schema = 'public'
-                AND table_name = 'geography_questions'
-              );
-            `);
+            // Check total questions across all tables
+            const totalQuestionsQuery = `
+              SELECT COUNT(*) as total FROM (
+                SELECT * FROM science_questions
+                UNION ALL SELECT * FROM history_questions
+                UNION ALL SELECT * FROM geography_questions
+                UNION ALL SELECT * FROM literature_questions
+                UNION ALL SELECT * FROM general_knowledge_questions
+                UNION ALL SELECT * FROM mathematics_questions
+                UNION ALL SELECT * FROM caribbean_history_questions
+                UNION ALL SELECT * FROM french_caribbean_questions
+              ) as all_questions
+            `;
 
-            if (!tableCheck.rows[0].exists) {
-              console.log('ℹ️ Geography questions table does not exist - skipping questions import');
-              return;
-            }
-
-            const result = await pool.query('SELECT COUNT(*) as count FROM geography_questions');
-            const questionCount = parseInt(result.rows[0].count);
+            const result = await pool.query(totalQuestionsQuery);
+            const questionCount = parseInt(result.rows[0].total);
 
             if (questionCount === 0) {
-              console.log('🔧 No questions found, importing sample questions...');
+              console.log('🔧 No questions found, importing from questions.json...');
 
-              // Import Geography questions directly
-              const geographyQuestions = [
-                {
-                  subject: 'Geography',
-                  question: 'What is the capital of France?',
-                  options: ['London', 'Berlin', 'Paris', 'Rome'],
-                  correct_answer: 'Paris',
-                  difficulty: 'easy',
-                  explanation: 'Paris, located on the Seine River, is the capital and most populous city of France.',
-                  points: 10
-                },
-                {
-                  subject: 'Geography',
-                  question: 'Which is the largest ocean on Earth?',
-                  options: ['Atlantic Ocean', 'Indian Ocean', 'Arctic Ocean', 'Pacific Ocean'],
-                  correct_answer: 'Pacific Ocean',
-                  difficulty: 'easy',
-                  explanation: 'The Pacific Ocean is the largest and deepest of the world\'s ocean basins.',
-                  points: 10
-                },
-                {
-                  subject: 'Geography',
-                  question: 'What is the longest river in the world?',
-                  options: ['The Amazon River', 'The Nile River', 'The Yangtze River', 'The Mississippi River'],
-                  correct_answer: 'The Nile River',
-                  difficulty: 'easy',
-                  explanation: 'The Nile River in Africa is historically considered the longest river in the world at about 6,650 km (4,130 miles).',
-                  points: 10
-                },
-                {
-                  subject: 'Geography',
-                  question: 'Which desert is the largest in the world?',
-                  options: ['The Gobi Desert', 'The Sahara Desert', 'The Arabian Desert', 'The Kalahari Desert'],
-                  correct_answer: 'The Sahara Desert',
-                  difficulty: 'easy',
-                  explanation: 'The Sahara in Northern Africa is the world\'s largest hot desert.',
-                  points: 10
-                },
-                {
-                  subject: 'Geography',
-                  question: 'Which continent is the smallest by land area?',
-                  options: ['Europe', 'Australia', 'Antarctica', 'South America'],
-                  correct_answer: 'Australia',
-                  difficulty: 'easy',
-                  explanation: 'Australia is the smallest continent, also considered a single country.',
-                  points: 10
-                }
-              ];
+              // Import questions from questions.json file
+              const fs = await import('fs');
+              const path = await import('path');
+              const { fileURLToPath } = await import('url');
 
-              // Import Geography questions
-              for (const q of geographyQuestions) {
-                try {
-                  await pool.query(
-                    `INSERT INTO geography_questions
-                     (subject, question, options, correct_answer, difficulty, explanation, points)
-                     VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-                    [q.subject, q.question, q.options, q.correct_answer, q.difficulty, q.explanation, q.points]
-                  );
-                } catch (insertError) {
-                  console.error(`❌ Error inserting question "${q.question}":`, insertError.message);
-                }
-              }
+              const __filename = fileURLToPath(import.meta.url);
+              const __dirname = path.dirname(__filename);
+              const questionsPath = path.join(__dirname, '..', 'questions.json');
 
-              console.log('✅ Geography questions imported to production database');
+              if (fs.existsSync(questionsPath)) {
+                const questionsData = JSON.parse(fs.readFileSync(questionsPath, 'utf8'));
+                console.log(`📥 Importing ${questionsData.length} questions from questions.json`);
 
-              // Also import some Mathematics questions if mathematics_questions table exists
-              const mathTableCheck = await pool.query(`
-                SELECT EXISTS (
-                  SELECT FROM information_schema.tables
-                  WHERE table_schema = 'public'
-                  AND table_name = 'mathematics_questions'
-                );
-              `);
-
-              if (mathTableCheck.rows[0].exists) {
-                const mathQuestions = [
-                  {
-                    subject: 'Mathematics',
-                    question: 'What is 2 + 2?',
-                    options: ['3', '4', '5', '6'],
-                    correct_answer: '4',
-                    difficulty: 'easy',
-                    explanation: 'Basic addition: 2 + 2 equals 4.',
-                    points: 10
-                  },
-                  {
-                    subject: 'Mathematics',
-                    question: 'What is the square root of 16?',
-                    options: ['2', '4', '6', '8'],
-                    correct_answer: '4',
-                    difficulty: 'easy',
-                    explanation: 'The square root of 16 is 4, since 4 × 4 = 16.',
-                    points: 10
+                // Group questions by subject
+                const questionsBySubject = {};
+                questionsData.forEach(q => {
+                  const subject = q.subject.charAt(0).toUpperCase() + q.subject.slice(1);
+                  if (!questionsBySubject[subject]) {
+                    questionsBySubject[subject] = [];
                   }
-                ];
+                  questionsBySubject[subject].push(q);
+                });
 
-                for (const q of mathQuestions) {
-                  try {
-                    await pool.query(
-                      `INSERT INTO mathematics_questions
-                       (subject, question, options, correct_answer, difficulty, explanation, points)
-                       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-                      [q.subject, q.question, q.options, q.correct_answer, q.difficulty, q.explanation, q.points]
-                    );
-                  } catch (insertError) {
-                    console.error(`❌ Error inserting math question "${q.question}":`, insertError.message);
+                // Import questions for each subject
+                for (const [subject, questions] of Object.entries(questionsBySubject)) {
+                  const tableName = `${subject.toLowerCase().replace(/[^a-z0-9]/g, '_')}_questions`;
+
+                  for (const question of questions) {
+                    try {
+                      await pool.query(
+                        `INSERT INTO ${tableName} (subject, question, options, correct_answer, difficulty, explanation, points)
+                         VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+                        [
+                          subject,
+                          question.question,
+                          question.options,
+                          question.correct_answer,
+                          question.difficulty,
+                          question.explanation,
+                          question.points || 10
+                        ]
+                      );
+                    } catch (insertError) {
+                      console.error(`❌ Error inserting question "${question.question}":`, insertError.message);
+                    }
                   }
+
+                  console.log(`✅ Imported ${questions.length} ${subject} questions`);
                 }
 
-                console.log('✅ Mathematics questions imported to production database');
+                console.log('🎉 All questions imported successfully from questions.json!');
               } else {
-                console.log('ℹ️ Mathematics questions table does not exist - skipping math questions import');
+                console.log('⚠️ questions.json file not found, skipping import');
               }
             } else {
-              console.log(`✅ Questions already exist in production database (${questionCount} questions)`);
+              console.log(`✅ Questions already exist in production database (${questionCount} total questions)`);
             }
           } catch (queryError) {
             console.error('❌ Error querying questions table:', queryError.message);
